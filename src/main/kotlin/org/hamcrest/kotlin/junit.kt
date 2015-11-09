@@ -7,7 +7,7 @@ public fun <T> assertThat(message: String? = null, actual: T, criteria: Matcher<
             throw AssertionError(
                     (if (message == null) "" else message + ": ") +
                             "expected a value " + criteria.description() + "\n" +
-                            "but it was " + judgement.description())
+                            "but it " + judgement.description())
         }
     }
 }

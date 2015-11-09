@@ -1,6 +1,8 @@
 package org.hamcrest.kotlin;
 
 import org.junit.Test
+import java.math.BigDecimal
+import kotlin.reflect.KClass
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -23,8 +25,8 @@ class Equality {
 
     @Test
     public fun notEqual() {
-        assertIsMismatchWithDescription("20", equalTo(10)(20))
-        assertIsMismatchWithDescription("1", equalTo(0)(1))
+        assertIsMismatchWithDescription("was 20", equalTo(10)(20))
+        assertIsMismatchWithDescription("was 1", equalTo(0)(1))
     }
 
     @Test
@@ -50,7 +52,7 @@ class Nullability {
         val m : Matcher<Int?> = absent();
 
         assertEquals(MatchResult.Match, m(null))
-        assertIsMismatchWithDescription("100", m(100))
+        assertIsMismatchWithDescription("was 100", m(100))
     }
 
     @Test
@@ -58,7 +60,16 @@ class Nullability {
         val m : Matcher<String?> = present(equalTo("xxx"));
 
         assertEquals(MatchResult.Match, m("xxx"))
-        assertIsMismatchWithDescription("null", m(null))
-        assertIsMismatchWithDescription("\"yyy\"", m("yyy"))
+        assertIsMismatchWithDescription("was null", m(null))
+        assertIsMismatchWithDescription("was \"yyy\"", m("yyy"))
+    }
+}
+
+class Downcasting {
+    @Test
+    public fun wrongType() {
+        val m : Matcher<Number> = isA(Int::class, equalTo(10))
+
+        assertIsMismatchWithDescription("was a java.lang.Double", m(10.0))
     }
 }
