@@ -32,12 +32,12 @@ public fun <T> present(valueMatcher : Matcher<T>) : Matcher<T?> =
             }
         }
 
-public inline fun <reified T : Any> isA(downcaseMatcher: Matcher<T> ) : Matcher<Any> {
+public inline fun <reified T : Any> isA(downcastMatcher: Matcher<T> ) : Matcher<Any> {
     return object : Matcher.Primitive<Any>() {
         override fun invoke(actual: Any): MatchResult {
             return when(actual) {
                 is T -> {
-                    downcaseMatcher(actual)
+                    downcastMatcher(actual)
                 }
                 else -> {
                     MatchResult.Mismatch("was a " + actual.javaClass.kotlin.qualifiedName)
@@ -46,7 +46,7 @@ public inline fun <reified T : Any> isA(downcaseMatcher: Matcher<T> ) : Matcher<
         }
 
         override fun description(): String {
-            return "of type " + T::class.qualifiedName + " & " + downcaseMatcher.description()
+            return "of type " + T::class.qualifiedName + " & " + downcastMatcher.description()
         }
     }
 }

@@ -88,7 +88,7 @@ class Downcasting {
 
 fun isGreat(actual : String) : Boolean = actual == "great"
 
-class FromFunctions {
+class FromFunction {
     @Test
     public fun createMatcherFromNamedFunctionReferenceByExtensionMethod() {
         val m = ::isGreat.asMatcher()
