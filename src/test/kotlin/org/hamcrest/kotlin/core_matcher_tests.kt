@@ -1,8 +1,7 @@
 package org.hamcrest.kotlin;
 
 import org.junit.Test
-import java.math.BigDecimal
-import kotlin.reflect.KClass
+import kotlin.reflect.KFunction1
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -66,10 +65,34 @@ class Nullability {
 }
 
 class Downcasting {
+    val m : Matcher<Any> = isA<String>(equalTo("bob"))
+
     @Test
     public fun wrongType() {
-        val m : Matcher<Number> = isA(Int::class, equalTo(10))
+        assertIsMismatchWithDescription("was a kotlin.Double", m(10.0))
+    }
 
-        assertIsMismatchWithDescription("was a java.lang.Double", m(10.0))
+    @Test
+    public fun correctTypeAndDowncastMatch() {
+        assertEquals(MatchResult.Match, m("bob"))
+    }
+
+    @Test
+    public fun correctTypeAndDowncastMismatch() {
+        assertIsMismatchWithDescription("was \"alice\"", m("alice"))
+    }
+}
+
+fun isGreat(actual : String) : Boolean = actual == "great"
+
+class FromFunctions {
+    @Test
+    public fun createMatcherFromNamedFunctionReferenceByExtensionMethod() {
+        val m = ::isGreat.asMatcher()
+
+        assertEquals("isGreat", m.description())
+
+        assertEquals(MatchResult.Match, m("great"))
+        assertIsMismatchWithDescription("was \"grand\"", m("grand"))
     }
 }

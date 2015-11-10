@@ -1,6 +1,7 @@
 package org.hamcrest.kotlin
 
 import kotlin.reflect.KClass
+import kotlin.reflect.jvm.reflect
 
 
 public fun <T> equalTo(expected: T): Matcher<T> =
@@ -34,21 +35,22 @@ public fun <T> present(valueMatcher : Matcher<T>) : Matcher<T?> =
             }
         }
 
-public fun <T : Any> isA(type: KClass<out T>, downcaseMatcher: Matcher<T> ) : Matcher<Any> {
+public inline fun <reified T : Any> isA(downcaseMatcher: Matcher<T> ) : Matcher<Any> {
     return object : Matcher.Primitive<Any>() {
         override fun invoke(actual: Any): MatchResult {
             return when(actual) {
-                type.java.isInstance(actual) -> {
-                    downcaseMatcher(type.java.cast(actual))
+                is T -> {
+                    downcaseMatcher(actual)
                 }
                 else -> {
-                    MatchResult.Mismatch("was a " + actual.javaClass.name)
+                    MatchResult.Mismatch("was a " + actual.javaClass.kotlin.qualifiedName)
                 }
             }
         }
 
         override fun description(): String {
-            return "of type " + type.qualifiedName + " & " + downcaseMatcher.description()
+            return "of type " + T::class.qualifiedName + " & " + downcaseMatcher.description()
         }
     }
 }
+

@@ -1,5 +1,7 @@
 package org.hamcrest.kotlin
 
+import kotlin.reflect.KFunction1
+
 
 public fun <T> delimit(v: T): String {
     return when (v) {
@@ -17,11 +19,17 @@ public fun match(comparisonResult: Boolean, describeMismatch: () -> String): Mat
 
 
 public sealed class MatchResult {
-    object Match : MatchResult();
+    object Match : MatchResult() {
+        override fun toString(): String = "Match"
+    }
 
     class Mismatch(private val description: String) : MatchResult() {
         fun description(): String {
             return description;
+        }
+
+        override fun toString(): String {
+            return "Mismatch[${delimit(description)}]"
         }
     }
 }
@@ -51,4 +59,24 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
     }
 
     public abstract class Primitive<in T> : Matcher<T>()
+
+    companion object {
+        fun <T> of(predicate: KFunction1<T, Boolean>): Matcher<T> {
+            return object : Matcher.Primitive<T>() {
+                override fun invoke(actual: T): MatchResult =
+                        match(predicate(actual)) { "was ${delimit(actual)}" }
+
+                override fun description(): String = predicate.name
+            }
+        }
+    }
+}
+
+public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> {
+    return object : Matcher.Primitive<T>() {
+        override fun invoke(actual: T): MatchResult =
+                match(this@asMatcher(actual)) { "was ${delimit(actual)}" }
+
+        override fun description(): String = this@asMatcher.name
+    }
 }
