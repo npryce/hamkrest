@@ -59,17 +59,6 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
     }
 
     public abstract class Primitive<in T> : Matcher<T>()
-
-    companion object {
-        fun <T> of(predicate: KFunction1<T, Boolean>): Matcher<T> {
-            return object : Matcher.Primitive<T>() {
-                override fun invoke(actual: T): MatchResult =
-                        match(predicate(actual)) { "was ${delimit(actual)}" }
-
-                override fun description(): String = predicate.name
-            }
-        }
-    }
 }
 
 public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> {

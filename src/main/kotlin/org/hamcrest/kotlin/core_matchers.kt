@@ -1,8 +1,5 @@
 package org.hamcrest.kotlin
 
-import kotlin.reflect.KClass
-import kotlin.reflect.jvm.reflect
-
 
 public fun <T> equalTo(expected: T): Matcher<T> =
         object : Matcher.Primitive<T>() {

@@ -5,9 +5,9 @@ public fun <T> assertThat(message: String? = null, actual: T, criteria: Matcher<
     criteria(actual).let { judgement ->
         if (judgement is MatchResult.Mismatch) {
             throw AssertionError(
-                    (if (message == null) "" else message + ": ") +
-                            "expected a value " + criteria.description() + "\n" +
-                            "but it " + judgement.description())
+                    (message?.let { it + ": " } ?: "") +
+                    "expected a value " + criteria.description() + "\n" +
+                    "but it " + judgement.description())
         }
     }
 }
