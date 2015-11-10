@@ -1,7 +1,6 @@
 package org.hamcrest.kotlin;
 
 import org.junit.Test
-import kotlin.reflect.KFunction1
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
@@ -14,12 +13,16 @@ fun assertIsMismatchWithDescription(expectedDescription: String, m: MatchResult)
     }
 }
 
+private fun assertMatch(result: MatchResult) {
+    assertEquals(MatchResult.Match, result)
+}
+
 
 class Equality {
     @Test
     public fun equal() {
-        assertEquals(MatchResult.Match, equalTo(10)(10))
-        assertEquals(MatchResult.Match, equalTo("hello")("hello"))
+        assertMatch(equalTo(10)(10))
+        assertMatch(equalTo("hello")("hello"))
     }
 
     @Test
@@ -50,7 +53,7 @@ class Nullability {
     public fun absence() {
         val m : Matcher<Int?> = absent();
 
-        assertEquals(MatchResult.Match, m(null))
+        assertMatch(m(null))
         assertIsMismatchWithDescription("was 100", m(100))
     }
 
@@ -58,7 +61,7 @@ class Nullability {
     public fun presence() {
         val m : Matcher<String?> = present(equalTo("xxx"));
 
-        assertEquals(MatchResult.Match, m("xxx"))
+        assertMatch(m("xxx"))
         assertIsMismatchWithDescription("was null", m(null))
         assertIsMismatchWithDescription("was \"yyy\"", m("yyy"))
     }
@@ -74,7 +77,7 @@ class Downcasting {
 
     @Test
     public fun correctTypeAndDowncastMatch() {
-        assertEquals(MatchResult.Match, m("bob"))
+        assertMatch(m("bob"))
     }
 
     @Test
@@ -92,7 +95,7 @@ class FromFunctions {
 
         assertEquals("isGreat", m.description())
 
-        assertEquals(MatchResult.Match, m("great"))
+        assertMatch(m("great"))
         assertIsMismatchWithDescription("was \"grand\"", m("grand"))
     }
 }
