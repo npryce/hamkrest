@@ -4,7 +4,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
-fun assertIsMismatchWithDescription(expectedDescription: String, m: MatchResult) {
+fun assertMismatchWithDescription(expectedDescription: String, m: MatchResult) {
     when (m) {
         is MatchResult.Mismatch -> {
             assertEquals(expectedDescription, m.description())
@@ -27,8 +27,8 @@ class Equality {
 
     @Test
     public fun notEqual() {
-        assertIsMismatchWithDescription("was 20", equalTo(10)(20))
-        assertIsMismatchWithDescription("was 1", equalTo(0)(1))
+        assertMismatchWithDescription("was 20", equalTo(10)(20))
+        assertMismatchWithDescription("was 1", equalTo(0)(1))
     }
 
     @Test
@@ -37,16 +37,26 @@ class Equality {
         assertEquals("equal to \"foo\"", equalTo("foo").description())
         assertEquals("equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
     }
+}
 
+class LogicalConnectives {
     @Test
     public fun negation() {
         val m : Matcher<Int> = !equalTo(20)
         assertEquals("not equal to 20", m.description())
         assertEquals("equal to 20", m.negatedDescription())
-        assertIsMismatchWithDescription("was equal to 20", m(20));
+        assertMismatchWithDescription("was equal to 20", m(20));
+    }
+
+    @Test
+    public fun disjunction() {
+        val m = equalTo(10) or equalTo(20)
+
+        assertMatch(m(10))
+        assertMatch(m(20))
+        assertMismatchWithDescription("was 11", m(11))
     }
 }
-
 
 class Nullability {
     @Test
@@ -54,7 +64,7 @@ class Nullability {
         val m : Matcher<Int?> = absent();
 
         assertMatch(m(null))
-        assertIsMismatchWithDescription("was 100", m(100))
+        assertMismatchWithDescription("was 100", m(100))
     }
 
     @Test
@@ -62,8 +72,8 @@ class Nullability {
         val m : Matcher<String?> = present(equalTo("xxx"));
 
         assertMatch(m("xxx"))
-        assertIsMismatchWithDescription("was null", m(null))
-        assertIsMismatchWithDescription("was \"yyy\"", m("yyy"))
+        assertMismatchWithDescription("was null", m(null))
+        assertMismatchWithDescription("was \"yyy\"", m("yyy"))
     }
 }
 
@@ -72,7 +82,7 @@ class Downcasting {
 
     @Test
     public fun wrongType() {
-        assertIsMismatchWithDescription("was a kotlin.Double", m(10.0))
+        assertMismatchWithDescription("was a kotlin.Double", m(10.0))
     }
 
     @Test
@@ -82,7 +92,7 @@ class Downcasting {
 
     @Test
     public fun correctTypeAndDowncastMismatch() {
-        assertIsMismatchWithDescription("was \"alice\"", m("alice"))
+        assertMismatchWithDescription("was \"alice\"", m("alice"))
     }
 }
 
@@ -96,6 +106,7 @@ class FromFunction {
         assertEquals("isGreat", m.description())
 
         assertMatch(m("great"))
-        assertIsMismatchWithDescription("was \"grand\"", m("grand"))
+        assertMismatchWithDescription("was \"grand\"", m("grand"))
     }
+
 }

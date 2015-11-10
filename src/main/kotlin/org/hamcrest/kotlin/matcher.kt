@@ -3,11 +3,9 @@ package org.hamcrest.kotlin
 import kotlin.reflect.KFunction1
 
 
-public fun <T> delimit(v: T): String {
-    return when (v) {
-        is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-        else -> v.toString()
-    }
+public fun <T> delimit(v: T): String = when (v) {
+    is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
+    else -> v.toString()
 }
 
 public fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
@@ -45,7 +43,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
 
     public class Negation<in T>(private val negated: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
-                when (negated.invoke(actual)) {
+                when (negated(actual)) {
                     MatchResult.Match -> {
                         MatchResult.Mismatch("was " + negated.description())
                     }
@@ -58,14 +56,31 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         override fun negatedDescription(): String = negated.description()
     }
 
+    public class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+        override fun invoke(actual: T): MatchResult =
+            left(actual).let { l ->
+                when (l) {
+                    MatchResult.Match -> l
+                    is MatchResult.Mismatch -> right(actual).let { r ->
+                        when (r) {
+                            MatchResult.Match -> r
+                            is MatchResult.Mismatch -> l
+                        }
+                    }
+                }
+            }
+
+        override fun description(): String = "${left.description()} or ${right.description()}"
+    }
+
     public abstract class Primitive<in T> : Matcher<T>()
 }
 
-public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> {
-    return object : Matcher.Primitive<T>() {
-        override fun invoke(actual: T): MatchResult =
-                match(this@asMatcher(actual)) { "was ${delimit(actual)}" }
+public infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction<T>(this, that)
 
-        override fun description(): String = this@asMatcher.name
-    }
+public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> = object : Matcher.Primitive<T>() {
+    override fun invoke(actual: T): MatchResult =
+            match(this@asMatcher(actual)) { "was ${delimit(actual)}" }
+
+    override fun description(): String = this@asMatcher.name
 }
