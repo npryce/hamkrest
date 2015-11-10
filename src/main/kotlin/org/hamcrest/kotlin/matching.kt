@@ -1,19 +1,12 @@
 package org.hamcrest.kotlin
 
+import org.hamcrest.kotlin.internal.match
 import kotlin.reflect.KFunction1
-
 
 public fun <T> delimit(v: T): String = when (v) {
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
     else -> v.toString()
 }
-
-public fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
-        if (comparisonResult) {
-            MatchResult.Match
-        } else {
-            MatchResult.Mismatch(describeMismatch())
-        }
 
 
 public sealed class MatchResult {

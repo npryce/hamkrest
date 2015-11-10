@@ -1,5 +1,7 @@
 package org.hamcrest.kotlin
 
+import org.hamcrest.kotlin.internal.match
+
 
 public fun <T> equalTo(expected: T): Matcher<T> =
         object : Matcher.Primitive<T>() {
@@ -32,7 +34,7 @@ public fun <T> present(valueMatcher : Matcher<T>) : Matcher<T?> =
             }
         }
 
-public inline fun <reified T : Any> isA(downcastMatcher: Matcher<T> ) : Matcher<Any> {
+public inline fun <reified T : Any> cast(downcastMatcher: Matcher<T> ) : Matcher<Any> {
     return object : Matcher.Primitive<Any>() {
         override fun invoke(actual: Any): MatchResult {
             return when(actual) {
