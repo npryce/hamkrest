@@ -38,7 +38,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
                     MatchResult.Match -> {
-                        MatchResult.Mismatch("was " + negated.description())
+                        MatchResult.Mismatch("was ${delimit(actual)}")
                     }
                     is MatchResult.Mismatch -> {
                         MatchResult.Match

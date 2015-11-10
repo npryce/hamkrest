@@ -45,7 +45,7 @@ class LogicalConnectives {
         val m : Matcher<Int> = !equalTo(20)
         assertEquals("not equal to 20", m.description())
         assertEquals("equal to 20", m.negatedDescription())
-        assertMismatchWithDescription("was equal to 20", m(20));
+        assertMismatchWithDescription("was 20", m(20));
     }
 
     @Test
