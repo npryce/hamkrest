@@ -73,10 +73,25 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         override fun description(): String = "${left.description()} or ${right.description()}"
     }
 
+    public class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+        override fun invoke(actual: T): MatchResult =
+            left(actual).let { l ->
+                when (l) {
+                    MatchResult.Match -> right(actual)
+                    is MatchResult.Mismatch -> l
+                }
+            }
+
+        override fun description(): String = "${left.description()} and ${right.description()}"
+    }
+
     public abstract class Primitive<in T> : Matcher<T>()
 }
 
 public infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction<T>(this, that)
+
+public infix fun <T> Matcher<T>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction<T>(this, that)
+
 
 public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> = object : Matcher.Primitive<T>() {
     override fun invoke(actual: T): MatchResult =

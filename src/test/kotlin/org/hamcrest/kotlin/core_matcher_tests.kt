@@ -55,6 +55,23 @@ class LogicalConnectives {
         assertMatch(m(10))
         assertMatch(m(20))
         assertMismatchWithDescription("was 11", m(11))
+
+        assertThat(m.description(), equalTo("equal to 10 or equal to 20"))
+    }
+
+    @Test
+    public fun conjunction() {
+        fun greaterThan10(i : Int): Boolean = i > 10
+        fun lessThan20(i : Int): Boolean = i < 20
+
+        val m = ::greaterThan10.asMatcher() and ::lessThan20.asMatcher()
+
+        assertMatch(m(11))
+        assertMatch(m(19))
+        assertMismatchWithDescription("was 10", m(10))
+        assertMismatchWithDescription("was 20", m(20))
+
+        assertThat(m.description(), equalTo("greaterThan10 and lessThan20"))
     }
 }
 
