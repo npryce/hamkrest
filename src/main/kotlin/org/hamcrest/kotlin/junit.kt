@@ -4,11 +4,11 @@ import kotlin.reflect.KFunction1
 
 
 public fun <T> assertThat(actual: T, criteria: KFunction1<T,Boolean>) {
-    _assertThat(null, actual, criteria.asMatcher())
+    _assertThat(null, actual, Matcher(criteria))
 }
 
 public fun <T> assertThat(message: String, actual: T, criteria: KFunction1<T,Boolean>) {
-    _assertThat(message, actual, criteria.asMatcher())
+    _assertThat(message, actual, Matcher(criteria))
 }
 
 public fun <T> assertThat(actual: T, criteria: Matcher<T>) {
