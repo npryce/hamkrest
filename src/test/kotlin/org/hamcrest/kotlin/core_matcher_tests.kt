@@ -64,7 +64,7 @@ class LogicalConnectives {
         fun greaterThan10(i : Int): Boolean = i > 10
         fun lessThan20(i : Int): Boolean = i < 20
 
-        val m = ::greaterThan10.asMatcher() and ::lessThan20.asMatcher()
+        val m = ::greaterThan10 and ::lessThan20
 
         assertMatch(m(11))
         assertMatch(m(19))
@@ -115,7 +115,7 @@ class Downcasting {
 
 fun isGreat(actual : String) : Boolean = actual == "great"
 
-class FromFunction {
+class FunctionToMatcher {
     @Test
     public fun createMatcherFromNamedFunctionReferenceByExtensionMethod() {
         val m = ::isGreat.asMatcher()
@@ -125,8 +125,13 @@ class FromFunction {
         assertMatch(m("great"))
         assertMismatchWithDescription("was \"grand\"", m("grand"))
     }
-}
 
+    @Test
+    public fun canPassFunctionReferencesToAssertThat() {
+        assertThat("great", ::isGreat)
+    }
+
+}
 
 open class Fruit(public val ripeness: Double)
 class Apple(ripeness: Double, public val forCooking: Boolean) : Fruit(ripeness)
@@ -139,9 +144,12 @@ fun isCookingApple(a : Apple) : Boolean = a.forCooking
 
 class Subtyping {
     @Test
-    public fun canCombineMatchersAsWeExpect() {
+    public fun theKotlinTypeSystemMakesAnOldJavaProgrammerVeryHappy() {
         val mA: Matcher<Apple> = ::isRipe and ::isCookingApple
         val mO: Matcher<Orange> = ::isRipe and ::canBeShared
+
+        assertMatch(mA(Apple(ripeness = 1.0, forCooking = true)))
+        assertMatch(mO(Orange(ripeness = 1.0, segmentCount = 4)))
     }
 }
 
