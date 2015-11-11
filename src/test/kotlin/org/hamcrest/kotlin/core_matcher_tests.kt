@@ -71,7 +71,7 @@ class LogicalConnectives {
         assertMismatchWithDescription("was 10", m(10))
         assertMismatchWithDescription("was 20", m(20))
 
-        assertThat(m.description(), equalTo("greaterThan10 and lessThan20"))
+        assertThat(m.description(), equalTo("greater than 10 and less than 20"))
     }
 }
 
@@ -120,7 +120,7 @@ class FromFunction {
     public fun createMatcherFromNamedFunctionReferenceByExtensionMethod() {
         val m = ::isGreat.asMatcher()
 
-        assertEquals("isGreat", m.description())
+        assertEquals("is great", m.description())
 
         assertMatch(m("great"))
         assertMismatchWithDescription("was \"grand\"", m("grand"))

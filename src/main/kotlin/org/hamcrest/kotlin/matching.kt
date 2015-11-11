@@ -1,5 +1,6 @@
 package org.hamcrest.kotlin
 
+import org.hamcrest.kotlin.internal.identifierToDescription
 import org.hamcrest.kotlin.internal.match
 import kotlin.reflect.KFunction1
 
@@ -90,5 +91,5 @@ public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> = object : Match
     override fun invoke(actual: T): MatchResult =
             match(this@asMatcher(actual)) { "was ${delimit(actual)}" }
 
-    override fun description(): String = this@asMatcher.name
+    override fun description(): String = identifierToDescription(this@asMatcher.name)
 }
