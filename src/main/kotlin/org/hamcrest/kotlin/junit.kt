@@ -1,5 +1,15 @@
 package org.hamcrest.kotlin
 
+import kotlin.reflect.KFunction1
+
+
+public fun <T> assertThat(actual: T, criteria: KFunction1<T,Boolean>) {
+    _assertThat(null, actual, criteria.asMatcher())
+}
+
+public fun <T> assertThat(message: String, actual: T, criteria: KFunction1<T,Boolean>) {
+    _assertThat(message, actual, criteria.asMatcher())
+}
 
 public fun <T> assertThat(actual: T, criteria: Matcher<T>) {
     _assertThat(null, actual, criteria)

@@ -125,5 +125,23 @@ class FromFunction {
         assertMatch(m("great"))
         assertMismatchWithDescription("was \"grand\"", m("grand"))
     }
-
 }
+
+
+open class Fruit(public val ripeness: Double)
+class Apple(ripeness: Double, public val forCooking: Boolean) : Fruit(ripeness)
+class Orange(ripeness: Double, public val segmentCount: Int) : Fruit(ripeness)
+
+
+fun isRipe(f : Fruit) : Boolean = f.ripeness >= 0.5
+fun canBeShared(o: Orange) : Boolean = o.segmentCount % 2 == 0
+fun isCookingApple(a : Apple) : Boolean = a.forCooking
+
+class Subtyping {
+    @Test
+    public fun canCombineMatchersAsWeExpect() {
+        val mA: Matcher<Apple> = ::isRipe and ::isCookingApple
+        val mO: Matcher<Orange> = ::isRipe and ::canBeShared
+    }
+}
+

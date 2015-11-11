@@ -82,9 +82,15 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
     public abstract class Primitive<in T> : Matcher<T>()
 }
 
-public infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction<T>(this, that)
+public infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(this, that)
+public infix fun <T> KFunction1<T,Boolean>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(this.asMatcher(), that)
+public infix fun <T> Matcher<T>.or(that: KFunction1<T,Boolean>): Matcher<T> = Matcher.Disjunction(this, that.asMatcher())
+public infix fun <T> KFunction1<T,Boolean>.or(that: KFunction1<T,Boolean>): Matcher<T> = Matcher.Disjunction(this.asMatcher(), that.asMatcher())
 
 public infix fun <T> Matcher<T>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction<T>(this, that)
+public infix fun <T> KFunction1<T,Boolean>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction(this.asMatcher(), that)
+public infix fun <T> Matcher<T>.and(that: KFunction1<T,Boolean>): Matcher<T> = Matcher.Conjunction(this, that.asMatcher())
+public infix fun <T> KFunction1<T,Boolean>.and(that: KFunction1<T,Boolean>): Matcher<T> = Matcher.Conjunction(this.asMatcher(), that.asMatcher())
 
 
 public fun <T> (KFunction1<T, Boolean>).asMatcher(): Matcher<T> = object : Matcher.Primitive<T>() {

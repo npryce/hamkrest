@@ -15,5 +15,4 @@ class Comparables {
         assertThat(10, lessThanOrEqualTo(10))
         assertThat(10, !lessThanOrEqualTo(5))
     }
-
 }
