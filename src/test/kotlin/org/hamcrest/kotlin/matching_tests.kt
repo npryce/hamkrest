@@ -1,13 +1,15 @@
 package org.hamcrest.kotlin
 
 import org.junit.Test
+import kotlin.reflect.KFunction1
+import kotlin.reflect.KProperty1
 import kotlin.test.assertEquals
 
 
 class LogicalConnectives {
     @Test
     fun negation() {
-        val m : Matcher<Int> = !equalTo(20)
+        val m: Matcher<Int> = !equalTo(20)
 
         assertEquals("not equal to 20", m.description())
         assertEquals("equal to 20", m.negatedDescription())
@@ -54,7 +56,7 @@ class FunctionToMatcher {
 
     @Test
     fun create_matcher_from_binary_function_reference_and_second_parameter() {
-        fun String.hasLength(n: Int) : Boolean = this.length == n
+        fun String.hasLength(n: Int): Boolean = this.length == n
 
         val hasLength4 = Matcher(String::hasLength, 4)
 
@@ -67,7 +69,7 @@ class FunctionToMatcher {
 
     @Test
     fun create_matcher_factory_from_binary_function_reference() {
-        fun String.hasLength(n: Int) : Boolean = this.length == n
+        fun String.hasLength(n: Int): Boolean = this.length == n
         val hasLength = Matcher(String::hasLength)
 
         assertEquals("has length 4", hasLength(4).description())
@@ -89,9 +91,9 @@ class Apple(ripeness: Double, public val forCooking: Boolean) : Fruit(ripeness)
 class Orange(ripeness: Double, public val segmentCount: Int) : Fruit(ripeness)
 
 
-fun isRipe(f : Fruit) : Boolean = f.ripeness >= 0.5
-fun canBeShared(o: Orange) : Boolean = o.segmentCount % 2 == 0
-fun isCookingApple(a : Apple) : Boolean = a.forCooking
+fun isRipe(f: Fruit): Boolean = f.ripeness >= 0.5
+fun canBeShared(o: Orange): Boolean = o.segmentCount % 2 == 0
+fun isCookingApple(a: Apple): Boolean = a.forCooking
 
 class Subtyping {
     @Test
@@ -104,3 +106,42 @@ class Subtyping {
     }
 }
 
+
+fun <T, R> has(name: String, projection: (T) -> R, rMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
+    override fun invoke(actual: T) =
+            rMatcher(projection(actual)).let {
+                when (it) {
+                    is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description()}")
+                    else -> it
+                }
+            }
+
+    override fun description() = "has ${name} that ${rMatcher.description()}"
+    override fun negatedDescription() = "does not have ${name} that ${rMatcher.description()}"
+}
+
+fun <T, R> has(property: KProperty1<T, R>, rMatcher: Matcher<R>): Matcher<T> = has(property.name, property.getter, rMatcher)
+
+fun <T, R> has(projection: KFunction1<T,R>, rMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, rMatcher)
+
+class Projections {
+    @Test
+    fun can_match_projection_by_property() {
+        val isLongEnough = has(String::length, greaterThan(4))
+
+        assertThat("12345", isLongEnough)
+        assertThat("1234", !isLongEnough)
+
+        assertThat(isLongEnough.description(), equalTo("has length that is greater than 4"))
+    }
+
+    @Test
+    fun can_match_projection_by_function() {
+        val isLongEnough = has(String::count, greaterThan(4))
+
+        assertThat("12345", isLongEnough)
+        assertThat("1234", !isLongEnough)
+
+        assertThat(isLongEnough.description(), equalTo("has count that is greater than 4"))
+    }
+}
