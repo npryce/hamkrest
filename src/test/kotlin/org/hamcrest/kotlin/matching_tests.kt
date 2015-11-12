@@ -1,8 +1,6 @@
 package org.hamcrest.kotlin
 
 import org.junit.Test
-import kotlin.reflect.KFunction1
-import kotlin.reflect.KProperty1
 import kotlin.test.assertEquals
 
 
@@ -106,23 +104,6 @@ class Subtyping {
     }
 }
 
-
-fun <T, R> has(name: String, projection: (T) -> R, rMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
-    override fun invoke(actual: T) =
-            rMatcher(projection(actual)).let {
-                when (it) {
-                    is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description()}")
-                    else -> it
-                }
-            }
-
-    override fun description() = "has ${name} that ${rMatcher.description()}"
-    override fun negatedDescription() = "does not have ${name} that ${rMatcher.description()}"
-}
-
-fun <T, R> has(property: KProperty1<T, R>, rMatcher: Matcher<R>): Matcher<T> = has(property.name, property.getter, rMatcher)
-
-fun <T, R> has(projection: KFunction1<T,R>, rMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, rMatcher)
 
 class Projections {
     @Test
