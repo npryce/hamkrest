@@ -35,7 +35,7 @@ class LogicalConnectives {
         assertMismatchWithDescription("was 10", m(10))
         assertMismatchWithDescription("was 20", m(20))
 
-        assertThat(m.description(), equalTo("greater than 10 and less than 20"))
+        assertThat(m.description(), equalTo("is greater than 10 and is less than 20"))
     }
 }
 

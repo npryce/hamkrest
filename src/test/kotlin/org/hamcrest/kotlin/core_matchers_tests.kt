@@ -49,7 +49,7 @@ class Downcasting {
 
     @Test
     fun wrong_type() {
-        assertMismatchWithDescription("was a kotlin.Double", m(10.0))
+        assertMismatchWithDescription("had type kotlin.Double", m(10.0))
     }
 
     @Test

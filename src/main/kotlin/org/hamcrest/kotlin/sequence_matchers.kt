@@ -8,7 +8,7 @@ public fun <T> contains(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {
         override fun invoke(actual: Iterable<T>): MatchResult =
                 match(actual.any(elementMatcher.asPredicate())) {"was ${delimit(actual)}"}
 
-        override fun description(): String = "containing a value ${elementMatcher.description()}"
-        override fun negatedDescription() : String = "containing no value ${elementMatcher.description()}"
+        override fun description(): String = "containing an element that ${elementMatcher.description()}"
+        override fun negatedDescription() : String = "containing no element that ${elementMatcher.description()}"
     }
 }

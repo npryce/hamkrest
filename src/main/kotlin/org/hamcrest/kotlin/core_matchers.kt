@@ -30,7 +30,7 @@ public fun <T> present(valueMatcher : Matcher<T>) : Matcher<T?> =
             }
 
             override fun description(): String {
-                return "not null & " + valueMatcher.description()
+                return "is not null & " + valueMatcher.description()
             }
         }
 
@@ -42,13 +42,13 @@ public inline fun <reified T : Any> cast(downcastMatcher: Matcher<T> ) : Matcher
                     downcastMatcher(actual)
                 }
                 else -> {
-                    MatchResult.Mismatch("was a " + actual.javaClass.kotlin.qualifiedName)
+                    MatchResult.Mismatch("had type ${actual.javaClass.kotlin.qualifiedName}")
                 }
             }
         }
 
         override fun description(): String {
-            return "of type " + T::class.qualifiedName + " & " + downcastMatcher.description()
+            return "has type " + T::class.qualifiedName + " & " + downcastMatcher.description()
         }
     }
 }
@@ -64,7 +64,7 @@ private fun <N :Comparable<N>> _comparesAs(description: String, n: N, expectedSi
                 match(expectedSignum(actual.compareTo(n))) {"was ${delimit(actual)}"}
 
         override fun description(): String {
-            return "${description} ${delimit(n)}"
+            return "is ${description} ${delimit(n)}"
         }
     }
 }
