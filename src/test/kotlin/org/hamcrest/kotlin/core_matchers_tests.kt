@@ -6,19 +6,19 @@ import kotlin.test.assertEquals
 
 class Equality {
     @Test
-    public fun equal() {
+    fun equal() {
         assertMatch(equalTo(10)(10))
         assertMatch(equalTo("hello")("hello"))
     }
 
     @Test
-    public fun notEqual() {
+    fun not_equal() {
         assertMismatchWithDescription("was 20", equalTo(10)(20))
         assertMismatchWithDescription("was 1", equalTo(0)(1))
     }
 
     @Test
-    public fun description() {
+    fun description() {
         assertEquals("equal to 20", equalTo(20).description())
         assertEquals("equal to \"foo\"", equalTo("foo").description())
         assertEquals("equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
@@ -27,7 +27,7 @@ class Equality {
 
 class Nullability {
     @Test
-    public fun absence() {
+    fun absence() {
         val m : Matcher<Int?> = absent();
 
         assertMatch(m(null))
@@ -35,7 +35,7 @@ class Nullability {
     }
 
     @Test
-    public fun presence() {
+    fun presence() {
         val m : Matcher<String?> = present(equalTo("xxx"));
 
         assertMatch(m("xxx"))
@@ -48,24 +48,24 @@ class Downcasting {
     val m : Matcher<Any> = cast(equalTo("bob"))
 
     @Test
-    public fun wrongType() {
+    fun wrong_type() {
         assertMismatchWithDescription("was a kotlin.Double", m(10.0))
     }
 
     @Test
-    public fun correctTypeAndDowncastMatch() {
-        assertMatch(m("bob"))
+    fun correct_type_and_downcast_mismatch() {
+        assertMismatchWithDescription("was \"alice\"", m("alice"))
     }
 
     @Test
-    public fun correctTypeAndDowncastMismatch() {
-        assertMismatchWithDescription("was \"alice\"", m("alice"))
+    fun correct_type_and_downcast_match() {
+        assertMatch(m("bob"))
     }
 }
 
 class Comparables {
     @Test
-    public fun numericalComparison() {
+    fun order_comparisons() {
         assertThat(10, greaterThan(5))
         assertThat(10, greaterThanOrEqualTo(5))
         assertThat(10, greaterThanOrEqualTo(10))

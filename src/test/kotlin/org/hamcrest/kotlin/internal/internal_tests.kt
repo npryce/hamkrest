@@ -7,7 +7,7 @@ import org.junit.Test
 
 class Utilities {
     @Test
-    public fun splitsIdentifiersIntoWords() {
+    public fun splits_identifier_into_words() {
         val cases = listOf(
                 "identifier" to listOf("identifier"),
                 "an_identifier" to listOf("an", "identifier"),

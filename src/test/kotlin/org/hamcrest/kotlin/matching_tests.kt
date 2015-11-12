@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class LogicalConnectives {
     @Test
-    public fun negation() {
+    fun negation() {
         val m : Matcher<Int> = !equalTo(20)
 
         assertEquals("not equal to 20", m.description())
@@ -16,7 +16,7 @@ class LogicalConnectives {
     }
 
     @Test
-    public fun disjunction() {
+    fun disjunction() {
         val m = equalTo(10) or equalTo(20)
 
         assertMatch(m(10))
@@ -27,7 +27,7 @@ class LogicalConnectives {
     }
 
     @Test
-    public fun conjunction() {
+    fun conjunction() {
         val m = greaterThan(10) and lessThan(20)
 
         assertMatch(m(11))
@@ -42,7 +42,7 @@ class LogicalConnectives {
 
 class FunctionToMatcher {
     @Test
-    public fun create_matcher_from_named_function_reference() {
+    fun create_matcher_from_named_function_reference() {
         val isBlank = Matcher(String::isBlank)
 
         assertEquals("is blank", isBlank.description())
@@ -53,7 +53,7 @@ class FunctionToMatcher {
     }
 
     @Test
-    public fun create_matcher_from_binary_function_reference_and_second_parameter() {
+    fun create_matcher_from_binary_function_reference_and_second_parameter() {
         fun String.hasLength(n: Int) : Boolean = this.length == n
 
         val hasLength4 = Matcher(String::hasLength, 4)
@@ -66,7 +66,7 @@ class FunctionToMatcher {
     }
 
     @Test
-    public fun create_matcher_factory_from_binary_function_reference() {
+    fun create_matcher_factory_from_binary_function_reference() {
         fun String.hasLength(n: Int) : Boolean = this.length == n
         val hasLength = Matcher(String::hasLength)
 
@@ -78,7 +78,7 @@ class FunctionToMatcher {
     }
 
     @Test
-    public fun can_pass_function_references_to_assertThat() {
+    fun can_pass_function_references_to_assertThat() {
         assertThat("  ", String::isBlank)
     }
 
@@ -95,7 +95,7 @@ fun isCookingApple(a : Apple) : Boolean = a.forCooking
 
 class Subtyping {
     @Test
-    public fun theKotlinTypeSystemMakesAnOldJavaProgrammerVeryHappy() {
+    fun the_kotlin_type_system_makes_an_old_java_programmer_very_happy() {
         val mA: Matcher<Apple> = ::isRipe and ::isCookingApple
         val mO: Matcher<Orange> = ::isRipe and ::canBeShared
 
