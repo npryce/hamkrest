@@ -76,4 +76,16 @@ class Comparables {
         assertThat(10, lessThanOrEqualTo(10))
         assertThat(10, !lessThanOrEqualTo(5))
     }
+
+    @Test
+    fun within_range() {
+        assertThat(1, isWithin(1..20))
+        assertThat(10, isWithin(1..20))
+        assertThat(20, isWithin(1..20))
+        assertThat(0, !isWithin(1..20))
+        assertThat(21, !isWithin(1..20))
+
+        assertThat(isWithin(1..20).description(), equalTo("is within 1..20"))
+        assertThat(isWithin(1..20).negatedDescription(), equalTo("is not within 1..20"))
+    }
 }

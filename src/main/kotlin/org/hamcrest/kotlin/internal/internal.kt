@@ -10,7 +10,21 @@ public fun match(comparisonResult: Boolean, describeMismatch: () -> String): Mat
             MatchResult.Mismatch(describeMismatch())
         }
 
-public fun identifierToDescription(s: String) : String = identifierToWords(s).joinToString(" ")
+internal fun identifierToDescription(id: String) = identifierToWords(id).joinToString(" ")
+
+internal fun identifierToNegatedDescription(id: String): String {
+    val words = identifierToWords(id)
+    val first = words[0]
+    val rest = words.drop(1).joinToString(" ")
+
+    return if (first == "is") {
+        "is not ${rest}"
+    } else if (words[0] == "has") {
+        "has no ${rest}"
+    } else {
+        "not ${first} ${rest}"
+    }
+}
 
 public fun identifierToWords(s: String): List<String> {
     val words: MutableList<String> = ArrayList()
