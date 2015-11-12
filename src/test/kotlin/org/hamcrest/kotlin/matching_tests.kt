@@ -8,8 +8,10 @@ class LogicalConnectives {
     @Test
     public fun negation() {
         val m : Matcher<Int> = !equalTo(20)
+
         assertEquals("not equal to 20", m.description())
         assertEquals("equal to 20", m.negatedDescription())
+
         assertMismatchWithDescription("was 20", m(20));
     }
 
@@ -26,10 +28,7 @@ class LogicalConnectives {
 
     @Test
     public fun conjunction() {
-        fun greaterThan10(i : Int): Boolean = i > 10
-        fun lessThan20(i : Int): Boolean = i < 20
-
-        val m = ::greaterThan10 and ::lessThan20
+        val m = greaterThan(10) and lessThan(20)
 
         assertMatch(m(11))
         assertMatch(m(19))

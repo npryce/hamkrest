@@ -54,9 +54,9 @@ public inline fun <reified T : Any> cast(downcastMatcher: Matcher<T> ) : Matcher
 }
 
 public fun <N :Comparable<N>> greaterThan(n:N) = _comparesAs(n, "greater than") {it > 0}
-public fun <N :Comparable<N>> greaterThanOrEqualTo(n:N) = _comparesAs(n, "greater than") {it >= 0}
-public fun <N :Comparable<N>> lessThan(n:N) = _comparesAs(n, "greater than") {it < 0}
-public fun <N :Comparable<N>> lessThanOrEqualTo(n:N) = _comparesAs(n, "greater than") {it <= 0}
+public fun <N :Comparable<N>> greaterThanOrEqualTo(n:N) = _comparesAs(n, "greater than or equal to") {it >= 0}
+public fun <N :Comparable<N>> lessThan(n:N) = _comparesAs(n, "less than") {it < 0}
+public fun <N :Comparable<N>> lessThanOrEqualTo(n:N) = _comparesAs(n, "less than or equal to") {it <= 0}
 
 private fun <N :Comparable<N>> _comparesAs(n: N, description: String, expectedSignum: (Int)->Boolean) : Matcher<N> {
     return object : Matcher.Primitive<N>() {
