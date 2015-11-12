@@ -1,7 +1,7 @@
 HamKrest - Hamcrest for Kotlin
 ==============================
 
-A reimplementation of Hamcrest to take advantage of Kotlin language features.
+A reimplementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.org/) language features.
 
 Compared to Java:
 
