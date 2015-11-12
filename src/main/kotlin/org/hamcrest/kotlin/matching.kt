@@ -36,6 +36,8 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         return Negation(this);
     }
 
+    public open fun asPredicate(): (T) -> Boolean = { this(it) == MatchResult.Match }
+
     public class Negation<in T>(private val negated: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
@@ -87,6 +89,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${delimit(actual)}" }
             override fun description(): String = identifierToDescription(fn.name)
+            override fun asPredicate(): (T) -> Boolean = fn
         }
 
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
