@@ -1,6 +1,6 @@
-package org.hamcrest.kotlin
+package com.natpryce.hamkrest
 
-import org.hamcrest.kotlin.internal.match
+import com.natpryce.hamkrest.internal.match
 
 
 fun <T> contains(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {

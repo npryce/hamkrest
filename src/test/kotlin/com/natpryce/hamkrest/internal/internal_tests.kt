@@ -1,8 +1,8 @@
-package org.hamcrest.kotlin.internal
+package com.natpryce.hamkrest.internal
 
-import org.hamcrest.kotlin.assertThat
-import org.hamcrest.kotlin.delimit
-import org.hamcrest.kotlin.equalTo
+import com.natpryce.hamkrest.assertThat
+import com.natpryce.hamkrest.delimit
+import com.natpryce.hamkrest.equalTo
 import org.junit.Test
 
 class Utilities {

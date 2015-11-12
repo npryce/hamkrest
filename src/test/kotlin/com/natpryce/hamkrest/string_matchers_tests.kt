@@ -1,4 +1,4 @@
-package org.hamcrest.kotlin
+package com.natpryce.hamkrest
 
 import org.junit.Test
 import kotlin.text.Regex

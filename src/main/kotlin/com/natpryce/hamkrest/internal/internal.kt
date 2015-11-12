@@ -1,6 +1,6 @@
-package org.hamcrest.kotlin.internal
+package com.natpryce.hamkrest.internal
 
-import org.hamcrest.kotlin.MatchResult
+import com.natpryce.hamkrest.MatchResult
 import java.util.*
 
 public fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =

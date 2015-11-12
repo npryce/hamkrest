@@ -10,13 +10,18 @@ buildscript {
     ext.kotlin_version = '1.0.0-beta-1103'
     repositories {
         mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.1"
     }
 }
 
 apply plugin: 'kotlin'
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 repositories {
     mavenCentral()
@@ -28,6 +33,23 @@ dependencies {
     testCompile 'junit:junit:4.12'
 }
 
-sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'hamkrest',
+                'Implementation-Vendor': 'com.natpryce',
+                'Implementation-Version': version
+    }
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+dokka {
+
 }

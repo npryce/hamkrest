@@ -1,4 +1,4 @@
-package org.hamcrest.kotlin
+package com.natpryce.hamkrest
 
 import kotlin.test.assertEquals
 import kotlin.test.fail

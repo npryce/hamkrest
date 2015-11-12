@@ -1,4 +1,4 @@
-package org.hamcrest.kotlin;
+package com.natpryce.hamkrest;
 
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class Equality {
     @Test
     fun equal() {
-        assertMatch(equalTo(10)(10))
+        assertMatch((com.natpryce.hamkrest.equalTo(10))(10))
         assertMatch(equalTo("hello")("hello"))
     }
 

@@ -1,8 +1,8 @@
-package org.hamcrest.kotlin
+package com.natpryce.hamkrest
 
-import org.hamcrest.kotlin.internal.identifierToDescription
-import org.hamcrest.kotlin.internal.identifierToNegatedDescription
-import org.hamcrest.kotlin.internal.match
+import com.natpryce.hamkrest.internal.identifierToDescription
+import com.natpryce.hamkrest.internal.identifierToNegatedDescription
+import com.natpryce.hamkrest.internal.match
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
