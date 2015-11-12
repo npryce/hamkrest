@@ -45,7 +45,7 @@ class Nullability {
 }
 
 class Downcasting {
-    val m : Matcher<Any> = cast<String>(equalTo("bob"))
+    val m : Matcher<Any> = cast(equalTo("bob"))
 
     @Test
     public fun wrongType() {
