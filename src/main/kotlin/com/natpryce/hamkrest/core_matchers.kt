@@ -1,28 +1,30 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.internal.match
 
-fun <T> equalTo(expected: T): com.natpryce.hamkrest.Matcher<T> =
-        object : com.natpryce.hamkrest.Matcher.Primitive<T>() {
-            override fun invoke(actual: T): com.natpryce.hamkrest.MatchResult = com.natpryce.hamkrest.internal.match(actual == expected) { "was ${com.natpryce.hamkrest.delimit(actual)}" }
+
+fun <T> equalTo(expected: T): Matcher<T> =
+        object : Matcher.Primitive<T>() {
+            override fun invoke(actual: T): MatchResult = match(actual == expected) { "was ${describe(actual)}" }
 
             override fun description(): String {
-                return "equal to ${com.natpryce.hamkrest.delimit(expected)}"
+                return "equal to ${describe(expected)}"
             }
         }
 
 
-fun <T> absent(): com.natpryce.hamkrest.Matcher<T?> = object : com.natpryce.hamkrest.Matcher.Primitive<T?>() {
-    override fun invoke(p1: T?): com.natpryce.hamkrest.MatchResult = com.natpryce.hamkrest.internal.match(p1 == null) { "was ${com.natpryce.hamkrest.delimit(p1)}" }
+fun <T> absent(): Matcher<T?> = object : Matcher.Primitive<T?>() {
+    override fun invoke(actual: T?): MatchResult = match(actual == null) { "was ${describe(actual)}" }
 
     override fun description(): String = "null"
 }
 
 
-fun <T> present(valueMatcher: com.natpryce.hamkrest.Matcher<T>): com.natpryce.hamkrest.Matcher<T?> =
-        object : com.natpryce.hamkrest.Matcher.Primitive<T?>() {
-            override fun invoke(actual: T?): com.natpryce.hamkrest.MatchResult {
+fun <T> present(valueMatcher: Matcher<T>): Matcher<T?> =
+        object : Matcher.Primitive<T?>() {
+            override fun invoke(actual: T?): MatchResult {
                 return when (actual) {
-                    null -> com.natpryce.hamkrest.MatchResult.Mismatch("was null")
+                    null -> MatchResult.Mismatch("was null")
                     else -> valueMatcher(actual)
                 }
             }
@@ -32,15 +34,15 @@ fun <T> present(valueMatcher: com.natpryce.hamkrest.Matcher<T>): com.natpryce.ha
             }
         }
 
-inline fun <reified T : Any> cast(downcastMatcher: com.natpryce.hamkrest.Matcher<T>): com.natpryce.hamkrest.Matcher<Any> {
-    return object : com.natpryce.hamkrest.Matcher.Primitive<Any>() {
-        override fun invoke(actual: Any): com.natpryce.hamkrest.MatchResult {
+inline fun <reified T : Any> cast(downcastMatcher: Matcher<T>): Matcher<Any> {
+    return object : Matcher.Primitive<Any>() {
+        override fun invoke(actual: Any): MatchResult {
             return when (actual) {
                 is T -> {
                     downcastMatcher(actual)
                 }
                 else -> {
-                    com.natpryce.hamkrest.MatchResult.Mismatch("had type ${actual.javaClass.kotlin.qualifiedName}")
+                    MatchResult.Mismatch("had type ${actual.javaClass.kotlin.qualifiedName}")
                 }
             }
         }
@@ -51,27 +53,27 @@ inline fun <reified T : Any> cast(downcastMatcher: com.natpryce.hamkrest.Matcher
     }
 }
 
-fun <N : Comparable<N>> greaterThan(n: N) = com.natpryce.hamkrest._comparesAs("greater than", n) { it > 0 }
-fun <N : Comparable<N>> greaterThanOrEqualTo(n: N) = com.natpryce.hamkrest._comparesAs("greater than or equal to", n) { it >= 0 }
-fun <N : Comparable<N>> lessThan(n: N) = com.natpryce.hamkrest._comparesAs("less than", n) { it < 0 }
-fun <N : Comparable<N>> lessThanOrEqualTo(n: N) = com.natpryce.hamkrest._comparesAs("less than or equal to", n) { it <= 0 }
+fun <N : Comparable<N>> greaterThan(n: N) = _comparesAs("greater than", n) { it > 0 }
+fun <N : Comparable<N>> greaterThanOrEqualTo(n: N) = _comparesAs("greater than or equal to", n) { it >= 0 }
+fun <N : Comparable<N>> lessThan(n: N) = _comparesAs("less than", n) { it < 0 }
+fun <N : Comparable<N>> lessThanOrEqualTo(n: N) = _comparesAs("less than or equal to", n) { it <= 0 }
 
-private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedSignum: (Int) -> Boolean): com.natpryce.hamkrest.Matcher<N> {
-    return object : com.natpryce.hamkrest.Matcher.Primitive<N>() {
-        override fun invoke(actual: N): com.natpryce.hamkrest.MatchResult =
-                com.natpryce.hamkrest.internal.match(expectedSignum(actual.compareTo(n))) { "was ${com.natpryce.hamkrest.delimit(actual)}" }
+private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedSignum: (Int) -> Boolean): Matcher<N> {
+    return object : Matcher.Primitive<N>() {
+        override fun invoke(actual: N): MatchResult =
+                match(expectedSignum(actual.compareTo(n))) { "was ${describe(actual)}" }
 
         override fun description(): String {
-            return "is ${description} ${com.natpryce.hamkrest.delimit(n)}"
+            return "is ${description} ${describe(n)}"
         }
     }
 }
 
-fun <T : Comparable<T>> isWithin(range: Range<T>) : com.natpryce.hamkrest.Matcher<T> {
+fun <T : Comparable<T>> isWithin(range: Range<T>) : Matcher<T> {
     fun _isWithin(actual: T, range: Range<T>): Boolean {
         return range.contains(actual)
     }
 
-    return com.natpryce.hamkrest.Matcher.Companion(::_isWithin, range)
+    return Matcher.Companion(::_isWithin, range)
 }
 

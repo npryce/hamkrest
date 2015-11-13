@@ -13,22 +13,21 @@ sealed class MatchResult {
         override fun toString(): String = "Match"
     }
 
-    class Mismatch(private val description: String) : MatchResult() {
-        fun description(): String {
+    class Mismatch(private val description: String) : MatchResult(), SelfDescribing {
+        override fun description(): String {
             return description;
         }
 
         override fun toString(): String {
-            return "Mismatch[${delimit(description)}]"
+            return "Mismatch[${describe(description)}]"
         }
     }
 }
 
 
-public sealed class Matcher<in T> : (T) -> MatchResult {
+public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     abstract override fun invoke(actual: T): MatchResult
-    abstract fun description(): String
-    open fun negatedDescription(): String = "not " + description()
+    open protected fun negatedDescription(): String = "not " + description()
 
     open operator fun not(): Matcher<T> {
         return Negation(this)
@@ -40,7 +39,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
                     MatchResult.Match -> {
-                        MatchResult.Mismatch("was ${delimit(actual)}")
+                        MatchResult.Mismatch("was ${describe(actual)}")
                     }
                     is MatchResult.Mismatch -> {
                         MatchResult.Match
@@ -85,16 +84,16 @@ public sealed class Matcher<in T> : (T) -> MatchResult {
 
     companion object {
         public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
-            override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${delimit(actual)}" }
+            override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
             override fun description(): String = identifierToDescription(fn.name)
             override fun negatedDescription() : String = identifierToNegatedDescription(fn.name)
             override fun asPredicate(): (T) -> Boolean = fn
         }
 
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
-            override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${delimit(actual)}" }
-            override fun description(): String = "${identifierToDescription(fn.name)} ${delimit(cmp)}"
-            override fun negatedDescription(): String = "${identifierToNegatedDescription(fn.name)} ${delimit(cmp)}"
+            override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${describe(actual)}" }
+            override fun description(): String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
+            override fun negatedDescription(): String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
         }
 
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }

@@ -24,8 +24,8 @@ private fun <T> _assertThat(message: String?, actual: T, criteria: Matcher<T>) {
         if (judgement is MatchResult.Mismatch) {
             throw AssertionError(
                     (message?.let { it + ": " } ?: "") +
-                    "expected a value that " + criteria.description() + "\n" +
-                    "but it " + judgement.description())
+                    "expected a value that ${describe(criteria)}\n" +
+                    "but it ${describe(judgement)}")
         }
     }
 }

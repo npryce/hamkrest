@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class Equality {
     @Test
     fun equal() {
-        assertMatch((com.natpryce.hamkrest.equalTo(10))(10))
+        assertMatch((equalTo(10))(10))
         assertMatch(equalTo("hello")("hello"))
     }
 
@@ -86,6 +86,6 @@ class Comparables {
         assertThat(21, !isWithin(1..20))
 
         assertThat(isWithin(1..20).description(), equalTo("is within 1..20"))
-        assertThat(isWithin(1..20).negatedDescription(), equalTo("is not within 1..20"))
+        assertThat((!isWithin(1..20)).description(), equalTo("is not within 1..20"))
     }
 }

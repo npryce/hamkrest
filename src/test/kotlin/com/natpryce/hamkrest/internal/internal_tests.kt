@@ -1,7 +1,7 @@
 package com.natpryce.hamkrest.internal
 
 import com.natpryce.hamkrest.assertThat
-import com.natpryce.hamkrest.delimit
+import com.natpryce.hamkrest.describe
 import com.natpryce.hamkrest.equalTo
 import org.junit.Test
 
@@ -17,7 +17,7 @@ class Utilities {
         )
 
         for ((identifier, words) in cases) {
-            assertThat("${delimit(identifier)} to words", identifierToWords(identifier), equalTo(words))
+            assertThat("${describe(identifier)} to words", identifierToWords(identifier), equalTo(words))
         }
     }
 }
