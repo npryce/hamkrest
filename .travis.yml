@@ -7,7 +7,6 @@ sudo: false
 jdk:
   - oraclejdk7
   - oraclejdk8
-  - openjdk8
 
 cache:
   directories:
