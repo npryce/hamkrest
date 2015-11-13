@@ -31,11 +31,12 @@ sealed class MatchResult {
 
 
 public sealed class Matcher<in T> : (T) -> MatchResult {
-    abstract fun description(): String;
-    open fun negatedDescription(): String = "not " + description();
+    abstract override fun invoke(actual: T): MatchResult
+    abstract fun description(): String
+    open fun negatedDescription(): String = "not " + description()
 
     open operator fun not(): Matcher<T> {
-        return Negation(this);
+        return Negation(this)
     }
 
     open fun asPredicate(): (T) -> Boolean = { this(it) == MatchResult.Match }
@@ -133,3 +134,11 @@ fun <T, R> has(property: KProperty1<T, R>, rMatcher: Matcher<R>): Matcher<T> = h
 
 fun <T, R> has(projection: KFunction1<T,R>, rMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, rMatcher)
 
+
+val anything = object : Matcher.Primitive<Any>() {
+    override fun invoke(actual: Any): MatchResult = MatchResult.Match
+    override fun description(): String = "anything"
+    override fun negatedDescription() : String = "nothing"
+}
+
+val nothing = !anything
