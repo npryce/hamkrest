@@ -7,11 +7,6 @@ import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
 
-fun <T> delimit(v: T): String = when (v) {
-    is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-    else -> v.toString()
-}
-
 
 sealed class MatchResult {
     object Match : MatchResult() {
