@@ -20,7 +20,12 @@ class DelimitingValuesInStrings {
     }
 
     @Test
-    fun range() {
+    fun ranges() {
         assertThat(delimit(1..8), equalTo("1..8"))
+    }
+
+    @Test
+    fun maps() {
+        assertThat(delimit(mapOf("a" to 1, "b" to 2)), equalTo("""{"a":1, "b":2}"""))
     }
 }

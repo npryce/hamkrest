@@ -6,6 +6,7 @@ fun delimit(v: Any?): String = when (v) {
     is Pair<*, *> -> Pair(delimit(v.first), delimit(v.second)).toString()
     is Range<*> -> "${delimit(v.start)}..${delimit(v.end)}"
     is Iterable<*> -> v.map(::delimit).joinToString(prefix = "[", separator= ", ", postfix = "]")
+    is Map<*,*> -> v.entries.map{"${delimit(it.key)}:${delimit(it.value)}"}.joinToString(prefix="{", separator=", ", postfix="}")
     else -> v.toString()
 }
 
