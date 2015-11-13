@@ -14,6 +14,11 @@ class DelimitingValuesInStrings {
     }
 
     @Test
+    fun triples() {
+        assertThat(delimit(Triple("x", "y", "z")), equalTo("(\"x\", \"y\", \"z\")"))
+    }
+
+    @Test
     fun iterables() {
         assertThat(delimit(listOf(1,2)), equalTo("[1, 2]"))
         assertThat(delimit(listOf("1","2")), equalTo("""["1", "2"]"""))
