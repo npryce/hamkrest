@@ -12,15 +12,23 @@ Compared to Java:
 
           assertThat("xyzzy", startsWith("x") and endsWith("y") and !contains("a"))
 
- * Easier to extend. You can convert named functions into matchers:
+ * Easier to extend. You can convert named unary predicates into matchers.
 
           val isBlank = Matcher(String::isBlank)
 
           assertThat(input, isBlank)
 
-   As a shortcut, you can pass named functions to the `assertThat`, `and` and `or` functions:
+   As a shortcut, you can pass named functions to the `assertThat`, `and`, `or` and many other functions that take a matcher.
 
           assertThat(input, String::isBlank)
+
+   You can also convert a named binary predicate and the second argument to a matcher for first argument, which works well for extension methods.
+
+          fun String.hasLength(n: Int): Boolean = this.length == n
+
+          val isTheRightLength = Matcher(String::hasLength, 8)
+
+          assertThat(secretCode, isTheRightLength)
 
    You can use function and property references to match features of a value:
 
