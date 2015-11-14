@@ -1,13 +1,14 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 
 
 class Contains {
     @Test
     public fun contains_any() {
-        assertThat(listOf(1,2,3,4), containsAny(equalTo(3)))
-        assertThat(listOf(1,2,3,4), containsAny(greaterThanOrEqualTo(4)))
+        assertThat(listOf(1, 2, 3, 4), containsAny(equalTo(3)))
+        assertThat(listOf(1, 2, 3, 4), containsAny(greaterThanOrEqualTo(4)))
         assertThat(listOf(), !containsAny(anything))
     }
 
@@ -24,8 +25,8 @@ class Contains {
     @Test
     public fun contains_all() {
         assertThat(listOf(1), containsAll(equalTo(1)))
-        assertThat(listOf(1,2,3,4), containsAll(greaterThan(0)))
-        assertThat(listOf(1,2,3,4), !containsAll(equalTo(1)))
+        assertThat(listOf(1, 2, 3, 4), containsAll(greaterThan(0)))
+        assertThat(listOf(1, 2, 3, 4), !containsAll(equalTo(1)))
     }
 
     @Test

@@ -6,16 +6,13 @@ import com.natpryce.hamkrest.internal.match
 fun <T> equalTo(expected: T): Matcher<T> =
         object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(actual == expected) { "was ${describe(actual)}" }
-
-            override fun description(): String {
-                return "equal to ${describe(expected)}"
-            }
+            override fun description() = "is equal to ${describe(expected)}"
+            override fun negatedDescription() = "is not equal to ${describe(expected)}"
         }
 
 
 fun <T> absent(): Matcher<T?> = object : Matcher.Primitive<T?>() {
     override fun invoke(actual: T?): MatchResult = match(actual == null) { "was ${describe(actual)}" }
-
     override fun description(): String = "null"
 }
 

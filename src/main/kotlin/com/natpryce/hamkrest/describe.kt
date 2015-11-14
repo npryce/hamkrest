@@ -15,3 +15,7 @@ fun describe(v: Any?): String = when (v) {
 interface SelfDescribing {
     fun description(): String
 }
+
+class Described<T>(val description: String, val value: T) : SelfDescribing {
+    override fun description() = description
+}

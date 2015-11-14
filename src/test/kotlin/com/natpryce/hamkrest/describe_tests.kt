@@ -1,5 +1,6 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 
 class DelimitingValuesInStrings {

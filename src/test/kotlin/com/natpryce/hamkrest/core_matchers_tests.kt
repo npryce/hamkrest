@@ -1,5 +1,6 @@
 package com.natpryce.hamkrest;
 
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -19,9 +20,9 @@ class Equality {
 
     @Test
     fun description() {
-        assertEquals("equal to 20", equalTo(20).description())
-        assertEquals("equal to \"foo\"", equalTo("foo").description())
-        assertEquals("equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
+        assertEquals("is equal to 20", equalTo(20).description())
+        assertEquals("is equal to \"foo\"", equalTo("foo").description())
+        assertEquals("is equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
     }
 }
 

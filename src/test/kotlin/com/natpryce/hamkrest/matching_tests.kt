@@ -1,5 +1,6 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -9,8 +10,8 @@ class LogicalConnectives {
     fun negation() {
         val m: Matcher<Int> = !equalTo(20)
 
-        assertEquals("not equal to 20", m.description())
-        assertEquals("equal to 20", (!m).description())
+        assertEquals("is not equal to 20", m.description())
+        assertEquals("is equal to 20", (!m).description())
 
         assertMismatchWithDescription("was 20", m(20));
     }
@@ -23,7 +24,7 @@ class LogicalConnectives {
         assertMatch(m(20))
         assertMismatchWithDescription("was 11", m(11))
 
-        assertThat(m.description(), equalTo("equal to 10 or equal to 20"))
+        assertThat(m.description(), equalTo("is equal to 10 or is equal to 20"))
     }
 
     @Test
