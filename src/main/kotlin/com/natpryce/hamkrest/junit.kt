@@ -19,6 +19,14 @@ fun <T> assertThat(message: String, actual: T, criteria: Matcher<T>) {
     _assertThat(message, actual, criteria)
 }
 
+inline fun <reified T> T.shouldMatch(matcher: Matcher<T>) {
+    assertThat(this, matcher)
+}
+
+inline fun <reified T> T.shouldMatch(f: KFunction1<T, Boolean>) {
+    this.shouldMatch(Matcher(f))
+}
+
 private fun <T> _assertThat(message: String?, actual: T, criteria: Matcher<T>) {
     criteria(actual).let { judgement ->
         if (judgement is MatchResult.Mismatch) {
