@@ -36,4 +36,9 @@ Compared to Java:
 
           assertThat(password, isLongEnough)
 
+   If you like sugar, you can use
+
+          password.shouldMatch(isLongEnough)
+          password.shouldMatch(::myPasswordFunction)
+
    All of these shortcuts produce good, human-readable diagnostics.
