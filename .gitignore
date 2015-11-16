@@ -2,4 +2,9 @@
 .idea/modules.xml
 .idea/.name
 .idea/compiler.xml
+.idea/workspace.xml
 *.iml
+.kobalt/
+.gradle/
+kobaltw
+build/
