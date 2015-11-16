@@ -38,7 +38,7 @@ Compared to Java:
 
    If you like sugar, you can use
 
-          password.shouldMatch(isLongEnough)
-          password.shouldMatch(::myPasswordFunction)
+          password shouldMatch isLongEnough
+          password shouldMatch ::myPasswordFunction
 
    All of these shortcuts produce good, human-readable diagnostics.
