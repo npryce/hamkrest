@@ -66,4 +66,11 @@ test {
         junitXml.enabled = true
         html.enabled = true
     }
+
+    beforeTest { desc ->
+        print "${desc.className} ${desc.name}"
+    }
+    afterTest { desc, result ->
+        println " -> ${result.resultType}"
+    }
 }
