@@ -1,5 +1,5 @@
 group 'com.natpryce'
-version '1.0-SNAPSHOT'
+version '1.0.0.0-SNAPSHOT'
 
 task wrapper(type: Wrapper) {
   gradleVersion = '2.5'
@@ -52,4 +52,9 @@ artifacts {
 
 dokka {
 
+}
+
+task dokkaJar(type: Jar, dependsOn: 'dokka') {
+    classifier 'docs'
+    from 'build/dokka' // how to get this value from the dokka task?
 }
