@@ -58,3 +58,12 @@ task dokkaJar(type: Jar, dependsOn: 'dokka') {
     classifier 'docs'
     from 'build/dokka' // how to get this value from the dokka task?
 }
+
+test {
+    include 'com/natpryce/hamkrest/**'
+    scanForTestClasses true
+    reports {
+        junitXml.enabled = true
+        html.enabled = true
+    }
+}
