@@ -16,6 +16,9 @@ fun describe(v: Any?): String = when (v) {
  * An object that can describe itself.
  */
 interface SelfDescribing {
+    /**
+     * Returns the description of this object
+     */
     fun description(): String
 }
 

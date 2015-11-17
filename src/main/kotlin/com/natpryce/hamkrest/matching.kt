@@ -85,6 +85,12 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         override operator fun not() = negated
     }
 
+    /**
+     * The logican disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
+     * matcher matches, the [right] matcher is never invoked.
+     *
+     * Use the infix [or] function to combine matchers with a Disjunction.
+     */
     class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
@@ -102,6 +108,12 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         override fun description(): String = "${left.description()} or ${right.description()}"
     }
 
+    /**
+     * The logican disjunction ("amd") of two matchers.  Evaluation is short-cut, so that if the [left]
+     * matcher fails to match, the [right] matcher is never invoked.
+     *
+     * Use the infix [or] function to combine matchers with a Disjunction.
+     */
     class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
@@ -114,10 +126,17 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         override fun description(): String = "${left.description()} and ${right.description()}"
     }
 
+    /**
+     * Base class of matchers for which the match criteria is coded, not composed.  Subclass this to write
+     * your own matchers.
+     */
     abstract class Primitive<in T> : Matcher<T>()
 
 
     companion object {
+        /**
+         * Converts a unary predicate into a Matcher. The description is derived from the name of the predicate.
+         */
         public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
             override fun description(): String = identifierToDescription(fn.name)
@@ -125,12 +144,21 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
             override fun asPredicate(): (T) -> Boolean = fn
         }
 
+        /**
+         * Converts a binary predicate and second argument into a Matcher that receives the first argument.
+         * The description is derived from the name of the predicate.
+         */
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${describe(actual)}" }
             override fun description(): String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
             override fun negatedDescription(): String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
         }
 
+        /**
+         * Converts a binary predicate into a factory function that receives the second argument of the predicate and
+         * returns a Matcher that receives the first argument. The description of the matcher is derived from the name
+         * of the predicate.
+         */
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }
     }
 }
@@ -164,10 +192,16 @@ fun <T, R> has(property: KProperty1<T, R>, rMatcher: Matcher<R>): Matcher<T> = h
 fun <T, R> has(projection: KFunction1<T,R>, rMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, rMatcher)
 
 
+/**
+ * A [Matcher] that matches anything, always returning [MatchResult.Match].
+ */
 val anything = object : Matcher.Primitive<Any>() {
     override fun invoke(actual: Any): MatchResult = MatchResult.Match
     override fun description(): String = "anything"
     override fun negatedDescription() : String = "nothing"
 }
 
+/**
+ * A [Matcher] that matches nothing, always returning a [MatchResult.Mismatch].
+ */
 val nothing = !anything
