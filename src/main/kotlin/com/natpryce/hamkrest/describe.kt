@@ -12,10 +12,16 @@ fun describe(v: Any?): String = when (v) {
     else -> v.toString()
 }
 
+/**
+ * An object that can describe itself.
+ */
 interface SelfDescribing {
     fun description(): String
 }
 
+/**
+ * Combines a [value] and its [description].
+ */
 class Described<T>(val description: String, val value: T) : SelfDescribing {
     override fun description() = description
 }

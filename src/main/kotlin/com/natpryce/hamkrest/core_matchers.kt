@@ -13,6 +13,16 @@ fun <T> equalTo(expected: T): Matcher<T> =
             override fun negatedDescription() = "is not equal to ${describe(expected)}"
         }
 
+/**
+ * Returns a matcher that reports if a value is the same instance as [expected] value.
+ */
+fun <T> sameInstance(expected: T): Matcher<T> =
+        object : Matcher.Primitive<T>() {
+            override fun invoke(actual: T): MatchResult = match(actual === expected) { "was ${describe(actual)}" }
+            override fun description() = "is same instance as ${describe(expected)}"
+            override fun negatedDescription() = "is not same instance as ${describe(expected)}"
+        }
+
 
 /**
  * Returns a matcher that reports if a value is null.

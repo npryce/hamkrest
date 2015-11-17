@@ -3,6 +3,7 @@ package com.natpryce.hamkrest;
 import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 class Equality {
@@ -23,6 +24,24 @@ class Equality {
         assertEquals("is equal to 20", equalTo(20).description())
         assertEquals("is equal to \"foo\"", equalTo("foo").description())
         assertEquals("is equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
+    }
+}
+
+class SameInstance {
+    @Test
+    fun same() {
+        val s = "hello"
+        val t = (s + "x").substring(0,s.length)
+
+        assertTrue { s !== t }
+        assertMatch(sameInstance(s)(s))
+        assertMismatchWithDescription("was \"hello\"", sameInstance(s)(t))
+    }
+
+    @Test
+    fun description() {
+        assertEquals("is same instance as \"x\"", sameInstance("x").description())
+        assertEquals("is not same instance as \"y\"", (!sameInstance("y")).description())
     }
 }
 

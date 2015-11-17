@@ -7,12 +7,20 @@ import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
 
-
+/**
+ * The result of matching some actual value against criteria defined by a [Matcher].
+ */
 sealed class MatchResult {
+    /**
+     * Represents that the actual value matched.
+     */
     object Match : MatchResult() {
         override fun toString(): String = "Match"
     }
 
+    /**
+     * Represents that the actual value did not match, and includes a human-readable description of the reason.
+     */
     class Mismatch(private val description: String) : MatchResult(), SelfDescribing {
         override fun description(): String {
             return description;
@@ -24,17 +32,43 @@ sealed class MatchResult {
     }
 }
 
-
+/**
+ * Acceptability criteria for a value of type [T].  A Matcher reports if a value of type T matches
+ * the criteria and describes the criteria in human-readable language.
+ *
+ * A Matcher is either a "primitive" matcher, that implements the criteria in code, or a logical combination
+ * (`not`, `and`, or `or`) of other matchers.
+ *
+ * To implement your own primitive matcher, create a subclass of [Matcher.Primitive].
+ */
 public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
+
+    /**
+     * Reports whether the [actual] value meets the criteria and, if not, why it does not match.
+     */
     abstract override fun invoke(actual: T): MatchResult
+
+    /**
+     * Describes the negation of this criteria.
+     */
     open protected fun negatedDescription(): String = "not " + description()
 
+    /**
+     * Returns a matcher that matches the negation of this criteria.
+     */
     open operator fun not(): Matcher<T> {
         return Negation(this)
     }
 
+    /**
+     * Returns this matcher as a predicate, that can be used for testing, finding and filtering collections
+     * and [kotlin.Sequence]s.
+     */
     open fun asPredicate(): (T) -> Boolean = { this(it) == MatchResult.Match }
 
+    /**
+     * The negation of a matcher.
+     */
     class Negation<in T>(private val negated: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
@@ -46,8 +80,9 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
                     }
                 }
 
-        override fun description(): String = negated.negatedDescription()
-        override fun negatedDescription(): String = negated.description()
+        override fun description() = negated.negatedDescription()
+        override fun negatedDescription() = negated.description()
+        override operator fun not() = negated
     }
 
     class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {

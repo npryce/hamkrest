@@ -3,6 +3,7 @@ package com.natpryce.hamkrest
 import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 
 class LogicalConnectives {
@@ -14,6 +15,13 @@ class LogicalConnectives {
         assertEquals("is equal to 20", (!m).description())
 
         assertMismatchWithDescription("was 20", m(20));
+    }
+
+    @Test
+    fun negation_of_negation_is_identity() {
+        val m: Matcher<Int> = equalTo(20)
+
+        assertTrue {!(!m) === m}
     }
 
     @Test
@@ -119,11 +127,10 @@ class Projections {
 
     @Test
     fun can_match_projection_by_function() {
-        val isLongEnough = has(String::count, greaterThan(4))
+        assertThat("12345", has(String::reversed, equalTo("54321")))
+        assertThat("1234", !has(String::reversed, equalTo("54321")))
 
-        assertThat("12345", isLongEnough)
-        assertThat("1234", !isLongEnough)
-
-        assertThat(isLongEnough.description(), equalTo("has count that is greater than 4"))
+        assertThat(has(String::reversed, equalTo("54321")).description(), equalTo(
+                "has reversed that is equal to \"54321\""))
     }
 }
