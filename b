@@ -1,2 +1,4 @@
 #!/bin/sh
-java -jar $(dirname $0)/kobalt/wrapper/kobalt-wrapper.jar "$@"
+set -e
+version=`git describe --always --tags --match '*.*.*' --dirty="_patched"`
+`dirname $0`/gradlew -P-version=${version} "$@"

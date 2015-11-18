@@ -1,4 +1,4 @@
-#!/bin/sh -e
-
+#!/bin/sh
+set -e
 version=`git describe --always --tags --match '*.*.*' --dirty="_patched"`
-`dirname $0`/gradlew -P-version=${version} uploadArchives "$@"
+`dirname $0`/b clean uploadArchives "$@"
