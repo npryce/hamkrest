@@ -45,13 +45,15 @@ artifacts {
     archives sourcesJar
 }
 
-dokka {
 
+dokka {
+    outputFormat 'javadoc'
+    outputDirectory 'build/javadoc'
 }
 
-task dokkaJar(type: Jar, dependsOn: 'dokka') {
-    classifier 'docs'
-    from 'build/dokka' // how to get this value from the dokka task?
+task javadocJar(type: Jar, dependsOn: 'dokka') {
+    classifier 'javadoc'
+    from 'build/javadoc'
 }
 
 test {
@@ -71,7 +73,7 @@ test {
 }
 
 artifacts {
-    archives sourcesJar, dokkaJar
+    archives sourcesJar, javadocJar
 }
 
 signing {

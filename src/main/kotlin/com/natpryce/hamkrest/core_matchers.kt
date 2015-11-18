@@ -1,6 +1,22 @@
+@file:JvmName("CoreMatchers")
+
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.match
+/**
+ * A [Matcher] that matches anything, always returning [MatchResult.Match].
+ */
+@JvmField
+val anything = object : Matcher.Primitive<Any>() {
+    override fun invoke(actual: Any): MatchResult = MatchResult.Match
+    override fun description(): String = "anything"
+    override fun negatedDescription(): String = "nothing"
+}
+
+/**
+ * A [Matcher] that matches nothing, always returning a [MatchResult.Mismatch].
+ */
+@JvmField
+val nothing = !anything
 
 
 /**
@@ -106,7 +122,7 @@ private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedS
 /**
  * Returns a matcher that reports if a [Comparable] value falls within a given [Range]
  */
-fun <T : Comparable<T>> isWithin(range: Range<T>) : Matcher<T> {
+fun <T : Comparable<T>> isWithin(range: Range<T>): Matcher<T> {
     fun _isWithin(actual: T, range: Range<T>): Boolean {
         return range.contains(actual)
     }

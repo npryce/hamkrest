@@ -1,7 +1,8 @@
+@file:JvmName("SequenceMatchers")
+
 package com.natpryce.hamkrest
 
 import kotlin.reflect.KFunction1
-
 
 /**
  * Matches an [Iterable] if any element is matched by [elementMatcher].

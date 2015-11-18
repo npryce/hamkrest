@@ -1,3 +1,5 @@
+@file:JvmName("StringMatchers")
+
 package com.natpryce.hamkrest
 
 import kotlin.text.Regex

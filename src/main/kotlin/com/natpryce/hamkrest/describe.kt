@@ -1,6 +1,13 @@
+@file:JvmName("Describe")
+
 package com.natpryce.hamkrest
 
-internal fun describe(v: Any?): String = when (v) {
+/**
+ * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
+ * iterable collections and maps are (recursively) described.  A null reference is described as `null`.
+ * For anything else, the result of [Any.toString] is used.
+ */
+fun describe(v: Any?): String = when (v) {
     null -> "null"
     is SelfDescribing -> v.description()
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""

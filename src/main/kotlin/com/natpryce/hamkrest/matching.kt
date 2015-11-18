@@ -1,8 +1,7 @@
+@file:JvmName("Matchers")
+
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.identifierToDescription
-import com.natpryce.hamkrest.identifierToNegatedDescription
-import com.natpryce.hamkrest.match
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
@@ -231,18 +230,3 @@ fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher
  * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
  */
 fun <T, R> has(projection: KFunction1<T,R>, resultMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, resultMatcher)
-
-
-/**
- * A [Matcher] that matches anything, always returning [MatchResult.Match].
- */
-val anything = object : Matcher.Primitive<Any>() {
-    override fun invoke(actual: Any): MatchResult = MatchResult.Match
-    override fun description(): String = "anything"
-    override fun negatedDescription() : String = "nothing"
-}
-
-/**
- * A [Matcher] that matches nothing, always returning a [MatchResult.Mismatch].
- */
-val nothing = !anything
