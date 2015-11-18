@@ -6,5 +6,6 @@
 *.iml
 .kobalt/
 .gradle/
+gradle.properties
 kobaltw
 build/

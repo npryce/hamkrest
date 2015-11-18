@@ -1,8 +1,8 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.internal.identifierToDescription
-import com.natpryce.hamkrest.internal.identifierToNegatedDescription
-import com.natpryce.hamkrest.internal.match
+import com.natpryce.hamkrest.identifierToDescription
+import com.natpryce.hamkrest.identifierToNegatedDescription
+import com.natpryce.hamkrest.match
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
@@ -163,33 +163,74 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     }
 }
 
+/**
+ * Syntactic sugar to create a [Matcher.Disjunction]
+ */
 infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(this, that)
+
+/**
+ * Syntactic sugar to create a [Matcher.Disjunction]
+ */
 infix fun <T> KFunction1<T, Boolean>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(Matcher(this), that)
+
+/**
+ * Syntactic sugar to create a [Matcher.Disjunction]
+ */
 infix fun <T> Matcher<T>.or(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Disjunction(this, Matcher(that))
+
+/**
+ * Syntactic sugar to create a [Matcher.Disjunction]
+ */
 infix fun <T> KFunction1<T, Boolean>.or(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Disjunction(Matcher(this), Matcher(that))
 
+/**
+ * Syntactic sugar to create a [Matcher.Conjunction]
+ */
 infix fun <T> Matcher<T>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction<T>(this, that)
+
+/**
+ * Syntactic sugar to create a [Matcher.Conjunction]
+ */
 infix fun <T> KFunction1<T, Boolean>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction(Matcher(this), that)
+
+/**
+ * Syntactic sugar to create a [Matcher.Conjunction]
+ */
 infix fun <T> Matcher<T>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Conjunction(this, Matcher(that))
+
+/**
+ * Syntactic sugar to create a [Matcher.Conjunction]
+ */
 infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Conjunction(Matcher(this), Matcher(that))
 
 
-fun <T, R> has(name: String, projection: (T) -> R, rMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
+/**
+ * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
+ * The description of the matcher uses [name] to describe the [projection].
+ */
+fun <T, R> has(name: String, projection: (T) -> R, resultMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
     override fun invoke(actual: T) =
-            rMatcher(projection(actual)).let {
+            resultMatcher(projection(actual)).let {
                 when (it) {
                     is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description()}")
                     else -> it
                 }
             }
 
-    override fun description() = "has ${name} that ${rMatcher.description()}"
-    override fun negatedDescription() = "does not have ${name} that ${rMatcher.description()}"
+    override fun description() = "has ${name} that ${resultMatcher.description()}"
+    override fun negatedDescription() = "does not have ${name} that ${resultMatcher.description()}"
 }
 
-fun <T, R> has(property: KProperty1<T, R>, rMatcher: Matcher<R>): Matcher<T> = has(property.name, property.getter, rMatcher)
+/**
+ * Returns a matcher that applies [propertyMatcher] to the current value of [property] of an object.
+ */
+fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher<T> = has(property.name, property.getter, propertyMatcher)
 
-fun <T, R> has(projection: KFunction1<T,R>, rMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, rMatcher)
+
+/**
+ * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
+ */
+fun <T, R> has(projection: KFunction1<T,R>, resultMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, resultMatcher)
 
 
 /**

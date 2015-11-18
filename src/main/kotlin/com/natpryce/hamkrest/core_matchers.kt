@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.internal.match
+import com.natpryce.hamkrest.match
 
 
 /**

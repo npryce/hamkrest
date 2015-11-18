@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-fun describe(v: Any?): String = when (v) {
+internal fun describe(v: Any?): String = when (v) {
     null -> "null"
     is SelfDescribing -> v.description()
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""

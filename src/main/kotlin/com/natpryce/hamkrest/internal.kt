@@ -1,18 +1,17 @@
-package com.natpryce.hamkrest.internal
+package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.MatchResult
 import java.util.*
 
-public fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
+internal  fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
         if (comparisonResult) {
             MatchResult.Match
         } else {
             MatchResult.Mismatch(describeMismatch())
         }
 
-internal fun identifierToDescription(id: String) = identifierToWords(id).joinToString(" ")
+internal  fun identifierToDescription(id: String) = identifierToWords(id).joinToString(" ")
 
-internal fun identifierToNegatedDescription(id: String): String {
+internal  fun identifierToNegatedDescription(id: String): String {
     val words = identifierToWords(id)
     val first = words[0]
     val rest = words.drop(1).joinToString(" ")
@@ -26,7 +25,7 @@ internal fun identifierToNegatedDescription(id: String): String {
     }
 }
 
-public fun identifierToWords(s: String): List<String> {
+internal  fun identifierToWords(s: String): List<String> {
     val words: MutableList<String> = ArrayList()
     val buf = StringBuilder()
 
@@ -48,9 +47,9 @@ public fun identifierToWords(s: String): List<String> {
     return words
 }
 
-fun isWordPart(c: Char): Boolean = c.isLetterOrDigit()
+internal fun isWordPart(c: Char): Boolean = c.isLetterOrDigit()
 
-fun isWordStart(prev: Char, c: Char): Boolean = when {
+internal fun isWordStart(prev: Char, c: Char): Boolean = when {
     c.isLetter() != prev.isLetter() -> true
     prev.isLowerCase() && c.isUpperCase() -> true
     else -> false

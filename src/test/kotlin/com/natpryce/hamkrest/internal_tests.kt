@@ -1,8 +1,6 @@
-package com.natpryce.hamkrest.internal
+package com.natpryce.hamkrest
 
 import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.describe
-import com.natpryce.hamkrest.equalTo
 import org.junit.Test
 
 class Utilities {

@@ -20,7 +20,7 @@ class ShouldExtension {
 
     @Test
     fun matches_subtypes() {
-        listOf(1, 2, 3, 4) shouldMatch containsAny(equalTo(3))
+        listOf(1, 2, 3, 4) shouldMatch anyElement(equalTo(3))
     }
 
     @Test

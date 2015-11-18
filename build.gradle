@@ -1,10 +1,5 @@
 group 'com.natpryce'
-version '1.0.0.0-SNAPSHOT'
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '2.5'
-  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
-}
+version (hasProperty("-version") ? property("-version") : "SNAPSHOT")
 
 buildscript {
     ext.kotlin_version = '1.0.0-beta-1103'
@@ -73,4 +68,66 @@ test {
     afterTest { desc, result ->
         println " -> ${result.resultType}"
     }
+}
+
+artifacts {
+    archives sourcesJar, dokkaJar
+}
+
+signing {
+    required { sign }
+    sign configurations.archives
+}
+
+uploadArchives {
+    if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name 'HamKrest'
+                    packaging 'jar'
+                    description 'Matcher library for Kotlin. A port of Hamcrest, made more Kotlin-esque.'
+                    url 'https://github.com/npryce/hamkrest'
+
+                    scm {
+                        connection 'git@github.com:npryce/hamkrest.git'
+                        url 'https://github.com/npryce/hamkrest'
+                    }
+
+                    licenses {
+                        license {
+                            name 'Apache 2.0'
+                            url 'http://opensource.org/licenses/Apache-2.0'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id 'npryce'
+                            name 'Nat Pryce'
+                        }
+                        developer {
+                            id 'dmcg'
+                            name 'Duncan McGregor'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.5'
+    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }

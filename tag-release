@@ -1,0 +1,3 @@
+#!/bin/sh -e
+version=${1:?version}
+git tag -u sw@natpryce.com ${version} -m "tagging version ${version}"
