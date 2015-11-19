@@ -5,7 +5,6 @@ script: ./b clean build
 sudo: false
 
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 cache:
