@@ -1,5 +1,5 @@
 group 'com.natpryce'
-version (hasProperty("-version") ? property("-version") : "SNAPSHOT")
+version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
 
 println "building version ${version}"
 
@@ -83,54 +83,59 @@ signing {
     sign configurations.archives
 }
 
+task ossrhAuthentication << {
+    if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
+        throw new InvalidUserDataException("no OSSRH username and/or password!")
+    }
+}
+
 uploadArchives {
-    if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
-        repositories {
-            mavenDeployer {
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    dependsOn ossrhAuthentication
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: project.properties["ossrh.username"],
+                        password: project.properties["ossrh.password"])
+            }
 
-                pom.project {
-                    name 'HamKrest'
-                    packaging 'jar'
-                    description 'Matcher library for Kotlin. A port of Hamcrest, made more Kotlin-esque.'
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: project.properties["ossrh.username"],
+                        password: project.properties["ossrh.password"])
+            }
+
+            pom.project {
+                name 'HamKrest'
+                packaging 'jar'
+                description 'Matcher library for Kotlin. A port of Hamcrest, made more Kotlin-esque.'
+                url 'https://github.com/npryce/hamkrest'
+
+                scm {
+                    connection 'git@github.com:npryce/hamkrest.git'
                     url 'https://github.com/npryce/hamkrest'
+                }
 
-                    scm {
-                        connection 'git@github.com:npryce/hamkrest.git'
-                        url 'https://github.com/npryce/hamkrest'
+                licenses {
+                    license {
+                        name 'Apache 2.0'
+                        url 'http://opensource.org/licenses/Apache-2.0'
                     }
+                }
 
-                    licenses {
-                        license {
-                            name 'Apache 2.0'
-                            url 'http://opensource.org/licenses/Apache-2.0'
-                        }
+                developers {
+                    developer {
+                        id 'npryce'
+                        name 'Nat Pryce'
                     }
-
-                    developers {
-                        developer {
-                            id 'npryce'
-                            name 'Nat Pryce'
-                        }
-                        developer {
-                            id 'dmcg'
-                            name 'Duncan McGregor'
-                        }
+                    developer {
+                        id 'dmcg'
+                        name 'Duncan McGregor'
                     }
                 }
             }
         }
-    }
-    else {
-        throw new org.gradle.api.InvalidUserDataException("no OSSRH username and/or password!")
     }
 }
 
@@ -138,3 +143,4 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.5'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
+
