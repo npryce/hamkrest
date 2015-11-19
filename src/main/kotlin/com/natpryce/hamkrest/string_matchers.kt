@@ -9,7 +9,9 @@ import kotlin.text.Regex
  *
  * @see [String.contains]
  */
-fun contains(r: Regex) : Matcher<String> = Matcher(CharSequence::contains, r)
+private fun _contains(s : CharSequence, regex: Regex): Boolean = regex.containsMatchIn(s)
+
+fun contains(r: Regex) : Matcher<String> = Matcher(::_contains, r)
 
 /**
  * Matches strings that match the given [Regex].

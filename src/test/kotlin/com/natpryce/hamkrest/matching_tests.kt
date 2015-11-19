@@ -127,10 +127,13 @@ class Projections {
 
     @Test
     fun can_match_projection_by_function() {
-        assertThat("12345", has(String::reversed, equalTo("54321")))
-        assertThat("1234", !has(String::reversed, equalTo("54321")))
+        assertThat("12345", has(String::toInt, equalTo(12345)))
+        assertThat("1234", !has(String::toInt, equalTo(12345)))
+    }
 
-        assertThat(has(String::reversed, equalTo("54321")).description(), equalTo(
-                "has reversed that is equal to \"54321\""))
+    @Test
+    fun description_of_projection_is_human_readableified() {
+        assertThat(has(String::toInt, equalTo(12345)).description(), equalTo(
+                "has to int that is equal to 12345"))
     }
 }

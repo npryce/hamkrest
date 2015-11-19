@@ -223,10 +223,12 @@ fun <T, R> has(name: String, projection: (T) -> R, resultMatcher: Matcher<R>): M
 /**
  * Returns a matcher that applies [propertyMatcher] to the current value of [property] of an object.
  */
-fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher<T> = has(property.name, property.getter, propertyMatcher)
+fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher<T> =
+        has(identifierToDescription(property.name), property.getter, propertyMatcher)
 
 
 /**
  * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
  */
-fun <T, R> has(projection: KFunction1<T,R>, resultMatcher: Matcher<R>) : Matcher<T> = has(projection.name, projection, resultMatcher)
+fun <T, R> has(projection: KFunction1<T,R>, resultMatcher: Matcher<R>) : Matcher<T> =
+        has(identifierToDescription(projection.name), projection, resultMatcher)
