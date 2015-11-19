@@ -67,7 +67,7 @@ test {
     }
 
     beforeTest { desc ->
-        print "${desc.className} ${desc.name}"
+        print "${desc.className.substring("com.natpryce.hamkrest.".length())}: ${desc.name.replace("_", " ")}"
     }
     afterTest { desc, result ->
         println " -> ${result.resultType}"
