@@ -129,6 +129,9 @@ uploadArchives {
             }
         }
     }
+    else {
+        println("no OSSRH username and/or password!")
+    }
 }
 
 task wrapper(type: Wrapper) {
