@@ -130,7 +130,7 @@ uploadArchives {
         }
     }
     else {
-        println("no OSSRH username and/or password!")
+        throw new org.gradle.api.InvalidUserDataException("no OSSRH username and/or password!")
     }
 }
 
