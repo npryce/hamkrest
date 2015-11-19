@@ -43,3 +43,5 @@ Compared to Java:
           password shouldMatch ::myPasswordFunction
 
    All of these shortcuts produce good, human-readable diagnostics.
+
+Still using Java?  The HamKrest API has been crafted to be convenient and idiomatic when used from Java code.  And all the generic wildcard bounds work the way you expect.
