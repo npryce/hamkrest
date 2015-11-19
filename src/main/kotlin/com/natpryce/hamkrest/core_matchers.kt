@@ -122,8 +122,8 @@ private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedS
 /**
  * Returns a matcher that reports if a [Comparable] value falls within a given [Range]
  */
-fun <T : Comparable<T>> isWithin(range: Range<T>): Matcher<T> {
-    fun _isWithin(actual: T, range: Range<T>): Boolean {
+fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
+    fun _isWithin(actual: T, range: ClosedRange<T>): Boolean {
         return range.contains(actual)
     }
 
