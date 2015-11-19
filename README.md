@@ -4,6 +4,7 @@ HamKrest - Hamcrest for Kotlin
 A reimplementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.org/) language features.
 
 [![Build Status](https://travis-ci.org/npryce/hamkrest.svg?branch=master)](https://travis-ci.org/npryce/hamkrest)
+[![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/hamkrest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.natpryce%22%20AND%20a%3A%22hamkrest%22)
 
 Compared to Java:
 
@@ -36,7 +37,7 @@ Compared to Java:
 
           assertThat(password, isLongEnough)
 
-   If you like sugar, you can use
+   If you like sugar (or don't like punctuation), you can use
 
           password shouldMatch isLongEnough
           password shouldMatch ::myPasswordFunction
