@@ -27,6 +27,7 @@ class RegexMatching {
 
 }
 
+
 class PrefixAndSuffix {
     @Test
     fun prefix() {
@@ -37,10 +38,33 @@ class PrefixAndSuffix {
     }
 
     @Test
+    fun prefix_can_specify_case_sensitivity() {
+        assertThat("qwerty", startsWith("Q").caseInsensitive())
+        assertThat("qwerty", !startsWith("Q").caseInsensitive().caseSensitive())
+    }
+
+    @Test
     fun suffix() {
         assertThat("qwerty", endsWith("y"))
         assertThat("qwerty", endsWith("rty"))
         assertThat("qwerty", !endsWith("Y"))
         assertThat("qwerty", endsWith(""))
+    }
+
+    @Test
+    fun suffix_can_specify_case_sensitivity() {
+        assertThat("qwerty", endsWith("Y").caseInsensitive())
+        assertThat("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
+    }
+
+    @Test
+    fun type_checker_can_enforce_case_sensitivity() {
+        // the following lines will not compile
+        // val caseInsensitive : StringMatcher<CaseSensitivity.CaseInsensitive> = endsWith("Y")
+        // val caseSensitive: StringMatcher<CaseSensitivity.CaseSensitive> = endsWith("Y").caseInsensitive()
+
+        val caseSensitiveOk: StringMatcher<CaseSensitivity.CaseSensitive> = endsWith("Y")
+        val doNotCare: Matcher<String> = endsWith("Y")
+        val doNotCareEither: Matcher<String> = endsWith("Y").caseInsensitive()
     }
 }
