@@ -119,6 +119,6 @@ val isNullOrBlank = Matcher(CharSequence::isNullOrBlank)
 val isEmptyString = Matcher(CharSequence::isEmpty)
 
 /**
- * Matches a char sequence if it is empty (contains no characters).
+ * Matches a char sequence if it is either `null` or empty (contains no characters).
  */
 val isNullOrEmptyString = Matcher(CharSequence::isNullOrEmpty)
