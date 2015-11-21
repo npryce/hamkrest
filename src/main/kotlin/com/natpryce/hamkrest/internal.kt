@@ -16,12 +16,10 @@ internal fun identifierToNegatedDescription(id: String): String {
     val first = words[0]
     val rest = words.drop(1).joinToString(" ")
 
-    return if (first == "is") {
-        "is not ${rest}"
-    } else if (words[0] == "has") {
-        "has no ${rest}"
-    } else {
-        "not ${first} ${rest}"
+    return when (first) {
+        "is" -> "is not ${rest}"
+        "has" -> "does not have ${rest}"
+        else -> "not ${first} ${rest}"
     }
 }
 

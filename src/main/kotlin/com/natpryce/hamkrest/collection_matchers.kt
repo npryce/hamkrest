@@ -1,4 +1,4 @@
-@file:JvmName("SequenceMatchers")
+@file:JvmName("CollectionMatchers")
 
 package com.natpryce.hamkrest
 
@@ -40,3 +40,6 @@ fun <T> allElements(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {
  */
 fun <T> allElements(elementPredicate: KFunction1<T,Boolean>) : Matcher<Iterable<T>> = allElements(Matcher(elementPredicate))
 
+
+val isEmpty = Matcher(Collection<Any>::isEmpty)
+fun hasSize(sizeMatcher : Matcher<Int>) = has(Collection<Any>::size, sizeMatcher)
