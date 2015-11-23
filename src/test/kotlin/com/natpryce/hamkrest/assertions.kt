@@ -6,7 +6,7 @@ import kotlin.test.fail
 fun assertMismatchWithDescription(expectedDescription: String, m: MatchResult) {
     when (m) {
         is MatchResult.Mismatch -> {
-            assertEquals(expectedDescription, m.description())
+            assertEquals(expectedDescription, m.description)
         }
         MatchResult.Match -> fail("unexpected match")
     }

@@ -43,8 +43,8 @@ class ContainsSubstring {
 
     @Test
     fun description() {
-        assertThat(containsSubstring("foo").description(), equalTo("contains substring \"foo\""))
-        assertThat(containsSubstring("foo").caseInsensitive().description(), equalTo("contains substring \"foo\" (case insensitive)"))
+        assertThat(containsSubstring("foo").description, equalTo("contains substring \"foo\""))
+        assertThat(containsSubstring("foo").caseInsensitive().description, equalTo("contains substring \"foo\" (case insensitive)"))
     }
 }
 

@@ -53,8 +53,8 @@ class CollectionSize {
 
     @Test
     fun size_description() {
-        assertThat(hasSize(greaterThan(3)).description(), equalTo("has size that is greater than 3"))
-        assertThat((!hasSize(greaterThan(3))).description(), equalTo("does not have size that is greater than 3"))
+        assertThat(hasSize(greaterThan(3)).description, equalTo("has size that is greater than 3"))
+        assertThat((!hasSize(greaterThan(3))).description, equalTo("does not have size that is greater than 3"))
     }
 
     @Test
@@ -65,7 +65,7 @@ class CollectionSize {
 
     @Test
     fun empty_description() {
-        assertThat(isEmpty.description(), equalTo("is empty"))
-        assertThat((!isEmpty).description(), equalTo("is not empty"))
+        assertThat(isEmpty.description, equalTo("is empty"))
+        assertThat((!isEmpty).description, equalTo("is not empty"))
     }
 }

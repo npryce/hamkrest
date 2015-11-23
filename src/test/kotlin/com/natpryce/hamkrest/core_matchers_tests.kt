@@ -21,9 +21,9 @@ class Equality {
 
     @Test
     fun description() {
-        assertEquals("is equal to 20", equalTo(20).description())
-        assertEquals("is equal to \"foo\"", equalTo("foo").description())
-        assertEquals("is equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description())
+        assertEquals("is equal to 20", equalTo(20).description)
+        assertEquals("is equal to \"foo\"", equalTo("foo").description)
+        assertEquals("is equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description)
     }
 }
 
@@ -40,8 +40,8 @@ class SameInstance {
 
     @Test
     fun description() {
-        assertEquals("is same instance as \"x\"", sameInstance("x").description())
-        assertEquals("is not same instance as \"y\"", (!sameInstance("y")).description())
+        assertEquals("is same instance as \"x\"", sameInstance("x").description)
+        assertEquals("is not same instance as \"y\"", (!sameInstance("y")).description)
     }
 }
 
@@ -105,7 +105,7 @@ class Comparables {
         assertThat(0, !isWithin(1..20))
         assertThat(21, !isWithin(1..20))
 
-        assertThat(isWithin(1..20).description(), equalTo("is within 1..20"))
-        assertThat((!isWithin(1..20)).description(), equalTo("is not within 1..20"))
+        assertThat(isWithin(1..20).description, equalTo("is within 1..20"))
+        assertThat((!isWithin(1..20)).description, equalTo("is not within 1..20"))
     }
 }

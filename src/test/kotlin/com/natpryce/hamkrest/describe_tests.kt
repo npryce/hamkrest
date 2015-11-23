@@ -38,7 +38,7 @@ class DelimitingValuesInStrings {
     @Test
     fun describable_objects() {
         val d = object : SelfDescribing {
-            override fun description(): String = "d"
+            override val description = "d"
         }
 
         assertThat(describe(d), equalTo("d"))

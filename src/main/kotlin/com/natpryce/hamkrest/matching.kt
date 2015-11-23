@@ -20,11 +20,7 @@ sealed class MatchResult {
     /**
      * Represents that the actual value did not match, and includes a human-readable description of the reason.
      */
-    class Mismatch(private val description: String) : MatchResult(), SelfDescribing {
-        override fun description(): String {
-            return description;
-        }
-
+    class Mismatch(override val description: String) : MatchResult(), SelfDescribing {
         override fun toString(): String {
             return "Mismatch[${describe(description)}]"
         }
@@ -46,6 +42,18 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * Reports whether the [actual] value meets the criteria and, if not, why it does not match.
      */
     abstract override fun invoke(actual: T): MatchResult
+
+    /**
+     * The description of this criteria.
+     *
+     * Subclasses must implement the description() method to provide the value of this property.
+     */
+    override final val description: String get() = description()
+
+    /**
+     * Returns the description of this criteria.
+     */
+    abstract protected fun description(): String
 
     /**
      * Describes the negation of this criteria.
@@ -237,7 +245,7 @@ fun <T, R> has(name: String, projection: (T) -> R, resultMatcher: Matcher<R>): M
     override fun invoke(actual: T) =
             resultMatcher(projection(actual)).let {
                 when (it) {
-                    is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description()}")
+                    is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description}")
                     else -> it
                 }
             }

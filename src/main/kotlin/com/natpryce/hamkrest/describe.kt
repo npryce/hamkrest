@@ -9,7 +9,7 @@ package com.natpryce.hamkrest
  */
 fun describe(v: Any?): String = when (v) {
     null -> "null"
-    is SelfDescribing -> v.description()
+    is SelfDescribing -> v.description
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
     is Pair<*, *> -> Pair(describe(v.first), describe(v.second)).toString()
     is Triple<*, *, *> -> Triple(describe(v.first), describe(v.second), describe(v.third)).toString()
@@ -26,7 +26,7 @@ interface SelfDescribing {
     /**
      * Returns the description of this object
      */
-    fun description(): String
+    val description: String
 }
 
 /**
@@ -36,12 +36,9 @@ class Described<T>(
         /**
          * The description of [value].
          */
-        val description: String,
+        override val description: String,
         /**
          * The value being described.
          */
         val value: T)
     : SelfDescribing
-{
-    override fun description() = description
-}

@@ -11,8 +11,8 @@ class LogicalConnectives {
     fun negation() {
         val m: Matcher<Int> = !equalTo(20)
 
-        assertEquals("is not equal to 20", m.description())
-        assertEquals("is equal to 20", (!m).description())
+        assertEquals("is not equal to 20", m.description)
+        assertEquals("is equal to 20", (!m).description)
 
         assertMismatchWithDescription("was 20", m(20));
     }
@@ -32,7 +32,7 @@ class LogicalConnectives {
         assertMatch(m(20))
         assertMismatchWithDescription("was 11", m(11))
 
-        assertThat(m.description(), equalTo("is equal to 10 or is equal to 20"))
+        assertThat(m.description, equalTo("is equal to 10 or is equal to 20"))
     }
 
     @Test
@@ -44,7 +44,7 @@ class LogicalConnectives {
         assertMismatchWithDescription("was 10", m(10))
         assertMismatchWithDescription("was 20", m(20))
 
-        assertThat(m.description(), equalTo("is greater than 10 and is less than 20"))
+        assertThat(m.description, equalTo("is greater than 10 and is less than 20"))
     }
 }
 
@@ -54,7 +54,7 @@ class FunctionToMatcher {
     fun create_matcher_from_named_function_reference() {
         val isBlank = Matcher(String::isBlank)
 
-        assertEquals("is blank", isBlank.description())
+        assertEquals("is blank", isBlank.description)
 
         assertMatch(isBlank(""))
         assertMatch(isBlank(" "))
@@ -67,7 +67,7 @@ class FunctionToMatcher {
 
         val hasLength4 = Matcher(String::hasLength, 4)
 
-        assertEquals("has length 4", hasLength4.description())
+        assertEquals("has length 4", hasLength4.description)
 
         assertMatch(hasLength4("yeah"))
         assertMatch(hasLength4("nope"))
@@ -79,8 +79,8 @@ class FunctionToMatcher {
         fun String.hasLength(n: Int): Boolean = this.length == n
         val hasLength = Matcher(String::hasLength)
 
-        assertEquals("has length 4", hasLength(4).description())
-        assertEquals("has length 6", hasLength(6).description())
+        assertEquals("has length 4", hasLength(4).description)
+        assertEquals("has length 6", hasLength(6).description)
 
         assertMatch(hasLength(3)("yes"))
         assertMatch(hasLength(4)("yeah"))
@@ -122,7 +122,7 @@ class Projections {
         assertThat("12345", isLongEnough)
         assertThat("1234", !isLongEnough)
 
-        assertThat(isLongEnough.description(), equalTo("has length that is greater than 4"))
+        assertThat(isLongEnough.description, equalTo("has length that is greater than 4"))
     }
 
     @Test
@@ -133,7 +133,7 @@ class Projections {
 
     @Test
     fun description_of_projection_is_human_readableified() {
-        assertThat(has(String::toInt, equalTo(12345)).description(), equalTo(
+        assertThat(has(String::toInt, equalTo(12345)).description, equalTo(
                 "has to int that is equal to 12345"))
     }
 }
