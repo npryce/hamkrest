@@ -120,7 +120,9 @@ private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedS
 }
 
 /**
- * Returns a matcher that reports if a [Comparable] value falls within a given [Range]
+ * Returns a matcher that reports if a [kotlin.Comparable] value falls within the given [range].
+ *
+ * @param range The range that contains matching values.
  */
 fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
     fun _isWithin(actual: T, range: ClosedRange<T>): Boolean {

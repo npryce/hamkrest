@@ -38,21 +38,20 @@ sealed class CaseSensitivity {
  * If desired, case sensitivity can be enforced at compile time, by requiring a
  * `StringMatcher<CaseSensitivity.CaseInsensitive>` or `StringMatcher<CaseSensitivity.CaseSensitive>`.
  * If case sensitivity does not need to be enforced, require a `Matcher<String>`.
+ *
+ * @property caseSensitivity The case sensitivity of the match, either [CaseSensitivity.CaseSensitive] or [CaseSensitivity.CaseInsensitive].
  */
-abstract class StringMatcher<S : CaseSensitivity>(
-        /**
-         * The case sensitivity of the match, either [CaseSensitivity.CaseSensitive] or [CaseSensitivity.CaseInsensitive].
-         */
-        protected val caseSensitivity: S)
-    : Matcher.Primitive<CharSequence>()
-{
+abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity: S) : Matcher.Primitive<CharSequence>() {
+    /**
+     * Returns this matcher transformed to have the given case sensitivity.
+     */
     abstract internal fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2): StringMatcher<S2>
 
     companion object {
         /**
          * Convert a String predicate to a [StringMatcher], specifying the desired case sensitivity.
          *
-         * The predicate must have the signature `<T> (CharSequence, T, Boolean) -> Boolean`, where the final Boolean
+         * The predicate must have the signature `(CharSequence, T, Boolean) -> Boolean`, where the final Boolean
          * argument indicates case sensitivity.
          */
         operator fun <T, S : CaseSensitivity> invoke(fn: KFunction3<CharSequence, T, Boolean, Boolean>, expected: T, sensitivity: S): StringMatcher<S> {
@@ -152,19 +151,23 @@ private fun CharSequence._containsSubstring(substring: CharSequence, ignoreCase:
 /**
  * Matches a char sequence if it is empty or consists solely of whitespace characters.
  */
+@JvmField
 val isBlank = Matcher(CharSequence::isBlank)
 
 /**
  * Matches a nullable char sequence if it is either `null` or empty or consists solely of whitespace characters.
  */
+@JvmField
 val isNullOrBlank = Matcher(CharSequence::isNullOrBlank)
 
 /**
  * Matches a char sequence if it is empty (contains no characters).
  */
+@JvmField
 val isEmptyString = Matcher(CharSequence::isEmpty)
 
 /**
  * Matches a char sequence if it is either `null` or empty (contains no characters).
  */
+@JvmField
 val isNullOrEmptyString = Matcher(CharSequence::isNullOrEmpty)

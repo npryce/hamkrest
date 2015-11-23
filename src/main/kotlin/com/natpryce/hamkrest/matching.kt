@@ -19,6 +19,8 @@ sealed class MatchResult {
 
     /**
      * Represents that the actual value did not match, and includes a human-readable description of the reason.
+     *
+     * @param description human readable text that explains why the value did not match.
      */
     class Mismatch(override val description: String) : MatchResult(), SelfDescribing {
         override fun toString(): String {
@@ -75,12 +77,10 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
 
     /**
      * The negation of a matcher.
+     *
+     * @property negated the matcher to be negated
      */
-    class Negation<in T>(
-            /**
-             * The matcher to be negated
-             */
-            private val negated: Matcher<T>)
+    class Negation<in T>(private val negated: Matcher<T>)
         : Matcher<T>()
     {
         override fun invoke(actual: T): MatchResult =
@@ -103,18 +103,11 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * matcher matches, the [right] matcher is never invoked.
      *
      * Use the infix [or] function to combine matchers with a Disjunction.
+     *
+     * @property left The left operand. This operand is always evaluated.
+     * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
      */
-    class Disjunction<in T>(
-            /**
-             * The left operand.
-             */
-            private val left: Matcher<T>,
-            /**
-             * The right operand.
-             */
-            private val right: Matcher<T>)
-        : Matcher<T>()
-    {
+    class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -132,22 +125,15 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     }
 
     /**
-     * The logican disjunction ("amd") of two matchers.  Evaluation is short-cut, so that if the [left]
+     * The logican conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
      * matcher fails to match, the [right] matcher is never invoked.
      *
-     * Use the infix [or] function to combine matchers with a Disjunction.
+     * Use the infix [and] function to combine matchers with a Disjunction.
+     *
+     * @property left The left operand. This operand is always evaluated.
+     * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
      */
-    class Conjunction<in T>(
-            /**
-             * The left operand.
-             */
-            private val left: Matcher<T>,
-            /**
-             * The right operand.
-             */
-            private val right: Matcher<T>)
-        : Matcher<T>()
-    {
+    class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -169,6 +155,8 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     companion object {
         /**
          * Converts a unary predicate into a Matcher. The description is derived from the name of the predicate.
+         *
+         * @param fn the predicate to convert into a [Matcher]<T>.
          */
         public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
@@ -180,6 +168,9 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         /**
          * Converts a binary predicate and second argument into a Matcher that receives the first argument.
          * The description is derived from the name of the predicate.
+         *
+         * @param fn The predicate to convert into a [Matcher]<T>
+         * @param cmp The second argument to be passed to [fn]
          */
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${describe(actual)}" }
@@ -191,6 +182,8 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          * Converts a binary predicate into a factory function that receives the second argument of the predicate and
          * returns a Matcher that receives the first argument. The description of the matcher is derived from the name
          * of the predicate.
+         *
+         * @param fn The predicate to convert into a [Matcher]<T>
          */
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }
     }
@@ -238,20 +231,24 @@ infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<
 
 
 /**
- * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
- * The description of the matcher uses [name] to describe the [projection].
+ * Returns a matcher that applies [featureMatcher] to the result of applying [feature] to a value.
+ * The description of the matcher uses [name] to describe the [feature].
+ *
+ * @param name the name to be used to describe [feature]
+ * @param feature a function that extracts a feature of a value to be matched by [featureMatcher]
+ * @param featureMatcher a matcher applied to the result of the [feature]
  */
-fun <T, R> has(name: String, projection: (T) -> R, resultMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
+fun <T, R> has(name: String, feature: (T) -> R, featureMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
     override fun invoke(actual: T) =
-            resultMatcher(projection(actual)).let {
+            featureMatcher(feature(actual)).let {
                 when (it) {
                     is MatchResult.Mismatch -> MatchResult.Mismatch("had ${name} that ${it.description}")
                     else -> it
                 }
             }
 
-    override fun description() = "has ${name} that ${resultMatcher.description()}"
-    override fun negatedDescription() = "does not have ${name} that ${resultMatcher.description()}"
+    override fun description() = "has ${name} that ${featureMatcher.description()}"
+    override fun negatedDescription() = "does not have ${name} that ${featureMatcher.description()}"
 }
 
 /**
@@ -262,7 +259,10 @@ fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher
 
 
 /**
- * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
+ * Returns a matcher that applies [featureMatcher] to the result of applying [feature] to a value.
+ *
+ * @param feature a function that extracts a feature of a value to be matched by [featureMatcher]
+ * @param featureMatcher a matcher applied to the result of the [feature]
  */
-fun <T, R> has(projection: KFunction1<T, R>, resultMatcher: Matcher<R>): Matcher<T> =
-        has(identifierToDescription(projection.name), projection, resultMatcher)
+fun <T, R> has(feature: KFunction1<T, R>, featureMatcher: Matcher<R>): Matcher<T> =
+        has(identifierToDescription(feature.name), feature, featureMatcher)

@@ -6,6 +6,8 @@ package com.natpryce.hamkrest
  * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
  * iterable collections and maps are (recursively) described.  A null reference is described as `null`.
  * For anything else, the result of [Any.toString] is used.
+ *
+ * @param v the value to be described.
  */
 fun describe(v: Any?): String = when (v) {
     null -> "null"
@@ -24,21 +26,15 @@ fun describe(v: Any?): String = when (v) {
  */
 interface SelfDescribing {
     /**
-     * Returns the description of this object
+     * The description of this object
      */
     val description: String
 }
 
 /**
  * Combines a [value] and its [description].
+ *
+ * @property description the description of the value
+ * @property value the value described by the description
  */
-class Described<T>(
-        /**
-         * The description of [value].
-         */
-        override val description: String,
-        /**
-         * The value being described.
-         */
-        val value: T)
-    : SelfDescribing
+class Described<T>(override val description: String, val value: T) : SelfDescribing
