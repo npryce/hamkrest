@@ -68,7 +68,13 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     /**
      * The negation of a matcher.
      */
-    class Negation<in T>(private val negated: Matcher<T>) : Matcher<T>() {
+    class Negation<in T>(
+            /**
+             * The matcher to be negated
+             */
+            private val negated: Matcher<T>)
+        : Matcher<T>()
+    {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
                     MatchResult.Match -> {
@@ -90,7 +96,17 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      *
      * Use the infix [or] function to combine matchers with a Disjunction.
      */
-    class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+    class Disjunction<in T>(
+            /**
+             * The left operand.
+             */
+            private val left: Matcher<T>,
+            /**
+             * The right operand.
+             */
+            private val right: Matcher<T>)
+        : Matcher<T>()
+    {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -113,7 +129,17 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      *
      * Use the infix [or] function to combine matchers with a Disjunction.
      */
-    class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+    class Conjunction<in T>(
+            /**
+             * The left operand.
+             */
+            private val left: Matcher<T>,
+            /**
+             * The right operand.
+             */
+            private val right: Matcher<T>)
+        : Matcher<T>()
+    {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -139,7 +165,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
             override fun description(): String = identifierToDescription(fn.name)
-            override fun negatedDescription() : String = identifierToNegatedDescription(fn.name)
+            override fun negatedDescription(): String = identifierToNegatedDescription(fn.name)
             override fun asPredicate(): (T) -> Boolean = fn
         }
 
@@ -230,5 +256,5 @@ fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher
 /**
  * Returns a matcher that applies [resultMatcher] to the result of applying [projection] to a value.
  */
-fun <T, R> has(projection: KFunction1<T,R>, resultMatcher: Matcher<R>) : Matcher<T> =
+fun <T, R> has(projection: KFunction1<T, R>, resultMatcher: Matcher<R>): Matcher<T> =
         has(identifierToDescription(projection.name), projection, resultMatcher)

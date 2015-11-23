@@ -32,6 +32,16 @@ interface SelfDescribing {
 /**
  * Combines a [value] and its [description].
  */
-class Described<T>(val description: String, val value: T) : SelfDescribing {
+class Described<T>(
+        /**
+         * The description of [value].
+         */
+        val description: String,
+        /**
+         * The value being described.
+         */
+        val value: T)
+    : SelfDescribing
+{
     override fun description() = description
 }

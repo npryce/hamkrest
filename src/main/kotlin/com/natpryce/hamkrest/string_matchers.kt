@@ -5,9 +5,27 @@ package com.natpryce.hamkrest
 import kotlin.reflect.KFunction3
 import kotlin.text.Regex
 
+/**
+ * The case sensitivity of a [StringMatcher].
+ *
+ * A case sensitive [StringMatcher] can be converted into a case insensitive equivalent by calling
+ * [StringMatcher.caseSensitive], and a case insensitive [StringMatcher] can be converted into a
+ * case sensitive equivalent by calling [StringMatcher.caseInsensitive].
+ *
+ * By convention, [StringMatcher]s are case sensitive by default.
+ *
+ * The [StringMatcher] type is parameterised by case sensitivity, so it is possible to enforce
+ * at compile time whether a match should be case sensitive or not.
+ */
 sealed class CaseSensitivity {
+    /**
+     * Indicates that the match is case sensitive.
+     */
     object CaseSensitive : CaseSensitivity()
 
+    /**
+     * Indicates that the match is case insensitive.
+     */
     object CaseInsensitive : CaseSensitivity()
 }
 
@@ -21,39 +39,67 @@ sealed class CaseSensitivity {
  * `StringMatcher<CaseSensitivity.CaseInsensitive>` or `StringMatcher<CaseSensitivity.CaseSensitive>`.
  * If case sensitivity does not need to be enforced, require a `Matcher<String>`.
  */
-abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity: S) : Matcher.Primitive<CharSequence>() {
-    abstract internal fun <S2 : CaseSensitivity> withCaseSensitivity(s2: S2): StringMatcher<S2>
+abstract class StringMatcher<S : CaseSensitivity>(
+        /**
+         * The case sensitivity of the match, either [CaseSensitivity.CaseSensitive] or [CaseSensitivity.CaseInsensitive].
+         */
+        protected val caseSensitivity: S)
+    : Matcher.Primitive<CharSequence>()
+{
+    abstract internal fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2): StringMatcher<S2>
 
     companion object {
+        /**
+         * Convert a String predicate to a [StringMatcher], specifying the desired case sensitivity.
+         *
+         * The predicate must have the signature `<T> (CharSequence, T, Boolean) -> Boolean`, where the final Boolean
+         * argument indicates case sensitivity.
+         */
         operator fun <T, S : CaseSensitivity> invoke(fn: KFunction3<CharSequence, T, Boolean, Boolean>, expected: T, sensitivity: S): StringMatcher<S> {
             return object : StringMatcher<S>(sensitivity) {
-                internal override fun <S2 : CaseSensitivity> withCaseSensitivity(s2: S2) = StringMatcher(fn, expected, s2)
-
+                override fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2) =
+                        StringMatcher(fn, expected, newSensitivity)
                 override fun description() =
                         "${identifierToDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
-
                 override fun negatedDescription() =
                         "${identifierToNegatedDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
-
-                override fun invoke(actual: CharSequence): MatchResult {
-                    return match(fn(actual, expected, ignoreCase)) { "was ${describe(actual)}" }
-                }
+                override fun invoke(actual: CharSequence) =
+                        match(fn(actual, expected, ignoreCase)) { "was ${describe(actual)}" }
             }
         }
 
+        /**
+         * Convert a String predicate to a case sensitive [StringMatcher].
+         *
+         * The predicate must have the signature `<T> (CharSequence, T, Boolean) -> Boolean`, where the final Boolean
+         * argument indicates case sensitivity.
+         */
         operator fun <T> invoke(fn: KFunction3<CharSequence, T, Boolean, Boolean>, expected: T) =
                 invoke(fn, expected, CaseSensitivity.CaseSensitive)
     }
 
+    /**
+     * Should the match ignore case (be case insensitive)?
+     */
     protected val ignoreCase: Boolean get() = caseSensitivity == CaseSensitivity.CaseInsensitive
 
+    /**
+     * A suffix to add to the description of a string matcher to indicate case sensitivity.
+     */
     protected fun suffix(s: CaseSensitivity) = when (s) {
         CaseSensitivity.CaseSensitive -> ""
         CaseSensitivity.CaseInsensitive -> " (case insensitive)"
     }
 }
 
+/**
+ * Returns a case sensitive version of a case insensitive [StringMatcher].
+ */
 fun StringMatcher<CaseSensitivity.CaseInsensitive>.caseSensitive() = withCaseSensitivity(CaseSensitivity.CaseSensitive)
+
+/**
+ * Returns a case insensitive version of a case sensitive [StringMatcher].
+ */
 fun StringMatcher<CaseSensitivity.CaseSensitive>.caseInsensitive() = withCaseSensitivity(CaseSensitivity.CaseInsensitive)
 
 /**

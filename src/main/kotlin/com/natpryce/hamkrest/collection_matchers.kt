@@ -40,6 +40,12 @@ fun <T> allElements(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {
  */
 fun <T> allElements(elementPredicate: KFunction1<T,Boolean>) : Matcher<Iterable<T>> = allElements(Matcher(elementPredicate))
 
-
+/**
+ * Matches an empty collection.
+ */
 val isEmpty = Matcher(Collection<Any>::isEmpty)
+
+/**
+ * Matches a collection with a size that matches [sizeMatcher].
+ */
 fun hasSize(sizeMatcher : Matcher<Int>) = has(Collection<Any>::size, sizeMatcher)
