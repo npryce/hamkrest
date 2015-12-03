@@ -109,3 +109,29 @@ class Comparables {
         assertThat((!isWithin(1..20)).description, equalTo("is not within 1..20"))
     }
 }
+
+class ExampleException(message: String) : Exception(message)
+class DifferentException(message: String) : Exception(message)
+
+class Throwing {
+    @Test
+    fun matches_block_that_throws_specific_exception() {
+        assertThat({throw ExampleException("testing")}, throws<ExampleException>())
+    }
+
+    @Test
+    fun matches_block_that_throws_specific_exception_and_state() {
+        assertThat({throw ExampleException("testing")},
+                throws<ExampleException>(has(Exception::message, present(equalTo("testing")))))
+    }
+
+    @Test
+    fun does_not_match_block_that_does_not_throw() {
+        assertThat({}, ! throws<ExampleException>())
+    }
+
+    @Test
+    fun does_not_match_block_that_throws_different_exception() {
+        assertThat({throw DifferentException("xxx")}, !throws<ExampleException>())
+    }
+}

@@ -132,3 +132,30 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
     return Matcher.Companion(::_isWithin, range)
 }
 
+
+/**
+ * Returns a matcher that reports if a block throws an exception of type [T] and, if [exceptionCriteria] is given,
+ * the exception matches the [exceptionCriteria].
+ */
+inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null): Matcher<() -> Unit> {
+    val exceptionName = T::class.qualifiedName
+
+    return object : Matcher.Primitive<() -> Unit>() {
+        override fun invoke(actual: () -> Unit): MatchResult =
+                try {
+                    actual()
+                    MatchResult.Mismatch("did not throw")
+                } catch (e: Throwable) {
+                    if (e is T) {
+                        exceptionCriteria?.invoke(e) ?: MatchResult.Match
+                    }
+                    else {
+                        MatchResult.Mismatch("threw ${e.javaClass.kotlin.qualifiedName}")
+                    }
+                }
+
+        override fun description() = "throws ${exceptionName}${exceptionCriteria?.let{" that ${describe(it)}"}?:""}"
+        override fun negatedDescription() = "does not throw ${exceptionName}${exceptionCriteria?.let{" that ${describe(it)}"}?:""}"
+    }
+}
+
