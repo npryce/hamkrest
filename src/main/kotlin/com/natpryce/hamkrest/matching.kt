@@ -38,29 +38,22 @@ sealed class MatchResult {
  *
  * To implement your own primitive matcher, create a subclass of [Matcher.Primitive].
  */
-public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
+interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
 
     /**
      * Reports whether the [actual] value meets the criteria and, if not, why it does not match.
      */
-    abstract override fun invoke(actual: T): MatchResult
+    override fun invoke(actual: T): MatchResult
 
     /**
      * The description of this criteria.
-     *
-     * Subclasses must implement the description() method to provide the value of this property.
      */
-    override final val description: String get() = description()
-
-    /**
-     * Returns the description of this criteria.
-     */
-    abstract protected fun description(): String
+    override val description: String
 
     /**
      * Describes the negation of this criteria.
      */
-    open protected fun negatedDescription(): String = "not " + description()
+    open val negatedDescription: String get() = "not " + description
 
     /**
      * Returns a matcher that matches the negation of this criteria.
@@ -80,9 +73,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      *
      * @property negated the matcher to be negated
      */
-    class Negation<in T>(private val negated: Matcher<T>)
-        : Matcher<T>()
-    {
+    class Negation<in T>(private val negated: Matcher<T>) : Matcher<T> {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
                     MatchResult.Match -> {
@@ -93,8 +84,8 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
                     }
                 }
 
-        override fun description() = negated.negatedDescription()
-        override fun negatedDescription() = negated.description()
+        override val description = negated.negatedDescription
+        override val negatedDescription = negated.description
         override operator fun not() = negated
     }
 
@@ -107,7 +98,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * @property left The left operand. This operand is always evaluated.
      * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
      */
-    class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+    class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -121,7 +112,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
                     }
                 }
 
-        override fun description(): String = "${left.description()} or ${right.description()}"
+        override val description: String = "${left.description} or ${right.description}"
     }
 
     /**
@@ -133,7 +124,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * @property left The left operand. This operand is always evaluated.
      * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
      */
-    class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T>() {
+    class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
         override fun invoke(actual: T): MatchResult =
                 left(actual).let { l ->
                     when (l) {
@@ -142,14 +133,14 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
                     }
                 }
 
-        override fun description(): String = "${left.description()} and ${right.description()}"
+        override val description: String = "${left.description} and ${right.description}"
     }
 
     /**
      * Base class of matchers for which the match criteria is coded, not composed.  Subclass this to write
      * your own matchers.
      */
-    abstract class Primitive<in T> : Matcher<T>()
+    abstract class Primitive<in T> : Matcher<T>
 
 
     companion object {
@@ -158,10 +149,10 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          *
          * @param fn the predicate to convert into a [Matcher]<T>.
          */
-        public operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher.Primitive<T>() {
+        operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher<T> {
             override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
-            override fun description(): String = identifierToDescription(fn.name)
-            override fun negatedDescription(): String = identifierToNegatedDescription(fn.name)
+            override val description = identifierToDescription(fn.name)
+            override val negatedDescription = identifierToNegatedDescription(fn.name)
             override fun asPredicate(): (T) -> Boolean = fn
         }
 
@@ -174,8 +165,8 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          */
         public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${describe(actual)}" }
-            override fun description(): String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
-            override fun negatedDescription(): String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
+            override val description: String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
+            override val negatedDescription: String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
         }
 
         /**
@@ -185,7 +176,7 @@ public sealed class Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          *
          * @param fn The predicate to convert into a [Matcher]<T>
          */
-        public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }
+        operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }
     }
 }
 
@@ -247,8 +238,8 @@ fun <T, R> has(name: String, feature: (T) -> R, featureMatcher: Matcher<R>): Mat
                 }
             }
 
-    override fun description() = "has ${name} that ${featureMatcher.description()}"
-    override fun negatedDescription() = "does not have ${name} that ${featureMatcher.description()}"
+    override val description = "has ${name} that ${featureMatcher.description}"
+    override val negatedDescription = "does not have ${name} that ${featureMatcher.description}"
 }
 
 /**
@@ -266,3 +257,7 @@ fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher
  */
 fun <T, R> has(feature: KFunction1<T, R>, featureMatcher: Matcher<R>): Matcher<T> =
         has(identifierToDescription(feature.name), feature, featureMatcher)
+
+fun <T> Matcher<T>.describedBy(fn: ()->String) = object : Matcher<T> by this {
+    override val description : String get() = fn()
+}

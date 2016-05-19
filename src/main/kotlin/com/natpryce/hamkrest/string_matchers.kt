@@ -58,9 +58,9 @@ abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity:
             return object : StringMatcher<S>(sensitivity) {
                 override fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2) =
                         StringMatcher(fn, expected, newSensitivity)
-                override fun description() =
+                override val description: String get() =
                         "${identifierToDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
-                override fun negatedDescription() =
+                override val negatedDescription: String get() =
                         "${identifierToNegatedDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
                 override fun invoke(actual: CharSequence) =
                         match(fn(actual, expected, ignoreCase)) { "was ${describe(actual)}" }

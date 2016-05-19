@@ -12,8 +12,8 @@ fun <T> anyElement(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {
         override fun invoke(actual: Iterable<T>): MatchResult =
                 match(actual.any(elementMatcher.asPredicate())) { "was ${describe(actual)}" }
 
-        override fun description(): String = "in which any element ${describe(elementMatcher)}"
-        override fun negatedDescription() : String = "in which no element ${describe(elementMatcher)}"
+        override val description: String get() = "in which any element ${describe(elementMatcher)}"
+        override val negatedDescription : String get() = "in which no element ${describe(elementMatcher)}"
     }
 }
 
@@ -30,8 +30,8 @@ fun <T> allElements(elementMatcher: Matcher<T>) : Matcher<Iterable<T>> {
         override fun invoke(actual: Iterable<T>): MatchResult =
                 match(actual.all(elementMatcher.asPredicate())) { "was ${describe(actual)}" }
 
-        override fun description(): String = "in which all elements ${describe(elementMatcher)}"
-        override fun negatedDescription() : String = "in which not all elements ${describe(elementMatcher)}"
+        override val description: String get() = "in which all elements ${describe(elementMatcher)}"
+        override val negatedDescription : String get() = "in which not all elements ${describe(elementMatcher)}"
     }
 }
 
