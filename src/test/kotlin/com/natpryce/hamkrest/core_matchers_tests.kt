@@ -56,6 +56,14 @@ class Nullability {
 
     @Test
     fun presence() {
+        val m : Matcher<String?> = present();
+
+        assertMatch(m("xxx"))
+        assertMismatchWithDescription("was null", m(null))
+    }
+
+    @Test
+    fun presence_and_constraint() {
         val m : Matcher<String?> = present(equalTo("xxx"));
 
         assertMatch(m("xxx"))
@@ -65,11 +73,11 @@ class Nullability {
 }
 
 class Downcasting {
-    val m : Matcher<Any> = cast(equalTo("bob"))
+    val m : Matcher<Any> = isA<String>(equalTo("bob"))
 
     @Test
     fun wrong_type() {
-        assertMismatchWithDescription("had type kotlin.Double", m(10.0))
+        assertMismatchWithDescription("was a kotlin.Double", m(10.0))
     }
 
     @Test
@@ -80,6 +88,12 @@ class Downcasting {
     @Test
     fun correct_type_and_downcast_match() {
         assertMatch(m("bob"))
+    }
+
+    @Test
+    fun type_match() {
+        assertMatch(isA<String>()("bob"))
+        assertMismatchWithDescription("was a kotlin.Int", isA<String>()(1))
     }
 }
 
