@@ -4,7 +4,7 @@ version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
 println "building version ${version}"
 
 buildscript {
-    ext.kotlin_version = '1.0.2'
+    ext.kotlin_version = '1.0.3'
     repositories {
         mavenCentral()
         jcenter()
