@@ -14,7 +14,7 @@ class LogicalConnectives {
         assertEquals("is not equal to 20", m.description)
         assertEquals("is equal to 20", (!m).description)
 
-        assertMismatchWithDescription("was 20", m(20));
+        assertMismatchWithDescription("was 20", m(20))
     }
 
     @Test
@@ -93,9 +93,9 @@ class FunctionToMatcher {
 
 }
 
-open class Fruit(public val ripeness: Double)
-class Apple(ripeness: Double, public val forCooking: Boolean) : Fruit(ripeness)
-class Orange(ripeness: Double, public val segmentCount: Int) : Fruit(ripeness)
+open class Fruit(val ripeness: Double)
+class Apple(ripeness: Double, val forCooking: Boolean) : Fruit(ripeness)
+class Orange(ripeness: Double, val segmentCount: Int) : Fruit(ripeness)
 
 
 fun isRipe(f: Fruit): Boolean = f.ripeness >= 0.5
