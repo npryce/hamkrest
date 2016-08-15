@@ -1,4 +1,4 @@
-package com.natpryce.hamkrest;
+package com.natpryce.hamkrest
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
@@ -18,12 +18,26 @@ class Equality {
         assertMismatchWithDescription("was 20", equalTo(10)(20))
         assertMismatchWithDescription("was 1", equalTo(0)(1))
     }
+    
+    @Test
+    fun null_comparison() {
+        assertMatch((equalTo(null)(null)))
+        
+        val actual: String? = null
+        assertMatch(equalTo<String?>(null)(actual))
+        
+        val expected: String? = null
+        assertMatch(equalTo(expected)(null))
+        
+        assertMismatchWithDescription("was null", equalTo("foo")(actual))
+    }
 
     @Test
     fun description() {
         assertEquals("is equal to 20", equalTo(20).description)
         assertEquals("is equal to \"foo\"", equalTo("foo").description)
         assertEquals("is equal to \"hello \\\"nat\\\"\"", equalTo("hello \"nat\"").description)
+        assertEquals("is equal to null", equalTo(null).description)
     }
 }
 
@@ -48,7 +62,7 @@ class SameInstance {
 class Nullability {
     @Test
     fun absence() {
-        val m : Matcher<Int?> = absent();
+        val m : Matcher<Int?> = absent()
 
         assertMatch(m(null))
         assertMismatchWithDescription("was 100", m(100))
@@ -56,7 +70,7 @@ class Nullability {
 
     @Test
     fun presence() {
-        val m : Matcher<String?> = present();
+        val m : Matcher<String?> = present()
 
         assertMatch(m("xxx"))
         assertMismatchWithDescription("was null", m(null))
@@ -64,7 +78,7 @@ class Nullability {
 
     @Test
     fun presence_and_constraint() {
-        val m : Matcher<String?> = present(equalTo("xxx"));
+        val m : Matcher<String?> = present(equalTo("xxx"))
 
         assertMatch(m("xxx"))
         assertMismatchWithDescription("was null", m(null))

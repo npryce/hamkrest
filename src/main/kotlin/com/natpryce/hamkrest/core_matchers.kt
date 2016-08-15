@@ -20,11 +20,12 @@ val nothing = !anything
 
 
 /**
- * Returns a matcher that reports if a value is equal to an [expected] value.
+ * Returns a matcher that reports if a value is equal to an [expected] value.  Handles null comparisons, just as
+ * the `==` operator does.
  */
-fun <T> equalTo(expected: T): Matcher<T> =
-    object : Matcher<T> {
-        override fun invoke(actual: T): MatchResult = match(actual == expected) { "was ${describe(actual)}" }
+fun <T> equalTo(expected: T?): Matcher<T?> =
+    object : Matcher<T?> {
+        override fun invoke(actual: T?): MatchResult = match(actual == expected) { "was ${describe(actual)}" }
         override val description: String get() = "is equal to ${describe(expected)}"
         override val negatedDescription: String get() = "is not equal to ${describe(expected)}"
     }
