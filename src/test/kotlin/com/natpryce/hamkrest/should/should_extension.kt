@@ -54,7 +54,6 @@ class ShouldExtension {
     @Test
     fun not_matches_subtypes() {
         listOf(1, 2, 4) shouldNotMatch anyElement(equalTo(3))
-        "Coltrane" shouldMatch equalTo("Ellington")
     }
 }
 
