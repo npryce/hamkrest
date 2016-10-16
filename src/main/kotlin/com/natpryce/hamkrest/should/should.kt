@@ -23,6 +23,20 @@ infix fun <T> T.shouldMatch(f: KFunction1<T, Boolean>) {
 }
 
 /**
+ * Syntactic sugar for a negated [assertThat] that can be used as an infix function
+ */
+infix fun <T> T.shouldNotMatch(matcher: Matcher<T>) {
+    assertThat(this, !matcher)
+}
+
+/**
+ * Syntactic sugar for a negated [assertThat] that can be used as an infix function
+ */
+infix fun <T> T.shouldNotMatch(f: KFunction1<T, Boolean>) {
+    this shouldNotMatch Matcher(f)
+}
+
+/**
  * Combines a value with a description to be used in failure messages from [shouldMatch].
  *
  * Used as:
@@ -38,4 +52,4 @@ infix fun <T> Described<T>.shouldMatch(criteria: Matcher<T>) = assertThat(this.d
 /**
  * Syntactic sugar for [assertThat] that can be used as an infix function.
  */
-infix fun <T> Described<T>.shouldMatch(p: KFunction1<T,Boolean>) = assertThat(this.description, this.value, Matcher(p))
+infix fun <T> Described<T>.shouldMatch(p: KFunction1<T, Boolean>) = assertThat(this.description, this.value, Matcher(p))
