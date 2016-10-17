@@ -15,8 +15,8 @@ class Equality {
 
     @Test
     fun not_equal() {
-        assertMismatchWithDescription("was 20", equalTo(10)(20))
-        assertMismatchWithDescription("was 1", equalTo(0)(1))
+        assertMismatchWithDescription("was: 20", equalTo(10)(20))
+        assertMismatchWithDescription("was: 1", equalTo(0)(1))
     }
     
     @Test
@@ -29,7 +29,7 @@ class Equality {
         val expected: String? = null
         assertMatch(equalTo(expected)(null))
         
-        assertMismatchWithDescription("was null", equalTo("foo")(actual))
+        assertMismatchWithDescription("was: null", equalTo("foo")(actual))
     }
 
     @Test
@@ -49,7 +49,7 @@ class SameInstance {
 
         assertTrue { s !== t }
         assertMatch(sameInstance(s)(s))
-        assertMismatchWithDescription("was \"hello\"", sameInstance(s)(t))
+        assertMismatchWithDescription("was: \"hello\"", sameInstance(s)(t))
     }
 
     @Test
@@ -65,7 +65,7 @@ class Nullability {
         val m : Matcher<Int?> = absent()
 
         assertMatch(m(null))
-        assertMismatchWithDescription("was 100", m(100))
+        assertMismatchWithDescription("was: 100", m(100))
     }
 
     @Test
@@ -73,7 +73,7 @@ class Nullability {
         val m : Matcher<String?> = present()
 
         assertMatch(m("xxx"))
-        assertMismatchWithDescription("was null", m(null))
+        assertMismatchWithDescription("was: null", m(null))
     }
 
     @Test
@@ -81,8 +81,8 @@ class Nullability {
         val m : Matcher<String?> = present(equalTo("xxx"))
 
         assertMatch(m("xxx"))
-        assertMismatchWithDescription("was null", m(null))
-        assertMismatchWithDescription("was \"yyy\"", m("yyy"))
+        assertMismatchWithDescription("was: null", m(null))
+        assertMismatchWithDescription("was: \"yyy\"", m("yyy"))
     }
 }
 
@@ -91,12 +91,12 @@ class Downcasting {
 
     @Test
     fun wrong_type() {
-        assertMismatchWithDescription("was a kotlin.Double", m(10.0))
+        assertMismatchWithDescription("was: a kotlin.Double", m(10.0))
     }
 
     @Test
     fun correct_type_and_downcast_mismatch() {
-        assertMismatchWithDescription("was \"alice\"", m("alice"))
+        assertMismatchWithDescription("was: \"alice\"", m("alice"))
     }
 
     @Test
@@ -107,7 +107,7 @@ class Downcasting {
     @Test
     fun type_match() {
         assertMatch(isA<String>()("bob"))
-        assertMismatchWithDescription("was a kotlin.Int", isA<String>()(1))
+        assertMismatchWithDescription("was: a kotlin.Int", isA<String>()(1))
     }
 }
 

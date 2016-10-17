@@ -6,13 +6,13 @@ import org.junit.Test
 
 class ShouldExtension {
 
-    @org.junit.Test
+    @Test
     fun can_extend_an_object() {
         "Banana" shouldMatch startsWith("Ban")
         42 shouldMatch isWithin(1..99)
     }
 
-    @org.junit.Test
+    @Test
     fun matches_with_function() {
         "Banana" shouldMatch ::isAYellowFruitName
         42 shouldMatch ::isTheAnswer
@@ -27,16 +27,33 @@ class ShouldExtension {
     fun can_name_asserted_value() {
         try {
             42 describedAs "bob" shouldMatch equalTo(63)
-        }
-        catch (e: AssertionError) {
+        } catch (e: AssertionError) {
             assertThat(e.message, present(startsWith("bob: ")))
         }
     }
 
     @Test
     fun is_type_safe() {
-         // 42 shouldMatch startsWith("Ban") // Doesn't compile
-         // Integer(42) shouldMatch startsWith("Ban") // Doesn't compile
+        // 42 shouldMatch startsWith("Ban") // Doesn't compile
+        // Integer(42) shouldMatch startsWith("Ban") // Doesn't compile
+    }
+
+
+    @Test
+    fun not_extend_an_object() {
+        "Banana" shouldNotMatch startsWith("App")
+        42 shouldNotMatch isWithin(1..10)
+    }
+
+    @Test
+    fun not_matches_with_function() {
+        "Apple" shouldNotMatch ::isAYellowFruitName
+        666 shouldNotMatch ::isTheAnswer
+    }
+
+    @Test
+    fun not_matches_subtypes() {
+        listOf(1, 2, 4) shouldNotMatch anyElement(equalTo(3))
     }
 }
 

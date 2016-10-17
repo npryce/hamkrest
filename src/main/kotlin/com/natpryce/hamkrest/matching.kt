@@ -75,15 +75,15 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      */
     class Negation<in T>(private val negated: Matcher<T>) : Matcher<T> {
         override fun invoke(actual: T): MatchResult =
-            when (negated(actual)) {
-                MatchResult.Match -> {
-                    MatchResult.Mismatch("was ${describe(actual)}")
+                when (negated(actual)) {
+                    MatchResult.Match -> {
+                        MatchResult.Mismatch("was: ${describe(actual)}")
+                    }
+                    is MatchResult.Mismatch -> {
+                        MatchResult.Match
+                    }
                 }
-                is MatchResult.Mismatch -> {
-                    MatchResult.Match
-                }
-            }
-        
+
         override val description = negated.negatedDescription
         override val negatedDescription = negated.description
         override operator fun not() = negated
@@ -150,7 +150,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          * @param fn the predicate to convert into a [Matcher]<T>.
          */
         operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher<T> {
-            override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was ${describe(actual)}" }
+            override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was: ${describe(actual)}" }
             override val description = identifierToDescription(fn.name)
             override val negatedDescription = identifierToNegatedDescription(fn.name)
             override fun asPredicate(): (T) -> Boolean = fn
@@ -163,8 +163,8 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          * @param fn The predicate to convert into a [Matcher]<T>
          * @param cmp The second argument to be passed to [fn]
          */
-        operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
-            override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was ${describe(actual)}" }
+        public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
+            override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was: ${describe(actual)}" }
             override val description: String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
             override val negatedDescription: String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
         }

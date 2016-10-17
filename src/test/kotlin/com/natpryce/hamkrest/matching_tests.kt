@@ -14,7 +14,7 @@ class LogicalConnectives {
         assertEquals("is not equal to 20", m.description)
         assertEquals("is equal to 20", (!m).description)
 
-        assertMismatchWithDescription("was 20", m(20))
+        assertMismatchWithDescription("was: 20", m(20))
     }
 
     @Test
@@ -30,7 +30,7 @@ class LogicalConnectives {
 
         assertMatch(m(10))
         assertMatch(m(20))
-        assertMismatchWithDescription("was 11", m(11))
+        assertMismatchWithDescription("was: 11", m(11))
 
         assertThat(m.description, equalTo("is equal to 10 or is equal to 20"))
     }
@@ -41,8 +41,8 @@ class LogicalConnectives {
 
         assertMatch(m(11))
         assertMatch(m(19))
-        assertMismatchWithDescription("was 10", m(10))
-        assertMismatchWithDescription("was 20", m(20))
+        assertMismatchWithDescription("was: 10", m(10))
+        assertMismatchWithDescription("was: 20", m(20))
 
         assertThat(m.description, equalTo("is greater than 10 and is less than 20"))
     }
@@ -58,7 +58,7 @@ class FunctionToMatcher {
 
         assertMatch(isBlank(""))
         assertMatch(isBlank(" "))
-        assertMismatchWithDescription("was \"wrong\"", isBlank("wrong"))
+        assertMismatchWithDescription("was: \"wrong\"", isBlank("wrong"))
     }
 
     @Test
@@ -71,7 +71,7 @@ class FunctionToMatcher {
 
         assertMatch(hasLength4("yeah"))
         assertMatch(hasLength4("nope"))
-        assertMismatchWithDescription("was \"wrong\"", hasLength4("wrong"))
+        assertMismatchWithDescription("was: \"wrong\"", hasLength4("wrong"))
     }
 
     @Test

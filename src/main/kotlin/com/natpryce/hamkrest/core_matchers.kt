@@ -25,7 +25,7 @@ val nothing = !anything
  */
 fun <T> equalTo(expected: T?): Matcher<T?> =
     object : Matcher<T?> {
-        override fun invoke(actual: T?): MatchResult = match(actual == expected) { "was ${describe(actual)}" }
+        override fun invoke(actual: T?): MatchResult = match(actual == expected) { "was: ${describe(actual)}" }
         override val description: String get() = "is equal to ${describe(expected)}"
         override val negatedDescription: String get() = "is not equal to ${describe(expected)}"
     }
@@ -35,7 +35,7 @@ fun <T> equalTo(expected: T?): Matcher<T?> =
  */
 fun <T> sameInstance(expected: T): Matcher<T> =
     object : Matcher<T> {
-        override fun invoke(actual: T): MatchResult = match(actual === expected) { "was ${describe(actual)}" }
+        override fun invoke(actual: T): MatchResult = match(actual === expected) { "was: ${describe(actual)}" }
         override val description: String get() = "is same instance as ${describe(expected)}"
         override val negatedDescription: String get() = "is not same instance as ${describe(expected)}"
     }
@@ -45,7 +45,7 @@ fun <T> sameInstance(expected: T): Matcher<T> =
  * Returns a matcher that reports if a value is null.
  */
 fun <T> absent(): Matcher<T?> = object : Matcher<T?> {
-    override fun invoke(actual: T?): MatchResult = match(actual == null) { "was ${describe(actual)}" }
+    override fun invoke(actual: T?): MatchResult = match(actual == null) { "was: ${describe(actual)}" }
     override val description: String get() = "null"
 }
 
@@ -55,7 +55,7 @@ fun <T> absent(): Matcher<T?> = object : Matcher<T?> {
 fun <T> present(valueMatcher: Matcher<T>? = null) = object : Matcher<T?> {
     override fun invoke(actual: T?) =
         if (actual == null) {
-            MatchResult.Mismatch("was null")
+            MatchResult.Mismatch("was: null")
         }
         else if (valueMatcher == null) {
             MatchResult.Match
@@ -76,7 +76,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
     object : Matcher<Any> {
         override fun invoke(actual: Any) =
             if (actual !is T) {
-                MatchResult.Mismatch("was a ${actual.javaClass.kotlin.qualifiedName}")
+                MatchResult.Mismatch("was: a ${actual.javaClass.kotlin.qualifiedName}")
             }
             else if (downcastMatcher == null) {
                 MatchResult.Match
@@ -118,7 +118,7 @@ fun <N : Comparable<N>> lessThanOrEqualTo(n: N) = _comparesAs("less than or equa
 private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedSignum: (Int) -> Boolean): Matcher<N> {
     return object : Matcher<N> {
         override fun invoke(actual: N): MatchResult =
-            match(expectedSignum(actual.compareTo(n))) { "was ${describe(actual)}" }
+            match(expectedSignum(actual.compareTo(n))) { "was: ${describe(actual)}" }
 
         override val description: String get() {
             return "is ${description} ${describe(n)}"
