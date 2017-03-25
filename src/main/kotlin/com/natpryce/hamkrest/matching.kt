@@ -246,7 +246,7 @@ fun <T, R> has(name: String, feature: (T) -> R, featureMatcher: Matcher<R>): Mat
  * Returns a matcher that applies [propertyMatcher] to the current value of [property] of an object.
  */
 fun <T, R> has(property: KProperty1<T, R>, propertyMatcher: Matcher<R>): Matcher<T> =
-    has(identifierToDescription(property.name), property.getter, propertyMatcher)
+    has(identifierToDescription(property.name), property, propertyMatcher)
 
 
 /**
