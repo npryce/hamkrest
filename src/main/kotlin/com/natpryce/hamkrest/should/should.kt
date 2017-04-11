@@ -5,6 +5,7 @@ package com.natpryce.hamkrest.should
 import com.natpryce.hamkrest.Described
 import com.natpryce.hamkrest.Matcher
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import kotlin.reflect.KFunction1
 
 
@@ -53,3 +54,10 @@ infix fun <T> Described<T>.shouldMatch(criteria: Matcher<T>) = assertThat(this.d
  * Syntactic sugar for [assertThat] that can be used as an infix function.
  */
 infix fun <T> Described<T>.shouldMatch(p: KFunction1<T, Boolean>) = assertThat(this.description, this.value, Matcher(p))
+
+/**
+ * Syntactic sugar for the common case of asserting equality.
+ */
+infix fun <T> T.shouldEqual(expected: T) {
+  this shouldMatch equalTo(expected)
+}

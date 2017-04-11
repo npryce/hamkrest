@@ -59,6 +59,11 @@ class ShouldExtension {
     fun not_matches_subtypes() {
         listOf(1, 2, 4) shouldNotMatch anyElement(equalTo(3))
     }
+
+    @Test
+    fun should_equal_asserts_equality() {
+        "Banana" shouldEqual "Banana"
+    }
 }
 
 private fun isAYellowFruitName(name: String) = name.toLowerCase() in listOf("banana", "lemon", "hippophae")
