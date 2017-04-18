@@ -1,7 +1,11 @@
 package com.natpryce.hamkrest.should
 
-import com.natpryce.hamkrest.*
+import com.natpryce.hamkrest.anyElement
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.isWithin
+import com.natpryce.hamkrest.present
+import com.natpryce.hamkrest.startsWith
 import org.junit.Test
 
 class ShouldExtension {

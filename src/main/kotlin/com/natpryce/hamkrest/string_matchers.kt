@@ -3,7 +3,6 @@
 package com.natpryce.hamkrest
 
 import kotlin.reflect.KFunction3
-import kotlin.text.Regex
 
 /**
  * The case sensitivity of a [StringMatcher].

@@ -2,7 +2,7 @@
 
 package com.natpryce.hamkrest
 
-import java.util.*
+import java.util.ArrayList
 
 internal fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
         if (comparisonResult) {
@@ -31,7 +31,7 @@ fun identifierToWords(s: String): List<String> {
 
     for ((prev, c) in (s[0] + s).zip(s)) {
         if (isWordStart(prev, c)) {
-            if (buf.length > 0) {
+            if (buf.isNotEmpty()) {
                 words.add(buf.toString())
                 buf.setLength(0)
             }
