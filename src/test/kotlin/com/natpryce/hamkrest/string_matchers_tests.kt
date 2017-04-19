@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.assertion.assert
 import org.junit.Test
 
 class RegexMatching {
@@ -8,20 +8,20 @@ class RegexMatching {
 
     @Test
     fun entire_string_matches_regex() {
-        assertThat("abba", matches(pattern))
-        assertThat("aba", matches(pattern))
-        assertThat("abbbbbba", matches(pattern))
-        assertThat("aha!", !matches(pattern))
-        assertThat("yabba dabba doo", !matches(pattern))
+        assert.that("abba", matches(pattern))
+        assert.that("aba", matches(pattern))
+        assert.that("abbbbbba", matches(pattern))
+        assert.that("aha!", !matches(pattern))
+        assert.that("yabba dabba doo", !matches(pattern))
     }
 
     @Test
     fun string_contains_regex() {
-        assertThat("abba", contains(pattern))
-        assertThat("aba", contains(pattern))
-        assertThat("abbbbbba", contains(pattern))
-        assertThat("aha!", !matches(pattern))
-        assertThat("yabba dabba doo", contains(pattern))
+        assert.that("abba", contains(pattern))
+        assert.that("aba", contains(pattern))
+        assert.that("abbbbbba", contains(pattern))
+        assert.that("aha!", !matches(pattern))
+        assert.that("yabba dabba doo", contains(pattern))
     }
 
 }
@@ -29,50 +29,50 @@ class RegexMatching {
 class ContainsSubstring {
     @Test
     fun contains_substring() {
-        assertThat("qwerty", containsSubstring("qwe"))
-        assertThat("qwerty", containsSubstring("wert"))
-        assertThat("qwerty", containsSubstring("erty"))
+        assert.that("qwerty", containsSubstring("qwe"))
+        assert.that("qwerty", containsSubstring("wert"))
+        assert.that("qwerty", containsSubstring("erty"))
     }
 
     @Test
     fun contains_substring_can_specify_case_sensitivity() {
-        assertThat("qwerty", containsSubstring("WERT").caseInsensitive())
-        assertThat("qwerty", !containsSubstring("WERT").caseInsensitive().caseSensitive())
+        assert.that("qwerty", containsSubstring("WERT").caseInsensitive())
+        assert.that("qwerty", !containsSubstring("WERT").caseInsensitive().caseSensitive())
     }
 
     @Test
     fun description() {
-        assertThat(containsSubstring("foo").description, equalTo("contains substring \"foo\""))
-        assertThat(containsSubstring("foo").caseInsensitive().description, equalTo("contains substring \"foo\" (case insensitive)"))
+        assert.that(containsSubstring("foo").description, equalTo("contains substring \"foo\""))
+        assert.that(containsSubstring("foo").caseInsensitive().description, equalTo("contains substring \"foo\" (case insensitive)"))
     }
 }
 
 class StringPrefixAndSuffix {
     @Test
     fun prefix() {
-        assertThat("qwerty", startsWith("q"))
-        assertThat("qwerty", startsWith("qwe"))
-        assertThat("qwerty", !startsWith("Q"))
-        assertThat("qwerty", startsWith(""))
+        assert.that("qwerty", startsWith("q"))
+        assert.that("qwerty", startsWith("qwe"))
+        assert.that("qwerty", !startsWith("Q"))
+        assert.that("qwerty", startsWith(""))
     }
 
     @Test
     fun prefix_can_specify_case_sensitivity() {
-        assertThat("qwerty", startsWith("Q").caseInsensitive())
-        assertThat("qwerty", !startsWith("Q").caseInsensitive().caseSensitive())
+        assert.that("qwerty", startsWith("Q").caseInsensitive())
+        assert.that("qwerty", !startsWith("Q").caseInsensitive().caseSensitive())
     }
 
     @Test
     fun suffix() {
-        assertThat("qwerty", endsWith("y"))
-        assertThat("qwerty", endsWith("rty"))
-        assertThat("qwerty", !endsWith("Y"))
-        assertThat("qwerty", endsWith(""))
+        assert.that("qwerty", endsWith("y"))
+        assert.that("qwerty", endsWith("rty"))
+        assert.that("qwerty", !endsWith("Y"))
+        assert.that("qwerty", endsWith(""))
     }
 
     @Test
     fun suffix_can_specify_case_sensitivity() {
-        assertThat("qwerty", endsWith("Y").caseInsensitive())
-        assertThat("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
+        assert.that("qwerty", endsWith("Y").caseInsensitive())
+        assert.that("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
     }
 }

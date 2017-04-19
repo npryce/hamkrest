@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.assertion.assert
 import org.junit.Test
 
 class Utilities {
@@ -13,9 +13,11 @@ class Utilities {
                 "farenheit451" to listOf("farenheit", "451"),
                 "i_got_99_problems" to listOf("i", "got", "99", "problems")
         )
-
+        
         for ((identifier, words) in cases) {
-            assertThat("${describe(identifier)} to words", identifierToWords(identifier), equalTo(words))
+            assert.that(identifierToWords(identifier), equalTo(words)) {
+                "${describe(identifier)} to words"
+            }
         }
     }
 }

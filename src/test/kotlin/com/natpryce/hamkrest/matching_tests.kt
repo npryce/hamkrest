@@ -1,6 +1,7 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.assertion.assert
+import com.natpryce.hamkrest.assertion.that
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -32,7 +33,7 @@ class LogicalConnectives {
         assertMatch(m(20))
         assertMismatchWithDescription("was: 11", m(11))
 
-        assertThat(m.description, equalTo("is equal to 10 or is equal to 20"))
+        assert.that(m.description, equalTo("is equal to 10 or is equal to 20"))
     }
 
     @Test
@@ -44,7 +45,7 @@ class LogicalConnectives {
         assertMismatchWithDescription("was: 10", m(10))
         assertMismatchWithDescription("was: 20", m(20))
 
-        assertThat(m.description, equalTo("is greater than 10 and is less than 20"))
+        assert.that(m.description, equalTo("is greater than 10 and is less than 20"))
     }
 }
 
@@ -87,10 +88,9 @@ class FunctionToMatcher {
     }
 
     @Test
-    fun can_pass_function_references_to_assertThat() {
-        assertThat("  ", String::isBlank)
+    fun can_pass_function_references_to_assert_that() {
+        assert.that("  ", String::isBlank)
     }
-
 }
 
 open class Fruit(val ripeness: Double)
@@ -119,21 +119,21 @@ class Projections {
     fun can_match_projection_by_property() {
         val isLongEnough = has(String::length, greaterThan(4))
 
-        assertThat("12345", isLongEnough)
-        assertThat("1234", !isLongEnough)
+        assert.that("12345", isLongEnough)
+        assert.that("1234", !isLongEnough)
 
-        assertThat(isLongEnough.description, equalTo("has length that is greater than 4"))
+        assert.that(isLongEnough.description, equalTo("has length that is greater than 4"))
     }
 
     @Test
     fun can_match_projection_by_function() {
-        assertThat("12345", has(::toInt, equalTo(12345)))
-        assertThat("1234", !has(::toInt, equalTo(12345)))
+        assert.that("12345", has(::toInt, equalTo(12345)))
+        assert.that("1234", !has(::toInt, equalTo(12345)))
     }
 
     @Test
     fun description_of_projection_is_human_readableified() {
-        assertThat(has(::toInt, equalTo(12345)).description, equalTo(
+        assert.that(has(::toInt, equalTo(12345)).description, equalTo(
                 "has to int that is equal to 12345"))
     }
 }
