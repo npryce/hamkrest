@@ -12,13 +12,12 @@ private fun noMessage() = ""
 
 class Assertion(val valueDescriber: (Any?) -> String) {
     fun <T> that(actual: T, criteria: Matcher<T>, message: () -> String = ::noMessage) {
-        criteria(actual).let { judgement ->
-            if (judgement is MatchResult.Mismatch) {
-                throw AssertionError(
-                    message().let { if (it.isEmpty()) it else it + ": " } +
-                        "expected a value that ${valueDescriber(criteria)}\n" +
-                        "but it ${valueDescriber(judgement)}")
-            }
+        val judgement = criteria(actual)
+        if (judgement is MatchResult.Mismatch) {
+            throw AssertionError(
+                message().let { if (it.isEmpty()) it else it + ": " } +
+                    "expected a value that ${valueDescriber(criteria)}\n" +
+                    "but it ${valueDescriber(judgement)}")
         }
     }
 }
@@ -36,6 +35,7 @@ fun <T, U> Assertion.that(actual: T, criteria: KFunction2<T, U, Boolean>, other:
  * An Assertion that uses the Hamkrest's `describe` function to describe values.
  */
 val assert = Assertion(::describe)
+
 
 /**
  * Asserts that [criteria] matches [actual].
