@@ -7,6 +7,9 @@ A reimplementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.
 [![Build Status](https://travis-ci.org/npryce/hamkrest.svg?branch=master)](https://travis-ci.org/npryce/hamkrest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/hamkrest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.natpryce%22%20AND%20a%3A%22hamkrest%22)
 
+Note: as of version 1.4.0.0, you must add kotlin-reflect to the classpath to use HamKrest's reflective features.
+
+
 Compared to Java:
 
  * Kotlin's type system means that developers don't have to worry about getting the variance of generic signatures right.  Variance is defined on the abstract Matcher type and Kotlin makes sure composition and subtyping work together the way you expect.
