@@ -16,31 +16,45 @@ Compared to Java:
  
  * Syntactic sugar. You can negate a matcher with the ! operator and compose matchers with infix `and` and `or` functions:
 
-          assert.that("xyzzy", startsWith("x") and endsWith("y") and !containsSubstring("a"))
-
+    ``` kotlin
+    import com.natpryce.hamkrest.assertion.assert
+          
+    ...
+          
+    assert.that("xyzzy", startsWith("x") and endsWith("y") and !containsSubstring("a"))
+    ```
+    
  * Easier to extend. You can convert named unary predicates into matchers.
 
-          val isBlank = Matcher(String::isBlank)
-
-          assert.that(input, isBlank)
+    ``` kotlin
+    val isBlank = Matcher(String::isBlank)
+    
+    assert.that(input, isBlank)
+    ```
 
    As a shortcut, you can pass named functions to the `assert.that`, `and`, `or` and many other functions that take a matcher.
 
-          assert.that(input, String::isBlank)
+    ``` kotlin
+    assert.that(input, String::isBlank)
+    ```
 
    You can also convert a named binary predicate and the second argument to a matcher for first argument, which works well for extension methods.
 
-          fun String.hasLength(n: Int): Boolean = this.length == n
+    ``` kotlin
+    fun String.hasLength(n: Int): Boolean = this.length == n
 
-          val isTheRightLength = Matcher(String::hasLength, 8)
+    val isTheRightLength = Matcher(String::hasLength, 8)
 
-          assert.that(secretCode, isTheRightLength)
+    assert.that(secretCode, isTheRightLength)
+    ```
 
    You can use function and property references to match features of a value:
 
-          val isLongEnough = has(String::length, greaterThan(8))
+   ``` kotlin
+   val isLongEnough = has(String::length, greaterThan(8))
 
-          assert.that(password, isLongEnough)
+   assert.that(password, isLongEnough)
+   ```
 
    All of these shortcuts produce good, human-readable diagnostics.
 
