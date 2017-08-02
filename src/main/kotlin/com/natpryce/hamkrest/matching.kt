@@ -149,13 +149,8 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          *
          * @param fn the predicate to convert into a [Matcher]<T>.
          */
-        operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = object : Matcher<T> {
-            override fun invoke(actual: T): MatchResult = match(fn(actual)) { "was: ${describe(actual)}" }
-            override val description = identifierToDescription(fn.name)
-            override val negatedDescription = identifierToNegatedDescription(fn.name)
-            override fun asPredicate(): (T) -> Boolean = fn
-        }
-        
+        operator fun <T> invoke(fn: KFunction1<T, Boolean>): Matcher<T> = Matcher(fn.name, fn)
+
         /**
          * Converts a binary predicate and second argument into a Matcher that receives the first argument.
          * The description is derived from the name of the predicate.
@@ -163,7 +158,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          * @param fn The predicate to convert into a [Matcher]<T>
          * @param cmp The second argument to be passed to [fn]
          */
-        public operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
+        operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was: ${describe(actual)}" }
             override val description: String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
             override val negatedDescription: String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
@@ -177,6 +172,27 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
          * @param fn The predicate to convert into a [Matcher]<T>
          */
         operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>): (U) -> Matcher<T> = { Matcher(fn, it) }
+
+        /**
+         * Converts a property into a Matcher. The description is derived from the name of the property.
+         *
+         * @param property the property to convert into a [Matcher]<T>.
+         */
+        operator fun <T> invoke(property: KProperty1<T, Boolean>): Matcher<T> = Matcher(property.name, property)
+
+        /**
+         * Converts a unary predicate into a Matcher.
+         * The description of the matcher uses [name] to describe the [feature].
+         *
+         * @param name the name to be used to describe [feature]
+         * @param feature the predicate to convert into a [Matcher]<T>.
+         */
+        operator fun <T> invoke(name: String, feature: (T) -> Boolean): Matcher<T> = object : Matcher<T> {
+            override fun invoke(actual: T): MatchResult = match(feature(actual)) { "was: ${describe(actual)}" }
+            override val description = identifierToDescription(name)
+            override val negatedDescription = identifierToNegatedDescription(name)
+            override fun asPredicate(): (T) -> Boolean = feature
+        }
     }
 }
 
