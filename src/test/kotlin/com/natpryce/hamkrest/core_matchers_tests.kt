@@ -163,3 +163,13 @@ class Throwing {
         assert.that({throw DifferentException("xxx")}, !throws<ExampleException>())
     }
 }
+
+class Converting {
+
+    data class HasProperty(val hasAProperty: Boolean)
+
+    @Test
+    fun create_from_a_property() {
+        assert.that(HasProperty(true), Matcher(HasProperty::hasAProperty))
+    }
+}
