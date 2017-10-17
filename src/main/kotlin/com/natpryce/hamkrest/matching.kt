@@ -77,7 +77,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
                     MatchResult.Match -> {
-                        MatchResult.Mismatch("was: ${describe(actual)}")
+                        MatchResult.Mismatch(negatedDescription)
                     }
                     is MatchResult.Mismatch -> {
                         MatchResult.Match

@@ -15,7 +15,7 @@ class LogicalConnectives {
         assertEquals("is not equal to 20", m.description)
         assertEquals("is equal to 20", (!m).description)
 
-        assertMismatchWithDescription("was: 20", m(20))
+        assertMismatchWithDescription("is equal to 20", m(20))
     }
 
     @Test
