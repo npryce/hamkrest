@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.13"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.15"
     }
 }
 
@@ -144,7 +144,7 @@ uploadArchives {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
+    gradleVersion = '4.2.1'
     distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
