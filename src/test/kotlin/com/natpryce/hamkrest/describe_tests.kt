@@ -1,7 +1,9 @@
 package com.natpryce.hamkrest
 
 import com.natpryce.hamkrest.assertion.assert
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
+import java.nio.file.Paths
 
 class DelimitingValuesInStrings {
     @Test
@@ -42,5 +44,11 @@ class DelimitingValuesInStrings {
         }
 
         assert.that(describe(d), equalTo("d"))
+    }
+    
+    @Test
+    fun file_paths() {
+        val path = Paths.get("/foo/bar/baz")
+        assertThat(describe(path), equalTo("/foo/bar/baz"))
     }
 }

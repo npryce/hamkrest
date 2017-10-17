@@ -16,7 +16,7 @@ fun describe(v: Any?): String = when (v) {
     is Pair<*, *> -> Pair(describe(v.first), describe(v.second)).toString()
     is Triple<*, *, *> -> Triple(describe(v.first), describe(v.second), describe(v.third)).toString()
     is ClosedRange<*> -> "${describe(v.start)}..${describe(v.endInclusive)}"
-    is Iterable<*> -> v.map(::describe).joinToString(prefix = "[", separator = ", ", postfix = "]")
+    is Collection<*> -> v.map(::describe).joinToString(prefix = "[", separator = ", ", postfix = "]")
     is Map<*, *> -> v.entries.map { "${describe(it.key)}:${describe(it.value)}" }.joinToString(prefix = "{", separator = ", ", postfix = "}")
     else -> v.toString()
 }
