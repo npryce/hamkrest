@@ -157,7 +157,7 @@ val isBlank = Matcher(CharSequence::isBlank)
  * Matches a nullable char sequence if it is either `null` or empty or consists solely of whitespace characters.
  */
 @JvmField
-val isNullOrBlank = Matcher(CharSequence::isNullOrBlank)
+val isNullOrBlank = Matcher(CharSequence?::isNullOrBlank)
 
 /**
  * Matches a char sequence if it is empty (contains no characters).
@@ -169,4 +169,4 @@ val isEmptyString = Matcher(CharSequence::isEmpty)
  * Matches a char sequence if it is either `null` or empty (contains no characters).
  */
 @JvmField
-val isNullOrEmptyString = Matcher(CharSequence::isNullOrEmpty)
+val isNullOrEmptyString = Matcher(CharSequence?::isNullOrEmpty)

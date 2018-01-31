@@ -76,3 +76,18 @@ class StringPrefixAndSuffix {
         assert.that("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
     }
 }
+
+class NullableString {
+    @Test
+    fun null_or_empty_works_on_null_or_empty_string() {
+        assert.that(null, isNullOrEmptyString)
+        assert.that("", isNullOrEmptyString)
+    }
+
+    @Test
+    fun null_or_blank_works_on_null_or_blank_string() {
+        assert.that(null, isNullOrBlank)
+        assert.that("", isNullOrBlank)
+        assert.that(" ", isNullOrBlank)
+    }
+}
