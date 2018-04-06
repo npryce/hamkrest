@@ -119,7 +119,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * The logican conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
      * matcher fails to match, the [right] matcher is never invoked.
      *
-     * Use the infix [and] function to combine matchers with a Disjunction.
+     * Use the infix [and] function or [allOf] to combine matchers with a Disjunction.
      *
      * @property left The left operand. This operand is always evaluated.
      * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
@@ -135,7 +135,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
         
         override val description: String = "${left.description} and ${right.description}"
     }
-    
+
     /**
      * Base class of matchers for which the match criteria is coded, not composed.  Subclass this to write
      * your own matchers.
@@ -236,6 +236,27 @@ infix fun <T> Matcher<T>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher
  */
 infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Conjunction(Matcher(this), Matcher(that))
 
+/**
+ * Returns a matcher that matches if all of the supplied matchers match.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T> allOf(matchers: List<Matcher<T>>): Matcher<T> = matchers.reducedWith(Matcher<T>::and)
+
+/**
+ * Returns a matcher that matches if all of the supplied matchers match.
+ */
+fun <T> allOf(vararg matchers: Matcher<T>): Matcher<T> = allOf(matchers.asList())
+
+/**
+ * Returns a matcher that matches if any of the supplied matchers match.
+ */
+fun <T> anyOf(matchers: List<Matcher<T>>): Matcher<T> = matchers.reducedWith(Matcher<T>::or)
+
+/**
+ * Returns a matcher that matches if any of the supplied matchers match.
+ */
+fun <T> anyOf(vararg matchers: Matcher<T>): Matcher<T> = anyOf(matchers.asList())
+
 
 /**
  * Returns a matcher that applies [featureMatcher] to the result of applying [feature] to a value.
@@ -276,4 +297,10 @@ fun <T, R> has(feature: KFunction1<T, R>, featureMatcher: Matcher<R>): Matcher<T
 
 fun <T> Matcher<T>.describedBy(fn: () -> String) = object : Matcher<T> by this {
     override val description: String get() = fn()
+}
+
+@Suppress("UNCHECKED_CAST")
+private fun <T> List<Matcher<T>>.reducedWith(op: (Matcher<T>, Matcher<T>) -> Matcher<T>): Matcher<T> = when {
+    isEmpty() -> anything as Matcher<T>
+    else -> reduce(op)
 }
