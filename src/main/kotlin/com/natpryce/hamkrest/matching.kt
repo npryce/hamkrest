@@ -93,7 +93,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
      * The logican disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
      * matcher matches, the [right] matcher is never invoked.
      *
-     * Use the infix [or] function to combine matchers with a Disjunction.
+     * Use the infix [or] function or [anyOf] to combine matchers with a Disjunction.
      *
      * @property left The left operand. This operand is always evaluated.
      * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
