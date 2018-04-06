@@ -239,7 +239,6 @@ infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<
 /**
  * Returns a matcher that matches if all of the supplied matchers match.
  */
-@Suppress("UNCHECKED_CAST")
 fun <T> allOf(matchers: List<Matcher<T>>): Matcher<T> = matchers.reducedWith(Matcher<T>::and)
 
 /**
