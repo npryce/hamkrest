@@ -170,3 +170,11 @@ val isEmptyString = Matcher(CharSequence::isEmpty)
  */
 @JvmField
 val isNullOrEmptyString = Matcher(CharSequence::isNullOrEmpty)
+
+/**
+ * Matches a string if it is the same as the given string, ignoring case differences.
+ */
+fun equalToIgnoringCase(s: String?): Matcher<String> {
+    fun String.equalToIgnoringCase(s: String?) = this.equals(s, ignoreCase = true)
+    return Matcher(String::equalToIgnoringCase, s)
+}

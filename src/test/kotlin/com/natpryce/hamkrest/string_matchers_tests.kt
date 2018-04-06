@@ -76,3 +76,20 @@ class StringPrefixAndSuffix {
         assert.that("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
     }
 }
+
+class CaseInsensitiveEquals {
+    @Test
+    fun equalToIgnoringCase() {
+        assert.that("qwerty", equalToIgnoringCase("qwerty"))
+        assert.that("qwerty", equalToIgnoringCase("QWERTY"))
+        assert.that("QWERTY", equalToIgnoringCase("qwerty"))
+        assert.that("qwerty", !equalToIgnoringCase(" qwerty"))
+        assert.that("qwerty", !equalToIgnoringCase(null))
+    }
+
+    @Test
+    fun description() {
+        assert.that(equalToIgnoringCase("foo").description, equalToIgnoringCase("""EQUAL TO IGNORING CASE "foo""""))
+        assert.that(equalToIgnoringCase(null).description, equalToIgnoringCase("""EQUAL TO IGNORING CASE null"""))
+    }
+}
