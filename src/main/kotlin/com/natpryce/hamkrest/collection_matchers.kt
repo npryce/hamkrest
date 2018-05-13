@@ -47,6 +47,11 @@ val isEmpty = Matcher(Collection<Any>::isEmpty)
 fun hasSize(sizeMatcher: Matcher<Int>) = has(Collection<Any>::size, sizeMatcher)
 
 /**
+ * Matches a collection with a size that matches [size].
+ */
+fun hasSize(size: Int) = has(Collection<Any>::size, equalTo(size))
+
+/**
  * Matches a collection that contains [element]
  *
  * See [Collection::contains]
