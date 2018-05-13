@@ -82,9 +82,22 @@ class CollectionSize {
     }
 
     @Test
+    fun integer_size() {
+        val l = listOf(1,2,3)
+
+        assert.that(l, hasSize(3))
+    }
+
+    @Test
     fun size_description() {
         assert.that(hasSize(greaterThan(3)).description, equalTo("has size that is greater than 3"))
         assert.that((!hasSize(greaterThan(3))).description, equalTo("does not have size that is greater than 3"))
+    }
+
+    @Test
+    fun integer_size_description() {
+        assert.that(hasSize(3).description, equalTo("has size that is equal to 3"))
+        assert.that((!hasSize(3)).description, equalTo("does not have size that is equal to 3"))
     }
 
     @Test
