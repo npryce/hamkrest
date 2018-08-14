@@ -9,3 +9,4 @@
 gradle.properties
 kobaltw
 build/
+out/
