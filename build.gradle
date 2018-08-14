@@ -80,8 +80,10 @@ signing {
 }
 
 task ossrhAuthentication {
-    if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
-        throw new InvalidUserDataException("no OSSRH username and/or password!")
+    doFirst {
+        if (!(project.hasProperty('ossrh.username') && project.hasProperty('ossrh.password'))) {
+            throw new InvalidUserDataException("no OSSRH username and/or password!")
+        }
     }
 }
 
