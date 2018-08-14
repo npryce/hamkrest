@@ -94,7 +94,7 @@ class NullableString {
 
 class CaseInsensitiveEquals {
     @Test
-    fun equalToIgnoringCase() {
+    fun equal_to_ignoring_case() {
         assert.that("qwerty", equalToIgnoringCase("qwerty"))
         assert.that("qwerty", equalToIgnoringCase("QWERTY"))
         assert.that("QWERTY", equalToIgnoringCase("qwerty"))

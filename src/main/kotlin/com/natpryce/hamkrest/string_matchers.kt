@@ -21,7 +21,7 @@ sealed class CaseSensitivity {
      * Indicates that the match is case sensitive.
      */
     object CaseSensitive : CaseSensitivity()
-
+    
     /**
      * Indicates that the match is case insensitive.
      */
@@ -45,7 +45,7 @@ abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity:
      * Returns this matcher transformed to have the given case sensitivity.
      */
     abstract internal fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2): StringMatcher<S2>
-
+    
     companion object {
         /**
          * Convert a String predicate to a [StringMatcher], specifying the desired case sensitivity.
@@ -56,16 +56,20 @@ abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity:
         operator fun <T, S : CaseSensitivity> invoke(fn: KFunction3<CharSequence, T, Boolean, Boolean>, expected: T, sensitivity: S): StringMatcher<S> {
             return object : StringMatcher<S>(sensitivity) {
                 override fun <S2 : CaseSensitivity> withCaseSensitivity(newSensitivity: S2) =
-                        StringMatcher(fn, expected, newSensitivity)
-                override val description: String get() =
+                    StringMatcher(fn, expected, newSensitivity)
+                
+                override val description: String
+                    get() =
                         "${identifierToDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
-                override val negatedDescription: String get() =
+                override val negatedDescription: String
+                    get() =
                         "${identifierToNegatedDescription(fn.name)} ${describe(expected)}${suffix(caseSensitivity)}"
+                
                 override fun invoke(actual: CharSequence) =
-                        match(fn(actual, expected, ignoreCase)) { "was: ${describe(actual)}" }
+                    match(fn(actual, expected, ignoreCase)) { "was: ${describe(actual)}" }
             }
         }
-
+        
         /**
          * Convert a String predicate to a case sensitive [StringMatcher].
          *
@@ -73,14 +77,14 @@ abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity:
          * argument indicates case sensitivity.
          */
         operator fun <T> invoke(fn: KFunction3<CharSequence, T, Boolean, Boolean>, expected: T) =
-                invoke(fn, expected, CaseSensitivity.CaseSensitive)
+            invoke(fn, expected, CaseSensitivity.CaseSensitive)
     }
-
+    
     /**
      * Should the match ignore case (be case insensitive)?
      */
     protected val ignoreCase: Boolean get() = caseSensitivity == CaseSensitivity.CaseInsensitive
-
+    
     /**
      * A suffix to add to the description of a string matcher to indicate case sensitivity.
      */
@@ -125,7 +129,7 @@ fun matches(r: Regex): Matcher<CharSequence> = Matcher(CharSequence::matches, r)
 fun startsWith(prefix: CharSequence) = StringMatcher(CharSequence::_startsWith, prefix)
 
 private fun CharSequence._startsWith(prefix: CharSequence, ignoreCase: Boolean) =
-        this.startsWith(prefix, ignoreCase)
+    this.startsWith(prefix, ignoreCase)
 
 /**
  * Matches a char sequence if it ends with [suffix].
@@ -135,7 +139,7 @@ private fun CharSequence._startsWith(prefix: CharSequence, ignoreCase: Boolean) 
 fun endsWith(suffix: CharSequence) = StringMatcher(CharSequence::_endsWith, suffix)
 
 private fun CharSequence._endsWith(prefix: CharSequence, ignoreCase: Boolean) =
-        this.endsWith(prefix, ignoreCase)
+    this.endsWith(prefix, ignoreCase)
 
 /**
  * Matches a char sequence if it contains [substring].
@@ -145,7 +149,7 @@ private fun CharSequence._endsWith(prefix: CharSequence, ignoreCase: Boolean) =
 fun containsSubstring(substring: CharSequence) = StringMatcher(CharSequence::_containsSubstring, substring)
 
 private fun CharSequence._containsSubstring(substring: CharSequence, ignoreCase: Boolean) =
-        this.contains(substring, ignoreCase)
+    this.contains(substring, ignoreCase)
 
 /**
  * Matches a char sequence if it is empty or consists solely of whitespace characters.
@@ -171,3 +175,12 @@ val isEmptyString = Matcher(CharSequence::isEmpty)
 @JvmField
 val isNullOrEmptyString = Matcher(CharSequence?::isNullOrEmpty)
 
+/**
+ * Matches a string if it is the same as the given string, ignoring case differences.
+ */
+fun equalToIgnoringCase(expected: String?): Matcher<String?> =
+    object : Matcher<String?> {
+        override fun invoke(actual: String?): MatchResult = match(actual.equals(expected, ignoreCase = true)) { "was: ${describe(actual)}" }
+        override val description: String get() = "is equal (ignoring case) to ${describe(expected)}"
+        override val negatedDescription: String get() = "is not equal (ignoring case) to ${describe(expected)}"
+    }
