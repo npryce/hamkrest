@@ -85,11 +85,13 @@ class CaseInsensitiveEquals {
         assert.that("QWERTY", equalToIgnoringCase("qwerty"))
         assert.that("qwerty", !equalToIgnoringCase(" qwerty"))
         assert.that("qwerty", !equalToIgnoringCase(null))
+        assert.that(null, equalToIgnoringCase(null))
+        assert.that(null, !equalToIgnoringCase("qwerty"))
     }
 
     @Test
     fun description() {
-        assert.that(equalToIgnoringCase("foo").description, equalToIgnoringCase("""EQUAL TO IGNORING CASE "foo""""))
-        assert.that(equalToIgnoringCase(null).description, equalToIgnoringCase("""EQUAL TO IGNORING CASE null"""))
+        assert.that(equalToIgnoringCase("foo").description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO "foo""""))
+        assert.that(equalToIgnoringCase(null).description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO NULL"""))
     }
 }

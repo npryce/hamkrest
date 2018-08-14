@@ -174,7 +174,9 @@ val isNullOrEmptyString = Matcher(CharSequence::isNullOrEmpty)
 /**
  * Matches a string if it is the same as the given string, ignoring case differences.
  */
-fun equalToIgnoringCase(s: String?): Matcher<String> {
-    fun String.equalToIgnoringCase(s: String?) = this.equals(s, ignoreCase = true)
-    return Matcher(String::equalToIgnoringCase, s)
-}
+fun equalToIgnoringCase(expected: String?): Matcher<String?> =
+    object : Matcher<String?> {
+        override fun invoke(actual: String?): MatchResult = match(actual.equals(expected, ignoreCase = true)) { "was: ${describe(actual)}" }
+        override val description: String get() = "is equal (ignoring case) to ${describe(expected)}"
+        override val negatedDescription: String get() = "is not equal (ignoring case) to ${describe(expected)}"
+    }
