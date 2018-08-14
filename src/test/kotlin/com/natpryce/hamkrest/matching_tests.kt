@@ -37,6 +37,24 @@ class LogicalConnectives {
     }
 
     @Test
+    fun anyOf() {
+        val m = anyOf(equalTo(10), equalTo(20))
+
+        assertMatch(m(10))
+        assertMatch(m(20))
+        assertMismatchWithDescription("was: 11", m(11))
+
+        assert.that(m.description, equalTo("is equal to 10 or is equal to 20"))
+
+        assertMatch(anyOf(equalTo(10))(10))
+        assertMismatchWithDescription("was: 11", allOf(equalTo(10))(11))
+
+        assertMatch(anyOf<Int>()(999))
+        assert.that(anyOf<Int>().description, equalTo("anything"))
+    }
+
+
+    @Test
     fun conjunction() {
         val m = greaterThan(10) and lessThan(20)
 
@@ -46,6 +64,24 @@ class LogicalConnectives {
         assertMismatchWithDescription("was: 20", m(20))
 
         assert.that(m.description, equalTo("is greater than 10 and is less than 20"))
+    }
+
+    @Test
+    fun allOf() {
+        val m = allOf(greaterThan(10), lessThan(20))
+
+        assertMatch(m(11))
+        assertMatch(m(19))
+        assertMismatchWithDescription("was: 10", m(10))
+        assertMismatchWithDescription("was: 20", m(20))
+
+        assert.that(m.description, equalTo("is greater than 10 and is less than 20"))
+
+        assertMatch(allOf(greaterThan(10))(11))
+        assertMismatchWithDescription("was: 9", allOf(greaterThan(10))(9))
+
+        assertMatch(allOf<Int>()(999))
+        assert.that(allOf<Int>().description, equalTo("anything"))
     }
 }
 

@@ -91,3 +91,22 @@ class NullableString {
         assert.that(" ", isNullOrBlank)
     }
 }
+
+class CaseInsensitiveEquals {
+    @Test
+    fun equalToIgnoringCase() {
+        assert.that("qwerty", equalToIgnoringCase("qwerty"))
+        assert.that("qwerty", equalToIgnoringCase("QWERTY"))
+        assert.that("QWERTY", equalToIgnoringCase("qwerty"))
+        assert.that("qwerty", !equalToIgnoringCase(" qwerty"))
+        assert.that("qwerty", !equalToIgnoringCase(null))
+        assert.that(null, equalToIgnoringCase(null))
+        assert.that(null, !equalToIgnoringCase("qwerty"))
+    }
+
+    @Test
+    fun description() {
+        assert.that(equalToIgnoringCase("foo").description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO "foo""""))
+        assert.that(equalToIgnoringCase(null).description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO NULL"""))
+    }
+}
