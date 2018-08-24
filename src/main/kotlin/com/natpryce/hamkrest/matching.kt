@@ -64,7 +64,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     
     /**
      * Returns this matcher as a predicate, that can be used for testing, finding and filtering collections
-     * and [kotlin.Sequence]s.
+     * and [kotlin.sequences.Sequence]s.
      */
     fun asPredicate(): (T) -> Boolean = { this(it) == MatchResult.Match }
     
@@ -300,6 +300,6 @@ fun <T> Matcher<T>.describedBy(fn: () -> String) = object : Matcher<T> by this {
 
 @Suppress("UNCHECKED_CAST")
 private fun <T> List<Matcher<T>>.reducedWith(op: (Matcher<T>, Matcher<T>) -> Matcher<T>): Matcher<T> = when {
-    isEmpty() -> anything as Matcher<T>
+    isEmpty() -> anything
     else -> reduce(op)
 }
