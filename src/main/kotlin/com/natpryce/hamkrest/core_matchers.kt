@@ -5,7 +5,6 @@ package com.natpryce.hamkrest
 /**
  * A [Matcher] that matches anything, always returning [MatchResult.Match].
  */
-@JvmField
 val anything = object : Matcher<Any?> {
     override fun invoke(actual: Any?): MatchResult = MatchResult.Match
     override val description: String get() = "anything"
@@ -15,7 +14,6 @@ val anything = object : Matcher<Any?> {
 /**
  * A [Matcher] that matches nothing, always returning a [MatchResult.Mismatch].
  */
-@JvmField
 val nothing = !anything
 
 

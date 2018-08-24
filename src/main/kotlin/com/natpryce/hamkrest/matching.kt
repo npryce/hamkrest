@@ -23,9 +23,7 @@ sealed class MatchResult {
      * @param description human readable text that explains why the value did not match.
      */
     class Mismatch(override val description: String) : MatchResult(), SelfDescribing {
-        override fun toString(): String {
-            return "Mismatch[${describe(description)}]"
-        }
+        override fun toString() = "Mismatch[${describe(description)}]"
     }
 }
 
@@ -53,7 +51,7 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     /**
      * Describes the negation of this criteria.
      */
-    val negatedDescription: String get() = "not " + description
+    val negatedDescription: String get() = "not $description"
     
     /**
      * Returns a matcher that matches the negation of this criteria.
@@ -76,12 +74,8 @@ interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
     class Negation<in T>(private val negated: Matcher<T>) : Matcher<T> {
         override fun invoke(actual: T): MatchResult =
                 when (negated(actual)) {
-                    MatchResult.Match -> {
-                        MatchResult.Mismatch(negatedDescription)
-                    }
-                    is MatchResult.Mismatch -> {
-                        MatchResult.Match
-                    }
+                    MatchResult.Match -> MatchResult.Mismatch(negatedDescription)
+                    is MatchResult.Mismatch -> MatchResult.Match
                 }
 
         override val description = negated.negatedDescription
