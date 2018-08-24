@@ -6,8 +6,8 @@ package com.natpryce.hamkrest
  * A [Matcher] that matches anything, always returning [MatchResult.Match].
  */
 @JvmField
-val anything = object : Matcher<Any> {
-    override fun invoke(actual: Any): MatchResult = MatchResult.Match
+val anything = object : Matcher<Any?> {
+    override fun invoke(actual: Any?): MatchResult = MatchResult.Match
     override val description: String get() = "anything"
     override val negatedDescription: String get() = "nothing"
 }

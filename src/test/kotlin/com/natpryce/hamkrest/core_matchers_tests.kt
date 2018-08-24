@@ -6,6 +6,38 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 
+class AnythingAndNothing {
+    @Test
+    fun any_value_is_anything() {
+        assertMatch(anything("a string"))
+        assertMatch(anything(99))
+        assertMatch(anything(99.0))
+        assertMatch(anything(true))
+        assertMatch(anything(false))
+        assertMatch(anything(object {}))
+    }
+    
+    @Test
+    fun null_is_anything() {
+        assertMatch(anything(null))
+    }
+    
+    @Test
+    fun any_value_is_not_nothing() {
+        assertMismatch(nothing("a string"))
+        assertMismatch(nothing(99))
+        assertMismatch(nothing(99.0))
+        assertMismatch(nothing(true))
+        assertMismatch(nothing(false))
+        assertMismatch(nothing(object {}))
+    }
+    
+    @Test
+    fun null_is_not_nothing() {
+        assertMismatch(nothing(null))
+    }
+}
+
 class Equality {
     @Test
     fun equal() {
