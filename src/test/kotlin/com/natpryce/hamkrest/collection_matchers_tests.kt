@@ -20,6 +20,14 @@ class Contains {
     }
 
     @Test
+    fun contains_elements() {
+        assert.that(listOf(1, 2, 3, 4), hasElements(setOf(1)))
+        assert.that(listOf(1, 2, 3, 4), hasElements(setOf(2, 3, 4)))
+        assert.that(listOf(1, 2, 3, 4), !hasElements(setOf(0)))
+        assert.that(listOf(1, 2, 3, 4), !hasElements(setOf(0, 1)))
+    }
+
+    @Test
     fun empty_sequence_never_contains_any() {
         assert.that(emptyList(), !anyElement(anything))
     }

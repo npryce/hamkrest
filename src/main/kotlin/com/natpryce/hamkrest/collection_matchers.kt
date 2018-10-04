@@ -58,6 +58,18 @@ fun <T> hasElement(element: T): Matcher<Collection<T>> = object : Matcher.Primit
     override val negatedDescription: String get() = "does not contain ${describe(element)}"
 }
 
+/**
+ * Matches a collection that contains [elements]
+ *
+ * See [Collection::containsAll]
+ */
+fun <T> hasElements(elements: Collection<T>): Matcher<Collection<T>> = object : Matcher.Primitive<Collection<T>>() {
+    override fun invoke(actual: Collection<T>): MatchResult =
+            match(actual.containsAll(elements)) { "was ${describe(actual)}" }
+    override val description: String get() = "containsAll ${describe(elements)}"
+    override val negatedDescription: String get() = "does not contain all ${describe(elements)}"
+}
+
 fun <T> isIn(i: Iterable<T>) : Matcher<T> = object : Matcher.Primitive<T>() {
     override fun invoke(actual: T) = match(actual in i) {"was not in ${describe(i)}"}
     override val description: String get() = "is in ${describe(i)}"
