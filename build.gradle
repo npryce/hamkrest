@@ -4,7 +4,7 @@ version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
 println "building version ${version}"
 
 buildscript {
-    ext.kotlin_version = '1.2.60'
+    ext.kotlin_version = '1.3.11'
     repositories {
         mavenCentral()
         jcenter()
@@ -137,8 +137,7 @@ uploadArchives {
     }
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
-    distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+wrapper {
+    gradleVersion = '5.0'
 }
 
