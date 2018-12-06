@@ -15,7 +15,7 @@ class Assertion(val valueDescriber: (Any?) -> String) {
         val judgement = criteria(actual)
         if (judgement is MatchResult.Mismatch) {
             throw AssertionError(
-                message().let { if (it.isEmpty()) it else it + ": " } +
+                message().let { if (it.isEmpty()) it else "$it: " } +
                     "expected: a value that ${valueDescriber(criteria)}\n" +
                     "but ${valueDescriber(judgement)}")
         }
