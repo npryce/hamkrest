@@ -3,7 +3,7 @@ HamKrest - Hamcrest for Kotlin
 
 A reimplementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.org/) language features.
 
-[![Kotlin](https://img.shields.io/badge/kotlin-1.2.60-blue.svg)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.11-blue.svg)](http://kotlinlang.org)
 [![Build Status](https://travis-ci.org/npryce/hamkrest.svg?branch=master)](https://travis-ci.org/npryce/hamkrest)
 [![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/hamkrest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.natpryce%22%20AND%20a%3A%22hamkrest%22)
 
