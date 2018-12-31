@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assert
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 
 class RegexMatching {
@@ -8,20 +8,20 @@ class RegexMatching {
 
     @Test
     fun entire_string_matches_regex() {
-        assert.that("abba", matches(pattern))
-        assert.that("aba", matches(pattern))
-        assert.that("abbbbbba", matches(pattern))
-        assert.that("aha!", !matches(pattern))
-        assert.that("yabba dabba doo", !matches(pattern))
+        assertThat("abba", matches(pattern))
+        assertThat("aba", matches(pattern))
+        assertThat("abbbbbba", matches(pattern))
+        assertThat("aha!", !matches(pattern))
+        assertThat("yabba dabba doo", !matches(pattern))
     }
 
     @Test
     fun string_contains_regex() {
-        assert.that("abba", contains(pattern))
-        assert.that("aba", contains(pattern))
-        assert.that("abbbbbba", contains(pattern))
-        assert.that("aha!", !matches(pattern))
-        assert.that("yabba dabba doo", contains(pattern))
+        assertThat("abba", contains(pattern))
+        assertThat("aba", contains(pattern))
+        assertThat("abbbbbba", contains(pattern))
+        assertThat("aha!", !matches(pattern))
+        assertThat("yabba dabba doo", contains(pattern))
     }
 
 }
@@ -29,84 +29,84 @@ class RegexMatching {
 class ContainsSubstring {
     @Test
     fun contains_substring() {
-        assert.that("qwerty", containsSubstring("qwe"))
-        assert.that("qwerty", containsSubstring("wert"))
-        assert.that("qwerty", containsSubstring("erty"))
+        assertThat("qwerty", containsSubstring("qwe"))
+        assertThat("qwerty", containsSubstring("wert"))
+        assertThat("qwerty", containsSubstring("erty"))
     }
 
     @Test
     fun contains_substring_can_specify_case_sensitivity() {
-        assert.that("qwerty", containsSubstring("WERT").caseInsensitive())
-        assert.that("qwerty", !containsSubstring("WERT").caseInsensitive().caseSensitive())
+        assertThat("qwerty", containsSubstring("WERT").caseInsensitive())
+        assertThat("qwerty", !containsSubstring("WERT").caseInsensitive().caseSensitive())
     }
 
     @Test
     fun description() {
-        assert.that(containsSubstring("foo").description, equalTo("contains substring \"foo\""))
-        assert.that(containsSubstring("foo").caseInsensitive().description, equalTo("contains substring \"foo\" (case insensitive)"))
+        assertThat(containsSubstring("foo").description, equalTo("contains substring \"foo\""))
+        assertThat(containsSubstring("foo").caseInsensitive().description, equalTo("contains substring \"foo\" (case insensitive)"))
     }
 }
 
 class StringPrefixAndSuffix {
     @Test
     fun prefix() {
-        assert.that("qwerty", startsWith("q"))
-        assert.that("qwerty", startsWith("qwe"))
-        assert.that("qwerty", !startsWith("Q"))
-        assert.that("qwerty", startsWith(""))
+        assertThat("qwerty", startsWith("q"))
+        assertThat("qwerty", startsWith("qwe"))
+        assertThat("qwerty", !startsWith("Q"))
+        assertThat("qwerty", startsWith(""))
     }
 
     @Test
     fun prefix_can_specify_case_sensitivity() {
-        assert.that("qwerty", startsWith("Q").caseInsensitive())
-        assert.that("qwerty", !startsWith("Q").caseInsensitive().caseSensitive())
+        assertThat("qwerty", startsWith("Q").caseInsensitive())
+        assertThat("qwerty", !startsWith("Q").caseInsensitive().caseSensitive())
     }
 
     @Test
     fun suffix() {
-        assert.that("qwerty", endsWith("y"))
-        assert.that("qwerty", endsWith("rty"))
-        assert.that("qwerty", !endsWith("Y"))
-        assert.that("qwerty", endsWith(""))
+        assertThat("qwerty", endsWith("y"))
+        assertThat("qwerty", endsWith("rty"))
+        assertThat("qwerty", !endsWith("Y"))
+        assertThat("qwerty", endsWith(""))
     }
 
     @Test
     fun suffix_can_specify_case_sensitivity() {
-        assert.that("qwerty", endsWith("Y").caseInsensitive())
-        assert.that("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
+        assertThat("qwerty", endsWith("Y").caseInsensitive())
+        assertThat("qwerty", !endsWith("Y").caseInsensitive().caseSensitive())
     }
 }
 
 class NullableString {
     @Test
     fun null_or_empty_works_on_null_or_empty_string() {
-        assert.that(null, isNullOrEmptyString)
-        assert.that("", isNullOrEmptyString)
+        assertThat(null, isNullOrEmptyString)
+        assertThat("", isNullOrEmptyString)
     }
 
     @Test
     fun null_or_blank_works_on_null_or_blank_string() {
-        assert.that(null, isNullOrBlank)
-        assert.that("", isNullOrBlank)
-        assert.that(" ", isNullOrBlank)
+        assertThat(null, isNullOrBlank)
+        assertThat("", isNullOrBlank)
+        assertThat(" ", isNullOrBlank)
     }
 }
 
 class CaseInsensitiveEquals {
     @Test
     fun equal_to_ignoring_case() {
-        assert.that("qwerty", equalToIgnoringCase("qwerty"))
-        assert.that("qwerty", equalToIgnoringCase("QWERTY"))
-        assert.that("QWERTY", equalToIgnoringCase("qwerty"))
-        assert.that("qwerty", !equalToIgnoringCase(" qwerty"))
-        assert.that("qwerty", !equalToIgnoringCase(null))
-        assert.that(null, equalToIgnoringCase(null))
-        assert.that(null, !equalToIgnoringCase("qwerty"))
+        assertThat("qwerty", equalToIgnoringCase("qwerty"))
+        assertThat("qwerty", equalToIgnoringCase("QWERTY"))
+        assertThat("QWERTY", equalToIgnoringCase("qwerty"))
+        assertThat("qwerty", !equalToIgnoringCase(" qwerty"))
+        assertThat("qwerty", !equalToIgnoringCase(null))
+        assertThat(null, equalToIgnoringCase(null))
+        assertThat(null, !equalToIgnoringCase("qwerty"))
     }
 
     @Test
     fun description() {
-        assert.that(equalToIgnoringCase("foo").description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO "foo""""))
-        assert.that(equalToIgnoringCase(null).description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO NULL"""))
+        assertThat(equalToIgnoringCase("foo").description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO "foo""""))
+        assertThat(equalToIgnoringCase(null).description, equalToIgnoringCase("""IS EQUAL (IGNORING CASE) TO NULL"""))
     }
 }

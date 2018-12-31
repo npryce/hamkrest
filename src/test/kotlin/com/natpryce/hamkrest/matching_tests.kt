@@ -1,7 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assert
-import com.natpryce.hamkrest.assertion.that
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -33,7 +32,7 @@ class LogicalConnectives {
         assertMatch(m(20))
         assertMismatchWithDescription("was: 11", m(11))
 
-        assert.that(m.description, equalTo("is equal to 10 or is equal to 20"))
+        assertThat(m.description, equalTo("is equal to 10 or is equal to 20"))
     }
 
     @Test
@@ -44,13 +43,13 @@ class LogicalConnectives {
         assertMatch(m(20))
         assertMismatchWithDescription("was: 11", m(11))
 
-        assert.that(m.description, equalTo("is equal to 10 or is equal to 20"))
+        assertThat(m.description, equalTo("is equal to 10 or is equal to 20"))
 
         assertMatch(anyOf(equalTo(10))(10))
         assertMismatchWithDescription("was: 11", allOf(equalTo(10))(11))
 
         assertMatch(anyOf<Int>()(999))
-        assert.that(anyOf<Int>().description, equalTo("anything"))
+        assertThat(anyOf<Int>().description, equalTo("anything"))
     }
 
 
@@ -63,7 +62,7 @@ class LogicalConnectives {
         assertMismatchWithDescription("was: 10", m(10))
         assertMismatchWithDescription("was: 20", m(20))
 
-        assert.that(m.description, equalTo("is greater than 10 and is less than 20"))
+        assertThat(m.description, equalTo("is greater than 10 and is less than 20"))
     }
 
     @Test
@@ -75,13 +74,13 @@ class LogicalConnectives {
         assertMismatchWithDescription("was: 10", m(10))
         assertMismatchWithDescription("was: 20", m(20))
 
-        assert.that(m.description, equalTo("is greater than 10 and is less than 20"))
+        assertThat(m.description, equalTo("is greater than 10 and is less than 20"))
 
         assertMatch(allOf(greaterThan(10))(11))
         assertMismatchWithDescription("was: 9", allOf(greaterThan(10))(9))
 
         assertMatch(allOf<Int>()(999))
-        assert.that(allOf<Int>().description, equalTo("anything"))
+        assertThat(allOf<Int>().description, equalTo("anything"))
     }
 }
 
@@ -125,7 +124,7 @@ class FunctionToMatcher {
 
     @Test
     fun can_pass_function_references_to_assert_that() {
-        assert.that("  ", String::isBlank)
+        assertThat("  ", String::isBlank)
     }
 }
 
@@ -155,21 +154,21 @@ class Projections {
     fun can_match_projection_by_property() {
         val isLongEnough = has(String::length, greaterThan(4))
 
-        assert.that("12345", isLongEnough)
-        assert.that("1234", !isLongEnough)
+        assertThat("12345", isLongEnough)
+        assertThat("1234", !isLongEnough)
 
-        assert.that(isLongEnough.description, equalTo("has length that is greater than 4"))
+        assertThat(isLongEnough.description, equalTo("has length that is greater than 4"))
     }
 
     @Test
     fun can_match_projection_by_function() {
-        assert.that("12345", has(::toInt, equalTo(12345)))
-        assert.that("1234", !has(::toInt, equalTo(12345)))
+        assertThat("12345", has(::toInt, equalTo(12345)))
+        assertThat("1234", !has(::toInt, equalTo(12345)))
     }
 
     @Test
     fun description_of_projection_is_human_readableified() {
-        assert.that(has(::toInt, equalTo(12345)).description, equalTo(
+        assertThat(has(::toInt, equalTo(12345)).description, equalTo(
                 "has to int that is equal to 12345"))
     }
 }

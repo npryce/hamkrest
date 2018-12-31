@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.assertion.assert
+import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -146,27 +146,27 @@ class Downcasting {
 class Comparables {
     @Test
     fun order_comparisons() {
-        assert.that(10, greaterThan(5))
-        assert.that(10, greaterThanOrEqualTo(5))
-        assert.that(10, greaterThanOrEqualTo(10))
-        assert.that(10, !greaterThanOrEqualTo(50))
+        assertThat(10, greaterThan(5))
+        assertThat(10, greaterThanOrEqualTo(5))
+        assertThat(10, greaterThanOrEqualTo(10))
+        assertThat(10, !greaterThanOrEqualTo(50))
 
-        assert.that(10, lessThan(20))
-        assert.that(10, lessThanOrEqualTo(20))
-        assert.that(10, lessThanOrEqualTo(10))
-        assert.that(10, !lessThanOrEqualTo(5))
+        assertThat(10, lessThan(20))
+        assertThat(10, lessThanOrEqualTo(20))
+        assertThat(10, lessThanOrEqualTo(10))
+        assertThat(10, !lessThanOrEqualTo(5))
     }
 
     @Test
     fun within_range() {
-        assert.that(1, isWithin(1..20))
-        assert.that(10, isWithin(1..20))
-        assert.that(20, isWithin(1..20))
-        assert.that(0, !isWithin(1..20))
-        assert.that(21, !isWithin(1..20))
+        assertThat(1, isWithin(1..20))
+        assertThat(10, isWithin(1..20))
+        assertThat(20, isWithin(1..20))
+        assertThat(0, !isWithin(1..20))
+        assertThat(21, !isWithin(1..20))
 
-        assert.that(isWithin(1..20).description, equalTo("is within 1..20"))
-        assert.that((!isWithin(1..20)).description, equalTo("is not within 1..20"))
+        assertThat(isWithin(1..20).description, equalTo("is within 1..20"))
+        assertThat((!isWithin(1..20)).description, equalTo("is not within 1..20"))
     }
 }
 
@@ -176,23 +176,23 @@ class DifferentException(message: String) : Exception(message)
 class Throwing {
     @Test
     fun matches_block_that_throws_specific_exception() {
-        assert.that({throw ExampleException("testing")}, throws<ExampleException>())
+        assertThat({throw ExampleException("testing")}, throws<ExampleException>())
     }
 
     @Test
     fun matches_block_that_throws_specific_exception_and_state() {
-        assert.that({throw ExampleException("testing")},
+        assertThat({throw ExampleException("testing")},
                 throws<ExampleException>(has(Exception::message, present(equalTo("testing")))))
     }
 
     @Test
     fun does_not_match_block_that_does_not_throw() {
-        assert.that({}, ! throws<ExampleException>())
+        assertThat({}, ! throws<ExampleException>())
     }
 
     @Test
     fun does_not_match_block_that_throws_different_exception() {
-        assert.that({throw DifferentException("xxx")}, !throws<ExampleException>())
+        assertThat({throw DifferentException("xxx")}, !throws<ExampleException>())
     }
 }
 
@@ -202,6 +202,6 @@ class Converting {
 
     @Test
     fun create_from_a_property() {
-        assert.that(HasProperty(true), Matcher(HasProperty::hasAProperty))
+        assertThat(HasProperty(true), Matcher(HasProperty::hasAProperty))
     }
 }

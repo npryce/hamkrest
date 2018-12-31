@@ -1,6 +1,16 @@
-@file:JvmName("Describe")
-
 package com.natpryce.hamkrest
+
+import java.util.ServiceLoader
+
+interface ValueDescription {
+    fun describe(v: Any?): String?
+}
+
+private val descriptionServices = ServiceLoader.load(ValueDescription::class.java)
+
+fun describe(v: Any?): String =
+    descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
+
 
 /**
  * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
@@ -9,7 +19,7 @@ package com.natpryce.hamkrest
  *
  * @param v the value to be described.
  */
-fun describe(v: Any?): String = when (v) {
+fun defaultDescription(v: Any?): String = when (v) {
     null -> "null"
     is SelfDescribing -> v.description
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
