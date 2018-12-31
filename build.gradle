@@ -1,34 +1,25 @@
-group 'com.natpryce'
-version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
-
-println "building version ${version}"
-
-buildscript {
-    ext.kotlin_version = '1.3.11'
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
+plugins {
+    id "org.jetbrains.kotlin.jvm" version "1.3.11"
+    id 'maven'
+    id 'signing'
 }
 
-apply plugin: 'kotlin'
-apply plugin: 'maven'
-apply plugin: 'signing'
+group 'com.natpryce'
+
+version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
+println "building version ${version}"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compileOnly "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compileOnly "org.jetbrains.kotlin:kotlin-reflect"
 
-    testCompile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testCompile "org.jetbrains.kotlin:kotlin-test:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testCompile "org.jetbrains.kotlin:kotlin-reflect"
+    testCompile "org.jetbrains.kotlin:kotlin-test"
     testCompile 'junit:junit:4.12'
 }
 
