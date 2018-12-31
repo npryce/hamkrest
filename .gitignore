@@ -1,12 +1,6 @@
-.idea/libraries/
-.idea/modules.xml
-.idea/.name
-.idea/compiler.xml
-.idea/workspace.xml
+.idea/
 *.iml
-.kobalt/
 .gradle/
-gradle.properties
-kobaltw
 build/
 out/
+*.class
