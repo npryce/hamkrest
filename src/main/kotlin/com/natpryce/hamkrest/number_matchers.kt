@@ -1,5 +1,3 @@
-@file:JvmName("NumberMatchers")
-
 package com.natpryce.hamkrest
 
 /**

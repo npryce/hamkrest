@@ -1,5 +1,3 @@
-@file:JvmName("Assert")
-
 package com.natpryce.hamkrest.assertion
 
 import com.natpryce.hamkrest.MatchResult

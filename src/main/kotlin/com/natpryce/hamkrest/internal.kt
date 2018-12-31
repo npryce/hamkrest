@@ -1,5 +1,3 @@
-@file:JvmName("Internal__do_not_use_directly")
-
 package com.natpryce.hamkrest
 
 import java.util.ArrayList

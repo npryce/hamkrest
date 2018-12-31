@@ -1,5 +1,3 @@
-@file:JvmName("Should")
-
 package com.natpryce.hamkrest.should
 
 import com.natpryce.hamkrest.Described

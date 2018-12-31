@@ -1,5 +1,3 @@
-@file:JvmName("Matchers")
-
 package com.natpryce.hamkrest
 
 import kotlin.reflect.KFunction1

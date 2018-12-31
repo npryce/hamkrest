@@ -1,5 +1,3 @@
-@file:JvmName("CollectionMatchers")
-
 package com.natpryce.hamkrest
 
 import kotlin.reflect.KFunction1

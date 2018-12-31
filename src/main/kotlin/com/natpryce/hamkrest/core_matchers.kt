@@ -1,5 +1,3 @@
-@file:JvmName("CoreMatchers")
-
 package com.natpryce.hamkrest
 
 /**
