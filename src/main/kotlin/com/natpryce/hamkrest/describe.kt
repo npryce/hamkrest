@@ -2,15 +2,19 @@ package com.natpryce.hamkrest
 
 import java.util.ServiceLoader
 
+/**
+ * A service interface for extensions to the [describe] function.
+ */
 interface ValueDescription {
+    /**
+     * Describes the value [v] or returns `null` to indicate that this service cannot describe the value, in which
+     * case, other registered services are tried.  If no services can describe the value, the [defaultDescription]
+     * function is called.
+     */
     fun describe(v: Any?): String?
 }
 
 private val descriptionServices = ServiceLoader.load(ValueDescription::class.java)
-
-fun describe(v: Any?): String =
-    descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
-
 
 /**
  * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
@@ -18,6 +22,12 @@ fun describe(v: Any?): String =
  * For anything else, the result of [Any.toString] is used.
  *
  * @param v the value to be described.
+ */
+fun describe(v: Any?): String =
+    descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
+
+/**
+ * The default description of a value, used when a value is not described by any registered [ValueDescription] services.
  */
 fun defaultDescription(v: Any?): String = when (v) {
     null -> "null"
