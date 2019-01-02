@@ -10,7 +10,7 @@ A reimplementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.
 Note: as of version 1.4.0.0, you must add kotlin-reflect to the classpath to use HamKrest's reflective features.
 
 
-Compared to Java:
+When working in Kotlin, Hamkrest provides these benefits over using the Java Hamcrest library:
 
  * Kotlin's type system means that developers don't have to worry about getting the variance of generic signatures right.  Variance is defined on the abstract Matcher type and Kotlin makes sure composition and subtyping work together the way you expect.
  
