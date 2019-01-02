@@ -20,8 +20,7 @@ The `describe` function generates reasonable representations of primitive types,
 Triples and Collections, and falls back to calling `toString` when it has no specialised representation for
 a value.
 
-If the built-in representation is not suitable for your types, you extend the `describe` function with your own 
-representations by registering a [JVM service][] of type [com.natpryce.hamkrest.ValueDescription][].
+If the built-in representation is not suitable for your types, you can plug new representations into the `describe` function by registering a [JVM service][] of type [com.natpryce.hamkrest.ValueDescription][].
 
 The ValueDescription service interface implements a single method, also called `describe`, which maps a value either to 
 a String representation, or to `null` if the service cannot generate a representation for the value.  When a 
