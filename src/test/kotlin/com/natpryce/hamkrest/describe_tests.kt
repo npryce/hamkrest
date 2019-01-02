@@ -62,17 +62,17 @@ class DelimitingValuesInStrings {
 
 class NeedsCustomDescription
 
-class DescribeExtensionPointTests {
-    @Test
-    fun can_extend_describe_function_with_jvm_services() {
-        assertThat(describe(NeedsCustomDescription()), equalTo("the-custom-description"))
-    }
-}
-
 class ExampleDescribeExtension : ValueDescription {
     override fun describe(v: Any?) =
         when (v) {
             is NeedsCustomDescription -> "the-custom-description"
             else -> null
         }
+}
+
+class DescribeExtensionPointTests {
+    @Test
+    fun can_extend_describe_function_with_jvm_services() {
+        assertThat(describe(NeedsCustomDescription()), equalTo("the-custom-description"))
+    }
 }
