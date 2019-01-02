@@ -28,6 +28,12 @@ class DelimitingValuesInStrings {
     }
     
     @Test
+    fun sets() {
+        assertThat(describe(setOf(1, 2)), equalTo("{1, 2}"))
+        assertThat(describe(setOf("1", "2")), equalTo("""{"1", "2"}"""))
+    }
+    
+    @Test
     fun ranges() {
         assertThat(describe(1..8), equalTo("1..8"))
     }
