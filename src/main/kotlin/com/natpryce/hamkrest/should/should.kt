@@ -2,7 +2,6 @@ package com.natpryce.hamkrest.should
 
 import com.natpryce.hamkrest.Described
 import com.natpryce.hamkrest.Matcher
-import com.natpryce.hamkrest.SelfDescribing
 import com.natpryce.hamkrest.assertion.assertThat
 import kotlin.reflect.KFunction1
 

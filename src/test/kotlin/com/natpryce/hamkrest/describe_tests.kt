@@ -2,7 +2,6 @@ package com.natpryce.hamkrest
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
-import sun.awt.SunHints.Value
 import java.nio.file.Paths
 
 class DelimitingValuesInStrings {
