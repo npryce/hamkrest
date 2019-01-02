@@ -20,29 +20,29 @@ class Contains {
     }
 
     @Test
-    fun empty_sequence_never_contains_any() {
+    fun empty_sequence_never_meets_any_elements() {
         assertThat(emptyList<Int>(), !anyElement(anything))
     }
 
     @Test
-    fun contains_any_can_be_passed_a_function_reference() {
+    fun any_elements_can_be_passed_a_function_reference() {
         assertThat(listOf("1", "2", " "), anyElement(String::isBlank))
     }
 
     @Test
-    fun contains_all() {
+    fun all_elements() {
         assertThat(listOf(1), allElements(equalTo(1)))
         assertThat(listOf(1, 2, 3, 4), allElements(greaterThan(0)))
         assertThat(listOf(1, 2, 3, 4), !allElements(equalTo(1)))
     }
 
     @Test
-    fun empty_sequence_always_contains_all() {
+    fun empty_sequence_always_meets_all_elements() {
         assertThat(emptyList<Any>(), allElements(anything))
     }
 
     @Test
-    fun contains_all_can_be_passed_a_function_reference() {
+    fun all_elements_can_be_passed_a_function_reference() {
         assertThat(listOf("1", "2", " "), !allElements(String::isBlank))
     }
 }
