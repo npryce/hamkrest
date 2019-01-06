@@ -2,7 +2,6 @@ package com.natpryce.hamkrest
 
 import com.natpryce.hamkrest.assertion.assertThat
 import org.junit.Test
-import java.nio.file.Paths
 
 class DelimitingValuesInStrings {
     @Test
@@ -51,10 +50,15 @@ class DelimitingValuesInStrings {
         assertThat(describe(d), equalTo("d"))
     }
     
+    class IterableButNotCollection(private vararg val elements: String) : Iterable<String> {
+        override fun iterator() = elements.iterator()
+        override fun toString() = elements.joinToString("/")
+    }
+    
     @Test
-    fun file_paths() {
-        val path = Paths.get("/foo/bar/baz")
-        assertThat(describe(path), equalTo("/foo/bar/baz"))
+    fun does_not_generate_collectionlike_description_for_iterables_that_are_not_collections() {
+        val thing = IterableButNotCollection("foo", "bar", "baz")
+        assertThat(describe(thing), equalTo("foo/bar/baz"))
     }
 }
 
