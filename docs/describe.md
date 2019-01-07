@@ -74,7 +74,7 @@ com.bigcorp.crm.CustomerDescription
 
 ## Tips
 
-You can have more than one ValueDescription service, and each service can provide representations for multiple types of value.  The most convenient organisation I've found is to define a single ValueDescription services in each module of the project. This also allows them to use internal features to generate representations, if required.
+You can have more than one ValueDescription service, and each service can provide representations for multiple types of value.  The most convenient organisation I've found is to define a single ValueDescription service in each module of the project. This also allows them to use internal features to generate representations, if required.
 
 [describe]: https://github.com/npryce/hamkrest/blob/master/src/main/kotlin/com/natpryce/hamkrest/describe.kt
 [JVM service]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html
