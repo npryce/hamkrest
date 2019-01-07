@@ -4,7 +4,7 @@ An implementation of Hamcrest to take advantage of [Kotlin](https://kotlinlang.o
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.3.11-blue.svg)](http://kotlinlang.org)
 [![Build Status](https://travis-ci.org/npryce/hamkrest.svg?branch=master)](https://travis-ci.org/npryce/hamkrest)
-[![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/hamkrest.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.natpryce%22%20AND%20a%3A%22hamkrest%22)
+[![Maven Central](https://img.shields.io/maven-central/v/com.natpryce/hamkrest.svg)](https://search.maven.org/artifact/com.natpryce/hamkrest)
 
 Note: as of version 1.4.0.0, you must add kotlin-reflect to the classpath to use Hamkrest's reflective features.
 
