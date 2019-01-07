@@ -10,7 +10,7 @@ Note: as of version 1.4.0.0, you must add kotlin-reflect to the classpath to use
 
 ## Getting Started
 
-Add Hamkrest as a dependency of your project. [Hamkrest is distributed via Maven Central](https://search.maven.org/search?q=a:hamkrest). 
+Add Hamkrest as a dependency of your project. [Hamkrest is distributed via Maven Central](https://search.maven.org/artifact/com.natpryce/hamkrest). 
 
 Import matchers from `com.natpryce.hamkrest`.  E.g. a quick way to get started is to import `com.natpryce.hamkrest.*` and then use IntelliJ to optimise imports when you're done.
 
