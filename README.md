@@ -19,8 +19,8 @@ If you're using Hamkrest for assertions, import `com.natpryce.hamkrest.assertion
 Now you can make assertions about values using matchers:
 
 ```kotlin
-assertThat(herName, equalTo("Alice"))
-assertThat(hisName, equalTo("Bob"))
+assertThat(thisName, equalTo("Alice"))
+assertThat(thatName, equalTo("Bob"))
 ```
 
 ... and so forth
