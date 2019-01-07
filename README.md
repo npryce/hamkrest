@@ -17,10 +17,6 @@ When working in Kotlin, Hamkrest provides these benefits over using the Java Ham
  * Syntactic sugar. You can negate a matcher with the ! operator and compose matchers with infix `and` and `or` functions:
 
     ``` kotlin
-    import com.natpryce.hamkrest.assertion.assert
-          
-    ...
-          
     assertThat("xyzzy", startsWith("x") and endsWith("y") and !containsSubstring("a"))
     ```
     
