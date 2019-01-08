@@ -28,6 +28,7 @@ assertThat(thatName, equalTo("Bob"))
 
 ## More Information
 
+* [Matching numbers](docs/numbers.md)
 * [Composing matchers](docs/compose.md)
 * [Using function and method references as Matchers](docs/function-references.md)
 * [How Hamkrest describes values, and how you can plug in your own descriptions](docs/describe.md)
