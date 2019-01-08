@@ -36,6 +36,7 @@ package com.bigcorp.crm
 
 class Customer(val name: String /* ... and  other features */ )
 ```
+
 By default, Hamkrest will represent Customers by calling their toString method.  But this does not give any useful
 information.  We can therefore register a ValueDescription service to represent Customers in Hamkrest's test diagnostics.
 
