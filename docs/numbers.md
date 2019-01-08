@@ -9,8 +9,18 @@ Match values by their relative order to another value:
 * greaterThanOrEqualTo
 * lessThanOrEqualTo
 
+```kotlin
+assertThat(5, lessThan(10))
+assertThat(10, greaterThan(5))
+assertThat(10, greaterThanOrEqualTo(5))
+assertThat(10, greaterThanOrEqualTo(10))
+```
+
 Because these work on Comparable values, they apply to all number types, and also strings, dates and times, and your own types that implement Comparable.
 
+```kotlin
+assertThat("large", lessThan("small"))
+```
 
 ## "Close to" matcher
 
