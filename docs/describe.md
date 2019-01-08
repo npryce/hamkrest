@@ -39,38 +39,29 @@ class Customer(val name: String /* ... and  other features */ )
 By default, Hamkrest will represent Customers by calling their toString method.  But this does not give any useful
 information.  We can therefore register a ValueDescription service to represent Customers in Hamkrest's test diagnostics.
 
-1. Define a class of type [com.natpryce.hamkrest.ValueDescription][].
+1. Define a class of type [com.natpryce.hamkrest.ValueDescription][] and implement its `describe` method to either describe Customers or return `null`.
 
-```kotlin
-package com.bigcorp.crm
+    ```kotlin
+    package com.bigcorp.crm
 
-import com.natpryce.hamkrest.ValueDescription
+    import com.natpryce.hamkrest.ValueDescription
 
-class CustomerDescription : ValueDescription {
-}
-```
+    class CustomerDescription : ValueDescription {
+        override fun describe(v: Any?) =
+            when (v) {
+                is Customer -> "Customer[${v.name}]"
+                else -> null
+            }
+    }
+    ```
 
-2. Implement the `ValueDescription::describe` method to either describe Customers or return `null`:
+2. Register the service by creating a resource file named `META-INF/services/com.natpryce.hamkrest.ValueDescription` that contains the fully qualified name name of the `CustomerDescription` class:
 
-```kotlin
-package com.bigcorp.crm
+    ```
+    com.bigcorp.crm.CustomerDescription
+    ```
 
-import com.natpryce.hamkrest.ValueDescription
-
-class CustomerDescription : ValueDescription {
-    override fun describe(v: Any?) =
-        when (v) {
-            is Customer -> "Customer[${v.name}]"
-            else -> null
-        }
-}
-```
-
-3. Register the service by creating a resource file named `META-INF/services/com.natpryce.hamkrest.ValueDescription` that contains the fully qualified name name of the `CustomerDescription` class:
-
-```
-com.bigcorp.crm.CustomerDescription
-```
+Now test diagnostics will display Customer instances in a more helpful way.
 
 ## Tips
 
