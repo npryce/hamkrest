@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import org.junit.Test
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class CloseTo {

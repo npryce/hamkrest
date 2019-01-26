@@ -2,9 +2,9 @@ package com.natpryce.hamkrest.assertion
 
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.matches
-import org.junit.Test
 import kotlin.text.RegexOption.DOT_MATCHES_ALL
 import kotlin.text.RegexOption.MULTILINE
+import kotlin.test.Test
 
 class AssertOutput {
     @Test
