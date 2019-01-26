@@ -60,6 +60,16 @@ kotlin {
     }
 }
 
+jvmTest {
+    beforeTest { desc ->
+        print "${desc.className.substring("com.natpryce.hamkrest.".length())}: ${desc.name.replace("_", " ")}"
+    }
+    afterTest { desc, result ->
+        println " -> ${result.resultType}"
+    }
+}
+
+
 wrapper {
     gradleVersion = '5.1.1'
 }
