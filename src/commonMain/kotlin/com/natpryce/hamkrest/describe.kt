@@ -1,7 +1,5 @@
 package com.natpryce.hamkrest
 
-import java.util.ServiceLoader
-
 /**
  * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
  * iterable collections and maps are (recursively) described.  A null reference is described as `null`.
@@ -9,17 +7,12 @@ import java.util.ServiceLoader
  *
  * @param v the value to be described.
  */
-fun describe(v: Any?): String =
-    descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
-
-
-private val descriptionServices = ServiceLoader.load(ValueDescription::class.java)
-
+expect fun describe(v: Any?): String
 
 /**
  * The default description of a value, used when a value is not described by any registered [ValueDescription] services.
  */
-private fun defaultDescription(v: Any?): String = when (v) {
+internal fun defaultDescription(v: Any?): String = when (v) {
     null -> "null"
     is SelfDescribing -> v.description
     is String -> "\"" + v.replace("\\", "\\\\").replace("\"", "\\\"") + "\""

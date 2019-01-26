@@ -72,7 +72,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
     object : Matcher<Any> {
         override fun invoke(actual: Any) =
             if (actual !is T) {
-                MatchResult.Mismatch("was: a ${actual.javaClass.kotlin.qualifiedName}")
+                MatchResult.Mismatch("was: a ${actual::class.qualifiedName}")
             }
             else if (downcastMatcher == null) {
                 MatchResult.Match
@@ -154,7 +154,7 @@ inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null)
                     exceptionCriteria?.invoke(e) ?: MatchResult.Match
                 }
                 else {
-                    MatchResult.Mismatch("threw ${e.javaClass.kotlin.qualifiedName}")
+                    MatchResult.Mismatch("threw ${e::class.qualifiedName}")
                 }
             }
 

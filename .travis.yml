@@ -1,6 +1,6 @@
 language: java
 
-script: ./b clean build
+script: ./b clean build check
 
 sudo: false
 

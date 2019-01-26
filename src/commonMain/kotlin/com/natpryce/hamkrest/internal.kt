@@ -1,6 +1,6 @@
 package com.natpryce.hamkrest
 
-import java.util.ArrayList
+import kotlin.text.*
 
 internal fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
         if (comparisonResult) {
@@ -24,17 +24,17 @@ internal fun identifierToNegatedDescription(id: String): String {
 }
 
 fun identifierToWords(s: String): List<String> {
-    val words: MutableList<String> = ArrayList()
-    val buf = StringBuilder()
+    val words = mutableListOf<String>()
+    var buf = StringBuilder()
 
     for ((prev, c) in (s[0] + s).zip(s)) {
         if (isWordStart(prev, c)) {
             if (buf.isNotEmpty()) {
                 words.add(buf.toString())
-                buf.setLength(0)
+                buf = StringBuilder()
             }
         }
-
+        
         if (isWordPart(c)) {
             buf.append(c.toLowerCase())
         }
@@ -45,10 +45,6 @@ fun identifierToWords(s: String): List<String> {
     return words
 }
 
-internal fun isWordPart(c: Char): Boolean = c.isLetterOrDigit()
+expect internal fun isWordPart(c: Char): Boolean
 
-internal fun isWordStart(prev: Char, c: Char): Boolean = when {
-    c.isLetter() != prev.isLetter() -> true
-    prev.isLowerCase() && c.isUpperCase() -> true
-    else -> false
-}
+expect internal fun isWordStart(prev: Char, c: Char): Boolean
