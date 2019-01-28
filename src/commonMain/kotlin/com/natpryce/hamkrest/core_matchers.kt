@@ -1,16 +1,16 @@
 package com.natpryce.hamkrest
 
 /**
- * A [Matcher] that matches anything, always returning [MatchResult.Match].
+ * A [Matcher] that matches anything, always returning [Match].
  */
 val anything = object : Matcher<Any?> {
-    override fun invoke(actual: Any?): MatchResult = MatchResult.Match
+    override fun invoke(actual: Any?): MatchResult = Match
     override val description: String get() = "anything"
     override val negatedDescription: String get() = "nothing"
 }
 
 /**
- * A [Matcher] that matches nothing, always returning a [MatchResult.Mismatch].
+ * A [Matcher] that matches nothing, always returning a [Mismatch].
  */
 val nothing = !anything
 
@@ -51,10 +51,10 @@ fun <T> absent(): Matcher<T?> = object : Matcher<T?> {
 fun <T> present(valueMatcher: Matcher<T>? = null) = object : Matcher<T?> {
     override fun invoke(actual: T?) =
         if (actual == null) {
-            MatchResult.Mismatch("was: null")
+            Mismatch("was: null")
         }
         else if (valueMatcher == null) {
-            MatchResult.Match
+            Match
         }
         else {
             valueMatcher(actual)
@@ -72,10 +72,10 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
     object : Matcher<Any> {
         override fun invoke(actual: Any) =
             if (actual !is T) {
-                MatchResult.Mismatch("was: a ${actual::class.qualifiedName}")
+                Mismatch("was: a ${actual::class.qualifiedName}")
             }
             else if (downcastMatcher == null) {
-                MatchResult.Match
+                Match
             }
             else {
                 downcastMatcher(actual)
@@ -147,14 +147,14 @@ inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null)
         override fun invoke(actual: () -> Unit): MatchResult =
             try {
                 actual()
-                MatchResult.Mismatch("did not throw")
+                Mismatch("did not throw")
             }
             catch (e: Throwable) {
                 if (e is T) {
-                    exceptionCriteria?.invoke(e) ?: MatchResult.Match
+                    exceptionCriteria?.invoke(e) ?: Match
                 }
                 else {
-                    MatchResult.Mismatch("threw ${e::class.qualifiedName}")
+                    Mismatch("threw ${e::class.qualifiedName}")
                 }
             }
 

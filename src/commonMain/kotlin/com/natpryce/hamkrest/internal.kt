@@ -4,9 +4,9 @@ import kotlin.text.*
 
 internal fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
         if (comparisonResult) {
-            MatchResult.Match
+            Match
         } else {
-            MatchResult.Mismatch(describeMismatch())
+            Mismatch(describeMismatch())
         }
 
 internal fun identifierToDescription(id: String) = identifierToWords(id).joinToString(" ")
@@ -26,7 +26,7 @@ internal fun identifierToNegatedDescription(id: String): String {
 fun identifierToWords(s: String): List<String> {
     val words = mutableListOf<String>()
     var buf = StringBuilder()
-
+    
     for ((prev, c) in (s[0] + s).zip(s)) {
         if (isWordStart(prev, c)) {
             if (buf.isNotEmpty()) {
@@ -45,6 +45,6 @@ fun identifierToWords(s: String): List<String> {
     return words
 }
 
-expect internal fun isWordPart(c: Char): Boolean
+internal expect fun isWordPart(c: Char): Boolean
 
-expect internal fun isWordStart(prev: Char, c: Char): Boolean
+internal expect fun isWordStart(prev: Char, c: Char): Boolean

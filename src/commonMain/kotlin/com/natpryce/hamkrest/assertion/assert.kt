@@ -1,7 +1,7 @@
 package com.natpryce.hamkrest.assertion
 
-import com.natpryce.hamkrest.MatchResult
 import com.natpryce.hamkrest.Matcher
+import com.natpryce.hamkrest.Mismatch
 import com.natpryce.hamkrest.describe
 import kotlin.reflect.KFunction1
 import kotlin.reflect.KFunction2
@@ -15,7 +15,7 @@ private fun noMessage() = ""
  */
 fun <T> assertThat(actual: T, criteria: Matcher<T>, message: () -> String = ::noMessage) {
     val judgement = criteria(actual)
-    if (judgement is MatchResult.Mismatch) {
+    if (judgement is Mismatch) {
         throw AssertionError(
             message().let { if (it.isEmpty()) it else "$it: " } +
                 "expected: a value that ${describe(criteria)}\n" +
