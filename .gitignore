@@ -4,3 +4,4 @@
 build/
 out/
 *.class
+/node_modules/

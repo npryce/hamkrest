@@ -72,7 +72,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
     object : Matcher<Any> {
         override fun invoke(actual: Any) =
             if (actual !is T) {
-                MatchResult.Mismatch("was: a ${actual::class.qualifiedName}")
+                MatchResult.Mismatch("was: a ${actual::class.reportedName}")
             }
             else if (downcastMatcher == null) {
                 MatchResult.Match
@@ -82,7 +82,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
             }
 
         override val description: String
-            get() = "is a ${T::class.qualifiedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
+            get() = "is a ${T::class.reportedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
     }
 
 /**
@@ -141,7 +141,7 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
  * the exception matches the [exceptionCriteria].
  */
 inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null): Matcher<() -> Unit> {
-    val exceptionName = T::class.qualifiedName
+    val exceptionName = T::class.reportedName
 
     return object : Matcher<() -> Unit> {
         override fun invoke(actual: () -> Unit): MatchResult =
@@ -154,7 +154,7 @@ inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null)
                     exceptionCriteria?.invoke(e) ?: MatchResult.Match
                 }
                 else {
-                    MatchResult.Mismatch("threw ${e::class.qualifiedName}")
+                    MatchResult.Mismatch("threw ${e::class.reportedName}")
                 }
             }
 

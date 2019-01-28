@@ -2,7 +2,7 @@ package com.natpryce.hamkrest.assertion
 
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.matches
-import kotlin.text.RegexOption.DOT_MATCHES_ALL
+import com.natpryce.hamkrest.present
 import kotlin.text.RegexOption.MULTILINE
 import kotlin.test.Test
 
@@ -12,7 +12,7 @@ class AssertOutput {
         try {
             assertThat("foo", equalTo("bar"))
         } catch (e: AssertionError) {
-            assertThat(e.message!!, matches(Regex("expected: .*but was: .*", setOf(MULTILINE, DOT_MATCHES_ALL))))
+            assertThat(e.message, present(matches(Regex("expected: (.|\\n)*but was: (.|\\n)*", setOf(MULTILINE)))))
         }
     }
 }

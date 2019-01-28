@@ -1,6 +1,9 @@
 package com.natpryce.hamkrest
 
+import kotlin.reflect.KClass
 import kotlin.text.*
+
+expect val KClass<*>.reportedName : String
 
 internal fun match(comparisonResult: Boolean, describeMismatch: () -> String): MatchResult =
         if (comparisonResult) {

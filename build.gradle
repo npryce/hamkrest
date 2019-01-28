@@ -22,11 +22,13 @@ kotlin {
             }
         }
     }
+    js()
+    macosX64()
 
     sourceSets {
         commonMain {
             dependencies {
-                compileOnly kotlin('stdlib-common')
+                api kotlin('stdlib-common')
             }
         }
 
@@ -39,8 +41,8 @@ kotlin {
 
         jvmMain {
             dependencies {
-                compileOnly kotlin('stdlib-jdk8')
-                compileOnly kotlin('reflect')
+                implementation kotlin('stdlib-jdk8')
+                implementation kotlin('reflect')
             }
         }
 
@@ -48,6 +50,30 @@ kotlin {
             dependencies {
                 api kotlin('test-junit')
                 api kotlin('reflect')
+            }
+        }
+
+        jsMain {
+            dependencies {
+                api kotlin('stdlib-js')
+            }
+        }
+
+        jsTest {
+            dependencies {
+                api kotlin('test-js')
+            }
+        }
+
+        macosX64Main {
+            dependencies {
+                api kotlin("stdlib")
+            }
+        }
+
+        macosX64Test {
+            dependencies {
+                api kotlin("stdlib")
             }
         }
 
@@ -60,7 +86,7 @@ kotlin {
     }
 }
 
-jvmTest {
+tasks.withType(Test) {
     beforeTest { desc ->
         print "${desc.className.substring("com.natpryce.hamkrest.".length())}: ${desc.name.replace("_", " ")}"
     }
