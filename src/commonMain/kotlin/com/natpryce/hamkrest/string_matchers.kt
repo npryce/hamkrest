@@ -1,5 +1,6 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.Matcher.Primitive
 import kotlin.reflect.KFunction3
 
 /**
@@ -173,7 +174,7 @@ val isNullOrEmptyString = Matcher(CharSequence?::isNullOrEmpty)
  * Matches a string if it is the same as the given string, ignoring case differences.
  */
 fun equalToIgnoringCase(expected: String?): Matcher<String?> =
-    object : Matcher<String?> {
+    object : Primitive<String?>() {
         override fun invoke(actual: String?): MatchResult = match(actual.equals(expected, ignoreCase = true)) { "was: ${describe(actual)}" }
         override val description: String get() = "is equal (ignoring case) to ${describe(expected)}"
         override val negatedDescription: String get() = "is not equal (ignoring case) to ${describe(expected)}"

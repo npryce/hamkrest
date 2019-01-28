@@ -1,9 +1,11 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.Matcher.Primitive
+
 /**
  * A [Matcher] that matches anything, always returning [Match].
  */
-val anything = object : Matcher<Any?> {
+val anything = object : Primitive<Any?>() {
     override fun invoke(actual: Any?): MatchResult = Match
     override val description: String get() = "anything"
     override val negatedDescription: String get() = "nothing"
@@ -20,7 +22,7 @@ val nothing = !anything
  * the `==` operator does.
  */
 fun <T> equalTo(expected: T?): Matcher<T?> =
-    object : Matcher<T?> {
+    object : Primitive<T?>() {
         override fun invoke(actual: T?): MatchResult = match(actual == expected) { "was: ${describe(actual)}" }
         override val description: String get() = "is equal to ${describe(expected)}"
         override val negatedDescription: String get() = "is not equal to ${describe(expected)}"
@@ -30,7 +32,7 @@ fun <T> equalTo(expected: T?): Matcher<T?> =
  * Returns a matcher that reports if a value is the same instance as [expected] value.
  */
 fun <T> sameInstance(expected: T): Matcher<T> =
-    object : Matcher<T> {
+    object : Primitive<T>() {
         override fun invoke(actual: T): MatchResult = match(actual === expected) { "was: ${describe(actual)}" }
         override val description: String get() = "is same instance as ${describe(expected)}"
         override val negatedDescription: String get() = "is not same instance as ${describe(expected)}"
@@ -40,7 +42,7 @@ fun <T> sameInstance(expected: T): Matcher<T> =
 /**
  * Returns a matcher that reports if a value is null.
  */
-fun <T> absent(): Matcher<T?> = object : Matcher<T?> {
+fun <T> absent(): Matcher<T?> = object : Primitive<T?>() {
     override fun invoke(actual: T?): MatchResult = match(actual == null) { "was: ${describe(actual)}" }
     override val description: String get() = "null"
 }
@@ -48,7 +50,7 @@ fun <T> absent(): Matcher<T?> = object : Matcher<T?> {
 /**
  * Returns a matcher that reports if a value is not null and meets the criteria of the [valueMatcher]
  */
-fun <T> present(valueMatcher: Matcher<T>? = null) = object : Matcher<T?> {
+fun <T> present(valueMatcher: Matcher<T>? = null) = object : Primitive<T?>() {
     override fun invoke(actual: T?) =
         if (actual == null) {
             Mismatch("was: null")
@@ -69,7 +71,7 @@ fun <T> present(valueMatcher: Matcher<T>? = null) = object : Matcher<T?> {
  * if the value meets its criteria.
  */
 inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
-    object : Matcher<Any> {
+    object : Primitive<Any>() {
         override fun invoke(actual: Any) =
             if (actual !is T) {
                 Mismatch("was: a ${actual::class.qualifiedName}")
@@ -112,7 +114,7 @@ fun <N : Comparable<N>> lessThan(n: N) = _comparesAs("less than", n) { it < 0 }
 fun <N : Comparable<N>> lessThanOrEqualTo(n: N) = _comparesAs("less than or equal to", n) { it <= 0 }
 
 private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedSignum: (Int) -> Boolean): Matcher<N> {
-    return object : Matcher<N> {
+    return object : Primitive<N>() {
         override fun invoke(actual: N): MatchResult =
             match(expectedSignum(actual.compareTo(n))) { "was: ${describe(actual)}" }
 
@@ -132,7 +134,7 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
         return range.contains(actual)
     }
 
-    return Matcher.Companion(::_isWithin, range)
+    return Matcher(::_isWithin, range)
 }
 
 
@@ -143,7 +145,7 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
 inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null): Matcher<() -> Unit> {
     val exceptionName = T::class.qualifiedName
 
-    return object : Matcher<() -> Unit> {
+    return object : Primitive<() -> Unit>() {
         override fun invoke(actual: () -> Unit): MatchResult =
             try {
                 actual()
@@ -158,8 +160,8 @@ inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null)
                 }
             }
 
-        override val description: String get() = "throws ${exceptionName}${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
-        override val negatedDescription: String get() = "does not throw ${exceptionName}${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
+        override val description: String get() = "throws $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
+        override val negatedDescription: String get() = "does not throw $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
     }
 }
 

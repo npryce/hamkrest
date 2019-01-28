@@ -159,7 +159,7 @@ interface Matcher<in T> : SelfDescribing {
          * @param name the name to be used to describe [feature]
          * @param feature the predicate to convert into a [Matcher]<T>.
          */
-        operator fun <T> invoke(name: String, feature: (T) -> Boolean): Matcher<T> = object : Matcher<T> {
+        operator fun <T> invoke(name: String, feature: (T) -> Boolean): Matcher<T> = object : Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(feature(actual)) { "was: ${describe(actual)}" }
             override val description = identifierToDescription(name)
             override val negatedDescription = identifierToNegatedDescription(name)

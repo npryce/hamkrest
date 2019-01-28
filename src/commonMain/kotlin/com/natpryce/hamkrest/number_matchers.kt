@@ -1,5 +1,6 @@
 package com.natpryce.hamkrest
 
+import com.natpryce.hamkrest.Matcher.Primitive
 import kotlin.math.abs
 
 /**
@@ -13,7 +14,7 @@ fun closeTo(expected: Float, error: Float = 0.00001f): Matcher<Float> = _closeTo
 fun closeTo(expected: Double, error: Double = 0.00001): Matcher<Double> = _closeTo(expected, error)
 
 private fun <T : Number> _closeTo(expected: T, error: T): Matcher<T> =
-        object : Matcher<T> {
+        object : Primitive<T>() {
             override fun invoke(actual: T): MatchResult = match(delta(actual, expected, error) <= 0.0) {
                 "a numeric value ${describe(actual)} differed by ${describe(delta(actual, expected, error))} more than error ${describe(error)}"
             }
