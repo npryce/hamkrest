@@ -45,7 +45,7 @@ interface Matcher<in T> : SelfDescribing {
     fun asPredicate(): (T) -> Boolean = fun(actual: T) = this(actual) == Match
     
     /**
-     * The negation of a matcher.
+     * The logical negation ("not") of a matcher.
      *
      * @property negated the matcher to be negated
      */
@@ -62,7 +62,7 @@ interface Matcher<in T> : SelfDescribing {
     }
     
     /**
-     * The logican disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
+     * The logical disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
      * matcher matches, the [right] matcher is never invoked.
      *
      * Use the infix [or] function or [anyOf] to combine matchers with a Disjunction.
@@ -88,7 +88,7 @@ interface Matcher<in T> : SelfDescribing {
     }
     
     /**
-     * The logican conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
+     * The logical conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
      * matcher fails to match, the [right] matcher is never invoked.
      *
      * Use the infix [and] function or [allOf] to combine matchers with a Disjunction.
