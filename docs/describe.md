@@ -70,4 +70,4 @@ You can have more than one ValueDescription service, and each service can provid
 
 [describe]: https://github.com/npryce/hamkrest/blob/master/src/main/kotlin/com/natpryce/hamkrest/describe.kt
 [JVM service]: https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/ServiceLoader.html
-[com.natpryce.hamkrest.ValueDescription]: https://github.com/npryce/hamkrest/blob/master/src/main/kotlin/com/natpryce/hamkrest/ValueDescription.kt
+[com.natpryce.hamkrest.ValueDescription]: https://github.com/npryce/hamkrest/blob/master/src/jvmMain/kotlin/com/natpryce/hamkrest/ValueDescription.kt
