@@ -14,12 +14,12 @@ import kotlin.reflect.KProperty1
  *
  * To implement your own primitive matcher, create a subclass of [Matcher.Primitive].
  */
-interface Matcher<in T> : (T) -> MatchResult, SelfDescribing {
+interface Matcher<in T> : SelfDescribing {
     
     /**
      * Reports whether the [actual] value meets the criteria and, if not, why it does not match.
      */
-    override fun invoke(actual: T): MatchResult
+    operator fun invoke(actual: T): MatchResult
     
     /**
      * The description of this criteria.
