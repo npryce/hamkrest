@@ -52,14 +52,10 @@ fun <T> absent(): Matcher<T?> = object : Primitive<T?>() {
  */
 fun <T> present(valueMatcher: Matcher<T>? = null) = object : Primitive<T?>() {
     override fun invoke(actual: T?) =
-        if (actual == null) {
-            Mismatch("was: null")
-        }
-        else if (valueMatcher == null) {
-            Match
-        }
-        else {
-            valueMatcher(actual)
+        when {
+            actual == null -> Mismatch("was: null")
+            valueMatcher == null -> Match
+            else -> valueMatcher(actual)
         }
 
     override val description: String
@@ -74,7 +70,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
     object : Primitive<Any>() {
         override fun invoke(actual: Any) =
             if (actual !is T) {
-                Mismatch("was: a ${actual::class.qualifiedName}")
+                Mismatch("was: a ${actual::class.reportedName}")
             }
             else if (downcastMatcher == null) {
                 Match
@@ -84,7 +80,7 @@ inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
             }
 
         override val description: String
-            get() = "is a ${T::class.qualifiedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
+            get() = "is a ${T::class.reportedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
     }
 
 /**
@@ -143,7 +139,7 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
  * the exception matches the [exceptionCriteria].
  */
 inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null): Matcher<() -> Unit> {
-    val exceptionName = T::class.qualifiedName
+    val exceptionName = T::class.reportedName
 
     return object : Primitive<() -> Unit>() {
         override fun invoke(actual: () -> Unit): MatchResult =
@@ -156,7 +152,7 @@ inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null)
                     exceptionCriteria?.invoke(e) ?: Match
                 }
                 else {
-                    Mismatch("threw ${e::class.qualifiedName}")
+                    Mismatch("threw ${e::class.reportedName}")
                 }
             }
 

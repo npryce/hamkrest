@@ -1,5 +1,7 @@
 package com.natpryce.hamkrest
 
+import kotlin.reflect.KClass
+
 /**
  * Formats [v] to be included in a description.  Strings are delimited with quotes and elements of tuples, ranges,
  * iterable collections and maps are (recursively) described.  A null reference is described as `null`.
@@ -24,3 +26,8 @@ internal fun defaultDescription(v: Any?): String = when (v) {
     is Map<*, *> -> v.entries.map { "${describe(it.key)}:${describe(it.value)}" }.joinToString(prefix = "{", separator = ", ", postfix = "}")
     else -> v.toString()
 }
+
+/**
+ * How a class is identified in error messages.
+ */
+expect val KClass<*>.reportedName : String
