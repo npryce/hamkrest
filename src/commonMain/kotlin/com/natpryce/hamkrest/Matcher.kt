@@ -15,7 +15,6 @@ import kotlin.reflect.KProperty1
  * To implement your own primitive matcher, create a subclass of [Matcher.Primitive].
  */
 interface Matcher<in T> : SelfDescribing {
-    
     /**
      * Reports whether the [actual] value meets the criteria and, if not, why it does not match.
      */
@@ -44,76 +43,6 @@ interface Matcher<in T> : SelfDescribing {
      */
     fun asPredicate(): (T) -> Boolean = fun(actual: T) = this(actual) == Match
     
-    /**
-     * The logical negation ("not") of a matcher.
-     *
-     * @property negated the matcher to be negated
-     */
-    class Negation<in T>(private val negated: Matcher<T>) : Matcher<T> {
-        override fun invoke(actual: T): MatchResult =
-            when (negated(actual)) {
-                Match -> Mismatch(negatedDescription)
-                is Mismatch -> Match
-            }
-        
-        override val description = negated.negatedDescription
-        override val negatedDescription = negated.description
-        override operator fun not() = negated
-    }
-    
-    /**
-     * The logical disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
-     * matcher matches, the [right] matcher is never invoked.
-     *
-     * Use the infix [or] function or [anyOf] to combine matchers with a Disjunction.
-     *
-     * @property left The left operand. This operand is always evaluated.
-     * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
-     */
-    class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
-        override fun invoke(actual: T): MatchResult =
-            left(actual).let { l ->
-                when (l) {
-                    Match -> l
-                    is Mismatch -> right(actual).let { r ->
-                        when (r) {
-                            Match -> r
-                            is Mismatch -> l
-                        }
-                    }
-                }
-            }
-        
-        override val description: String = "${left.description} or ${right.description}"
-    }
-    
-    /**
-     * The logical conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
-     * matcher fails to match, the [right] matcher is never invoked.
-     *
-     * Use the infix [and] function or [allOf] to combine matchers with a Disjunction.
-     *
-     * @property left The left operand. This operand is always evaluated.
-     * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
-     */
-    class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
-        override fun invoke(actual: T): MatchResult =
-            left(actual).let { l ->
-                when (l) {
-                    Match -> right(actual)
-                    is Mismatch -> l
-                }
-            }
-        
-        override val description: String = "${left.description} and ${right.description}"
-    }
-    
-    /**
-     * Base class of matchers for which the match criteria is coded, not composed.  Subclass this to write
-     * your own matchers.
-     */
-    abstract class Primitive<in T> : Matcher<T>
-    
     
     companion object {
         /**
@@ -130,7 +59,7 @@ interface Matcher<in T> : SelfDescribing {
          * @param fn The predicate to convert into a [Matcher]<T>
          * @param cmp The second argument to be passed to [fn]
          */
-        operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : Matcher.Primitive<T>() {
+        operator fun <T, U> invoke(fn: KFunction2<T, U, Boolean>, cmp: U): Matcher<T> = object : PrimitiveMatcher<T>() {
             override fun invoke(actual: T): MatchResult = match(fn(actual, cmp)) { "was: ${describe(actual)}" }
             override val description: String = "${identifierToDescription(fn.name)} ${describe(cmp)}"
             override val negatedDescription: String = "${identifierToNegatedDescription(fn.name)} ${describe(cmp)}"
@@ -159,11 +88,86 @@ interface Matcher<in T> : SelfDescribing {
          * @param name the name to be used to describe [feature]
          * @param feature the predicate to convert into a [Matcher]<T>.
          */
-        operator fun <T> invoke(name: String, feature: (T) -> Boolean): Matcher<T> = object : Primitive<T>() {
+        operator fun <T> invoke(name: String, feature: (T) -> Boolean): Matcher<T> = object : PrimitiveMatcher<T>() {
             override fun invoke(actual: T): MatchResult = match(feature(actual)) { "was: ${describe(actual)}" }
             override val description = identifierToDescription(name)
             override val negatedDescription = identifierToNegatedDescription(name)
             override fun asPredicate(): (T) -> Boolean = feature
         }
     }
+    
+    @Deprecated(
+        "will be moved out of the Matcher interface; refer directly to the top-level class PrimitiveMatcher<T>",
+        ReplaceWith("PrimitiveMatcher<T>", "com.natpryce.hamkrest.PrimitiveMatcher"))
+    abstract class Primitive<in T> : PrimitiveMatcher<T>()
 }
+
+/**
+ * The logical negation ("not") of a matcher.
+ *
+ * @property negated the matcher to be negated
+ */
+class Negation<in T>(private val negated: Matcher<T>) : Matcher<T> {
+    override fun invoke(actual: T): MatchResult =
+        when (negated(actual)) {
+            Match -> Mismatch(negatedDescription)
+            is Mismatch -> Match
+        }
+    
+    override val description = negated.negatedDescription
+    override val negatedDescription = negated.description
+    override operator fun not() = negated
+}
+
+/**
+ * The logical conjunction ("and") of two matchers.  Evaluation is short-cut, so that if the [left]
+ * matcher fails to match, the [right] matcher is never invoked.
+ *
+ * Use the infix [and] function or [allOf] to combine matchers with a Disjunction.
+ *
+ * @property left The left operand. This operand is always evaluated.
+ * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
+ */
+class Conjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
+    override fun invoke(actual: T): MatchResult =
+        left(actual).let { l ->
+            when (l) {
+                Match -> right(actual)
+                is Mismatch -> l
+            }
+        }
+    
+    override val description: String = "${left.description} and ${right.description}"
+}
+
+/**
+ * The logical disjunction ("or") of two matchers.  Evaluation is short-cut, so that if the [left]
+ * matcher matches, the [right] matcher is never invoked.
+ *
+ * Use the infix [or] function or [anyOf] to combine matchers with a Disjunction.
+ *
+ * @property left The left operand. This operand is always evaluated.
+ * @property right The right operand.  This operand will not be evaluated if the result can be determined from [left].
+ */
+class Disjunction<in T>(private val left: Matcher<T>, private val right: Matcher<T>) : Matcher<T> {
+    override fun invoke(actual: T): MatchResult =
+        left(actual).let { l ->
+            when (l) {
+                Match -> l
+                is Mismatch -> right(actual).let { r ->
+                    when (r) {
+                        Match -> r
+                        is Mismatch -> l
+                    }
+                }
+            }
+        }
+    
+    override val description: String = "${left.description} or ${right.description}"
+}
+
+/**
+ * Base class of matchers for which the match criteria is coded, not composed.  Subclass this to write
+ * your own matchers.
+ */
+abstract class PrimitiveMatcher<in T> : Matcher<T>

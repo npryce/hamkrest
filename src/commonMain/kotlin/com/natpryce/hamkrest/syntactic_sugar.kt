@@ -1,49 +1,48 @@
 package com.natpryce.hamkrest
 
 import kotlin.reflect.KFunction1
-import kotlin.reflect.KFunction2
 import kotlin.reflect.KProperty1
 
 
 /**
  * Syntactic sugar to create a [Matcher.Disjunction]
  */
-infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(this, that)
+infix fun <T> Matcher<T>.or(that: Matcher<T>): Matcher<T> = Disjunction(this, that)
 
 /**
  * Syntactic sugar to create a [Matcher.Disjunction]
  */
-infix fun <T> KFunction1<T, Boolean>.or(that: Matcher<T>): Matcher<T> = Matcher.Disjunction(Matcher(this), that)
+infix fun <T> KFunction1<T, Boolean>.or(that: Matcher<T>): Matcher<T> = Disjunction(Matcher(this), that)
 
 /**
  * Syntactic sugar to create a [Matcher.Disjunction]
  */
-infix fun <T> Matcher<T>.or(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Disjunction(this, Matcher(that))
+infix fun <T> Matcher<T>.or(that: KFunction1<T, Boolean>): Matcher<T> = Disjunction(this, Matcher(that))
 
 /**
  * Syntactic sugar to create a [Matcher.Disjunction]
  */
-infix fun <T> KFunction1<T, Boolean>.or(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Disjunction(Matcher(this), Matcher(that))
+infix fun <T> KFunction1<T, Boolean>.or(that: KFunction1<T, Boolean>): Matcher<T> = Disjunction(Matcher(this), Matcher(that))
 
 /**
  * Syntactic sugar to create a [Matcher.Conjunction]
  */
-infix fun <T> Matcher<T>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction<T>(this, that)
+infix fun <T> Matcher<T>.and(that: Matcher<T>): Matcher<T> = Conjunction<T>(this, that)
 
 /**
  * Syntactic sugar to create a [Matcher.Conjunction]
  */
-infix fun <T> KFunction1<T, Boolean>.and(that: Matcher<T>): Matcher<T> = Matcher.Conjunction(Matcher(this), that)
+infix fun <T> KFunction1<T, Boolean>.and(that: Matcher<T>): Matcher<T> = Conjunction(Matcher(this), that)
 
 /**
  * Syntactic sugar to create a [Matcher.Conjunction]
  */
-infix fun <T> Matcher<T>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Conjunction(this, Matcher(that))
+infix fun <T> Matcher<T>.and(that: KFunction1<T, Boolean>): Matcher<T> = Conjunction(this, Matcher(that))
 
 /**
  * Syntactic sugar to create a [Matcher.Conjunction]
  */
-infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<T> = Matcher.Conjunction(Matcher(this), Matcher(that))
+infix fun <T> KFunction1<T, Boolean>.and(that: KFunction1<T, Boolean>): Matcher<T> = Conjunction(Matcher(this), Matcher(that))
 
 /**
  * Returns a matcher that matches if all of the supplied matchers match.
@@ -74,7 +73,7 @@ fun <T> anyOf(vararg matchers: Matcher<T>): Matcher<T> = anyOf(matchers.asList()
  * @param feature a function that extracts a feature of a value to be matched by [featureMatcher]
  * @param featureMatcher a matcher applied to the result of the [feature]
  */
-fun <T, R> has(name: String, feature: (T) -> R, featureMatcher: Matcher<R>): Matcher<T> = object : Matcher.Primitive<T>() {
+fun <T, R> has(name: String, feature: (T) -> R, featureMatcher: Matcher<R>): Matcher<T> = object : PrimitiveMatcher<T>() {
     override fun invoke(actual: T) =
         featureMatcher(feature(actual)).let {
             when (it) {

@@ -5,7 +5,7 @@ import kotlin.reflect.KFunction1
 /**
  * Matches an [Iterable] if any element is matched by [elementMatcher].
  */
-fun <T> anyElement(elementMatcher: Matcher<T>) = object : Matcher.Primitive<Iterable<T>>() {
+fun <T> anyElement(elementMatcher: Matcher<T>) = object : PrimitiveMatcher<Iterable<T>>() {
     override fun invoke(actual: Iterable<T>): MatchResult =
         match(actual.any(elementMatcher.asPredicate())) { "was ${describe(actual)}" }
     
@@ -21,7 +21,7 @@ fun <T> anyElement(elementPredicate: KFunction1<T, Boolean>) = anyElement(Matche
 /**
  * Matches an [Iterable] if all elements are matched by [elementMatcher].
  */
-fun <T> allElements(elementMatcher: Matcher<T>) = object : Matcher.Primitive<Iterable<T>>() {
+fun <T> allElements(elementMatcher: Matcher<T>) = object : PrimitiveMatcher<Iterable<T>>() {
     override fun invoke(actual: Iterable<T>): MatchResult =
         match(actual.all(elementMatcher.asPredicate())) { "was ${describe(actual)}" }
     
@@ -49,14 +49,14 @@ fun hasSize(sizeMatcher: Matcher<Int>) = has(Collection<Any>::size, sizeMatcher)
  *
  * See [Collection::contains]
  */
-fun <T> hasElement(element: T): Matcher<Collection<T>> = object : Matcher.Primitive<Collection<T>>() {
+fun <T> hasElement(element: T): Matcher<Collection<T>> = object : PrimitiveMatcher<Collection<T>>() {
     override fun invoke(actual: Collection<T>): MatchResult =
         match(element in actual) { "was ${describe(actual)}" }
     override val description: String get() = "contains ${describe(element)}"
     override val negatedDescription: String get() = "does not contain ${describe(element)}"
 }
 
-fun <T> isIn(i: Iterable<T>) : Matcher<T> = object : Matcher.Primitive<T>() {
+fun <T> isIn(i: Iterable<T>) : Matcher<T> = object : PrimitiveMatcher<T>() {
     override fun invoke(actual: T) = match(actual in i) {"was not in ${describe(i)}"}
     override val description: String get() = "is in ${describe(i)}"
     override val negatedDescription: String get() = "is not in ${describe(i)}"

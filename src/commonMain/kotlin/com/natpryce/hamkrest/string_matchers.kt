@@ -1,6 +1,5 @@
 package com.natpryce.hamkrest
 
-import com.natpryce.hamkrest.Matcher.Primitive
 import kotlin.reflect.KFunction3
 
 /**
@@ -39,7 +38,7 @@ sealed class CaseSensitivity {
  *
  * @property caseSensitivity The case sensitivity of the match, either [CaseSensitivity.CaseSensitive] or [CaseSensitivity.CaseInsensitive].
  */
-abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity: S) : Matcher.Primitive<CharSequence>() {
+abstract class StringMatcher<S : CaseSensitivity>(protected val caseSensitivity: S) : PrimitiveMatcher<CharSequence>() {
     /**
      * Returns this matcher transformed to have the given case sensitivity.
      */
@@ -174,7 +173,7 @@ val isNullOrEmptyString = Matcher(CharSequence?::isNullOrEmpty)
  * Matches a string if it is the same as the given string, ignoring case differences.
  */
 fun equalToIgnoringCase(expected: String?): Matcher<String?> =
-    object : Primitive<String?>() {
+    object : PrimitiveMatcher<String?>() {
         override fun invoke(actual: String?): MatchResult = match(actual.equals(expected, ignoreCase = true)) { "was: ${describe(actual)}" }
         override val description: String get() = "is equal (ignoring case) to ${describe(expected)}"
         override val negatedDescription: String get() = "is not equal (ignoring case) to ${describe(expected)}"
