@@ -74,20 +74,24 @@ class Equality {
 }
 
 class SameInstance {
+    class Example(val name: String) {
+        override fun toString() = name
+    }
+    
+    val s = Example("s")
+    val t = Example("t")
+    
     @Test
     fun same() {
-        val s = "hello"
-        val t = (s + "x").substring(0,s.length)
-
-        assertTrue { s !== t }
+        assertTrue("s & t should be distinct instances") { s !== t }
         assertMatch(sameInstance(s)(s))
-        assertMismatchWithDescription("was: \"hello\"", sameInstance(s)(t))
+        assertMismatchWithDescription("was: t", sameInstance(s)(t))
     }
 
     @Test
     fun description() {
-        assertEquals("is same instance as \"x\"", sameInstance("x").description)
-        assertEquals("is not same instance as \"y\"", (!sameInstance("y")).description)
+        assertEquals("is same instance as s", sameInstance(s).description)
+        assertEquals("is not same instance as t", (!sameInstance(t)).description)
     }
 }
 
@@ -119,13 +123,16 @@ class Nullability {
 }
 
 class Downcasting {
-    val m : Matcher<Any> = isA<String>(equalTo("bob"))
+    val m = isA<String>(equalTo("bob"))
 
     @Test
     fun wrong_type() {
-        assertMismatchWithDescription("was: a kotlin.Double", m(10.0))
+        val actual = 10.0
+        assertMismatchWithDescriptionMatchingPattern("was: a ${actual.platformSpecificTypeName}", m(actual))
     }
-
+    
+    private val Any.platformSpecificTypeName get() = this::class.reportedName
+    
     @Test
     fun correct_type_and_downcast_mismatch() {
         assertMismatchWithDescription("was: \"alice\"", m("alice"))
@@ -139,7 +146,7 @@ class Downcasting {
     @Test
     fun type_match() {
         assertMatch(isA<String>()("bob"))
-        assertMismatchWithDescription("was: a kotlin.Int", isA<String>()(1))
+        assertMismatchWithDescriptionMatchingPattern("was: a (kotlin\\.)?Int", isA<String>()(1))
     }
 }
 

@@ -45,6 +45,15 @@ fun identifierToWords(s: String): List<String> {
     return words
 }
 
+
+internal fun isWordStart(prev: Char, c: Char): Boolean = when {
+    c.isLetter() != prev.isLetter() -> true
+    prev.isLowerCase() && c.isUpperCase() -> true
+    else -> false
+}
+
 internal expect fun isWordPart(c: Char): Boolean
 
-internal expect fun isWordStart(prev: Char, c: Char): Boolean
+internal expect fun Char.isLetter(): Boolean
+internal expect fun Char.isLowerCase(): Boolean
+internal expect fun Char.isUpperCase(): Boolean

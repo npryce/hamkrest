@@ -1,9 +1,9 @@
 package com.natpryce.hamkrest
+import kotlin.text.isLowerCase
+import kotlin.text.isUpperCase
+import kotlin.text.isLetter
 
 internal actual fun isWordPart(c: Char): Boolean = c.isLetterOrDigit()
-
-internal actual fun isWordStart(prev: Char, c: Char): Boolean = when {
-    c.isLetter() != prev.isLetter() -> true
-    prev.isLowerCase() && c.isUpperCase() -> true
-    else -> false
-}
+internal actual fun Char.isLetter(): Boolean = isLetter()
+internal actual fun Char.isLowerCase(): Boolean = isLowerCase()
+internal actual fun Char.isUpperCase(): Boolean = isUpperCase()

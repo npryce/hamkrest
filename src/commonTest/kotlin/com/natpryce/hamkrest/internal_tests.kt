@@ -11,7 +11,8 @@ class Utilities {
                 "an_identifier" to listOf("an", "identifier"),
                 "anIdentifier" to listOf("an", "identifier"),
                 "farenheit451" to listOf("farenheit", "451"),
-                "i_got_99_problems" to listOf("i", "got", "99", "problems")
+                "i_got_99_problems" to listOf("i", "got", "99", "problems"),
+                "_noteMyLeadingUnderscore" to listOf("note", "my", "leading", "underscore")
         )
         
         for ((identifier, words) in cases) {
