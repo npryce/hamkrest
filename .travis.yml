@@ -4,7 +4,7 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install -y node
 
-script: ./b clean && ./b build check
+script: ./b clean && ./b check
 
 sudo: false
 

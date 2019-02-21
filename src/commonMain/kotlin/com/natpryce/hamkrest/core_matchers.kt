@@ -1,5 +1,7 @@
 package com.natpryce.hamkrest
 
+import kotlin.reflect.KClass
+
 /**
  * A [Matcher] that matches anything, always returning [Match].
  */
@@ -55,7 +57,7 @@ fun <T> present(valueMatcher: Matcher<T>? = null) = object : PrimitiveMatcher<T?
             valueMatcher == null -> Match
             else -> valueMatcher(actual)
         }
-
+    
     override val description: String
         get() = "is not null" + (if (valueMatcher == null) "" else " & ${valueMatcher.description}")
 }
@@ -64,22 +66,30 @@ fun <T> present(valueMatcher: Matcher<T>? = null) = object : PrimitiveMatcher<T?
  * Returns a matcher that reports if a value of [Any] type is of a type compatible with [downcastMatcher] and, if so,
  * if the value meets its criteria.
  */
-inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null) =
+inline fun <reified T : Any> isA(downcastMatcher: Matcher<T>? = null): Matcher<Any> {
+    return isInstanceOf(T::class, downcastMatcher)
+}
+
+@PublishedApi
+internal fun <T : Any> isInstanceOf(tClass: KClass<T>, downcastMatcher: Matcher<T>? = null): Matcher<Any> =
     object : PrimitiveMatcher<Any>() {
         override fun invoke(actual: Any) =
-            if (actual !is T) {
+            if (!tClass.isInstance(actual)) {
                 Mismatch("was: a ${actual::class.reportedName}")
             }
             else if (downcastMatcher == null) {
                 Match
             }
             else {
-                downcastMatcher(actual)
+                // Reified types not fully supported on native platform yet.
+                @Suppress("UNCHECKED_CAST")
+                downcastMatcher(actual as T)
             }
-
+        
         override val description: String
-            get() = "is a ${T::class.reportedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
+            get() = "is a ${tClass.reportedName}" + if (downcastMatcher == null) "" else " ${downcastMatcher.description}"
     }
+
 
 /**
  * Returns a matcher that reports if a value of [Any] type is of a type compatible with [downcastMatcher] and, if so,
@@ -111,10 +121,11 @@ private fun <N : Comparable<N>> _comparesAs(description: String, n: N, expectedS
     return object : PrimitiveMatcher<N>() {
         override fun invoke(actual: N): MatchResult =
             match(expectedSignum(actual.compareTo(n))) { "was: ${describe(actual)}" }
-
-        override val description: String get() {
-            return "is ${description} ${describe(n)}"
-        }
+        
+        override val description: String
+            get() {
+                return "is ${description} ${describe(n)}"
+            }
     }
 }
 
@@ -127,35 +138,43 @@ fun <T : Comparable<T>> isWithin(range: ClosedRange<T>): Matcher<T> {
     fun _isWithin(actual: T, range: ClosedRange<T>): Boolean {
         return range.contains(actual)
     }
-
+    
     return Matcher(::_isWithin, range)
 }
 
 
 /**
- * Returns a matcher that reports if a block throws an exception of type [T] and, if [exceptionCriteria] is given,
+ * Returns a matcher that reports if a block throws an exception of type [E] and, if [exceptionCriteria] is given,
  * the exception matches the [exceptionCriteria].
  */
-inline fun <reified T : Throwable> throws(exceptionCriteria: Matcher<T>? = null): Matcher<() -> Unit> {
-    val exceptionName = T::class.reportedName
+inline fun <reified E : Throwable> throws(exceptionCriteria: Matcher<E>? = null): Matcher<() -> Unit> {
+    return throwsExceptionOfClass(E::class, exceptionCriteria)
+}
 
-    return object : PrimitiveMatcher<() -> Unit>() {
+@PublishedApi
+internal fun <E : Throwable> throwsExceptionOfClass(exceptionClass: KClass<E>, exceptionCriteria: Matcher<E>?): Matcher<()->Unit> =
+    object : PrimitiveMatcher<() -> Unit>() {
+        private val exceptionName = exceptionClass.reportedName
+        
         override fun invoke(actual: () -> Unit): MatchResult =
             try {
                 actual()
                 Mismatch("did not throw")
             }
             catch (e: Throwable) {
-                if (e is T) {
-                    exceptionCriteria?.invoke(e) ?: Match
+                if (exceptionClass.isInstance(e)) {
+                    // Reified types not fully supported on native platform yet.
+                    @Suppress("UNCHECKED_CAST")
+                    exceptionCriteria?.invoke(e as E) ?: Match
                 }
                 else {
                     Mismatch("threw ${e::class.reportedName}")
                 }
             }
-
-        override val description: String get() = "throws $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
-        override val negatedDescription: String get() = "does not throw $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
+        
+        override val description: String
+            get() = "throws $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
+        override val negatedDescription: String
+            get() = "does not throw $exceptionName${exceptionCriteria?.let { " that ${describe(it)}" } ?: ""}"
     }
-}
 

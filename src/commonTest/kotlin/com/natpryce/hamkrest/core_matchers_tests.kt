@@ -128,10 +128,9 @@ class Downcasting {
     @Test
     fun wrong_type() {
         val actual = 10.0
-        assertMismatchWithDescriptionMatchingPattern("was: a ${actual.platformSpecificTypeName}", m(actual))
+        
+        assertMismatchWithDescription("was: a ${actual.platformSpecificTypeName}", m(actual))
     }
-    
-    private val Any.platformSpecificTypeName get() = this::class.reportedName
     
     @Test
     fun correct_type_and_downcast_mismatch() {
@@ -144,11 +143,14 @@ class Downcasting {
     }
 
     @Test
-    fun type_match() {
+    fun matching_type_only() {
         assertMatch(isA<String>()("bob"))
-        assertMismatchWithDescriptionMatchingPattern("was: a (kotlin\\.)?Int", isA<String>()(1))
+        assertMismatchWithDescription("was: a ${1.platformSpecificTypeName}", isA<String>()(1))
     }
+    
+    private val Any.platformSpecificTypeName get() = this::class.reportedName
 }
+
 
 class Comparables {
     @Test
