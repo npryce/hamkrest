@@ -101,17 +101,9 @@ kotlin {
             }
         }
 
-        nativeMain {
-            dependsOn commonMain
-        }
-
-        macosX64Main {
-            dependsOn nativeMain
-        }
-        
-        linuxX64Main {
-            dependsOn nativeMain
-        }
+        nativeMain.dependsOn commonMain
+        macosX64Main.dependsOn nativeMain
+        linuxX64Main.dependsOn nativeMain
     }
 }
 
