@@ -1,0 +1,10 @@
+kotlin {
+    macosX64()
+    linuxX64()
+
+    sourceSets {
+        nativeMain.dependsOn commonMain
+        macosX64Main.dependsOn nativeMain
+        linuxX64Main.dependsOn nativeMain
+    }
+}

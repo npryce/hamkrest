@@ -1,4 +1,37 @@
 
+kotlin {
+    js {
+        compilations.main {
+            kotlinOptions {
+                sourceMap = true
+                metaInfo = true
+                moduleKind = "umd"
+            }
+        }
+        compilations.test {
+            kotlinOptions {
+                sourceMap = true
+                metaInfo = true
+                moduleKind = "commonjs"
+            }
+        }
+    }
+
+    sourceSets {
+        jsMain {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+            }
+        }
+
+        jsTest {
+            dependencies {
+                implementation "org.jetbrains.kotlin:kotlin-test-js"
+            }
+        }
+    }
+}
+
 node {
     version = "10.9.0"
     download = true

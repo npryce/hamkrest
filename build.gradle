@@ -25,34 +25,6 @@ println "building version ${version}"
 
 
 kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = '1.8'
-            }
-        }
-    }
-
-    js {
-        compilations.main {
-            kotlinOptions {
-                sourceMap = true
-                metaInfo = true
-                moduleKind = "umd"
-            }
-        }
-        compilations.test {
-            kotlinOptions {
-                sourceMap = true
-                metaInfo = true
-                moduleKind = "commonjs"
-            }
-        }
-    }
-
-    macosX64()
-    linuxX64()
-
     sourceSets {
         all {
             languageSettings {
@@ -73,43 +45,13 @@ kotlin {
                 api kotlin('test-annotations-common')
             }
         }
-
-        jvmMain {
-            dependencies {
-                compileOnly kotlin('stdlib-jdk8')
-                compileOnly kotlin('reflect')
-            }
-        }
-
-        jvmTest {
-            dependencies {
-                implementation kotlin('test-junit')
-                implementation kotlin('reflect')
-            }
-        }
-
-
-        jsMain {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
-            }
-        }
-
-        jsTest {
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-js"
-            }
-        }
-
-        nativeMain.dependsOn commonMain
-        macosX64Main.dependsOn nativeMain
-        linuxX64Main.dependsOn nativeMain
     }
-}
-
-wrapper {
-    gradleVersion = '5.1.1'
 }
 
 apply from: "build-jvm.gradle"
 apply from: "build-js.gradle"
+apply from: "build-native.gradle"
+
+wrapper {
+    gradleVersion = '5.1.1'
+}

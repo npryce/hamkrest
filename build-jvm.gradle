@@ -1,4 +1,32 @@
 
+
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = '1.8'
+            }
+        }
+    }
+
+    sourceSets {
+        jvmMain {
+            dependencies {
+                compileOnly kotlin('stdlib-jdk8')
+                compileOnly kotlin('reflect')
+            }
+        }
+
+        jvmTest {
+            dependencies {
+                implementation kotlin('test-junit')
+                implementation kotlin('reflect')
+            }
+        }
+    }
+}
+
+
 jvmTest {
     beforeTest { desc ->
         print "${desc.className.substring("com.natpryce.hamkrest.".length())}: ${desc.name.replace("_", " ")}"
