@@ -120,6 +120,17 @@ class Nullability {
         assertMismatchWithDescription("was: null", m(null))
         assertMismatchWithDescription("was: \"yyy\"", m("yyy"))
     }
+
+    @Test
+    fun description() {
+        val m : Matcher<String?> = absent()
+        val n : Matcher<String?> = present()
+
+        assertEquals("null", m.description)
+        assertEquals("is not null", n.description)
+        val valueMatcher = equalTo("test")
+        assertEquals("is not null & " + valueMatcher.description, present(valueMatcher).description)
+    }
 }
 
 class Downcasting {
