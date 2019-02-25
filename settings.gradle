@@ -1,2 +1,3 @@
 rootProject.name = 'hamkrest'
+enableFeaturePreview('GRADLE_METADATA')
 
