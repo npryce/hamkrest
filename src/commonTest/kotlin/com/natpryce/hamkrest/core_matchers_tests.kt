@@ -126,7 +126,7 @@ class Nullability {
         val m : Matcher<String?> = absent()
         val n : Matcher<String?> = present()
 
-        assertEquals("null", m.description)
+        assertEquals("is null", m.description)
         assertEquals("is not null", n.description)
         val valueMatcher = equalTo("test")
         assertEquals("is not null & " + valueMatcher.description, present(valueMatcher).description)
