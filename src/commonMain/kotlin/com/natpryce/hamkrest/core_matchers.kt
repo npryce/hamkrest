@@ -44,7 +44,7 @@ fun <T> sameInstance(expected: T): Matcher<T> =
  */
 fun <T> absent(): Matcher<T?> = object : PrimitiveMatcher<T?>() {
     override fun invoke(actual: T?): MatchResult = match(actual == null) { "was: ${describe(actual)}" }
-    override val description: String get() = "null"
+    override val description: String get() = "is null"
 }
 
 /**
