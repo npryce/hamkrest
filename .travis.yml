@@ -1,8 +1,9 @@
+dist: bionic
 language: java
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y nodejs
+  - sudo apt-get install -y nvm
 
 script: ./b clean && ./b check
 
