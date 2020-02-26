@@ -33,7 +33,7 @@ kotlin {
 }
 
 node {
-    version = "10.9.0"
+    version = "13.6.0"
     download = true
     nodeModulesDir = file("$buildDir/npm")
 }
