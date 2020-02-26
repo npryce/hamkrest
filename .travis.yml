@@ -2,7 +2,7 @@ language: java
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y node
+  - sudo apt-get install -y nodejs
 
 script: ./b clean && ./b check
 
