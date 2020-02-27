@@ -46,7 +46,7 @@ kotlin {
 }
 
 apply from: "build-jvm.gradle"
-//apply from: "build-js.gradle"
+apply from: "build-js.gradle"
 //apply from: "build-native.gradle"
 
 wrapper {

@@ -15,6 +15,13 @@ kotlin {
                 moduleKind = "commonjs"
             }
         }
+
+        nodejs {
+            version = 12
+            testTask {
+                useMocha()
+            }
+        }
     }
 
     sourceSets {
@@ -30,43 +37,4 @@ kotlin {
             }
         }
     }
-}
-
-node {
-    version = "12.16.1" // LTS
-    download = true
-    nodeModulesDir = file("$buildDir/npm")
-}
-
-task installMocha(type: NpmTask) {
-    args = ["install", "mocha@6.0.0"]
-}
-
-def jsCompilations = kotlin.targets.js.compilations
-
-task populateNodeModules {
-    doLast {
-        copy {
-            from "$buildDir/npm/node_modules"
-            from jsCompilations.main.output.allOutputs
-            jsCompilations.test.runtimeDependencyFiles.each {
-                if (it.exists() && !it.isDirectory()) {
-                    from zipTree(it.absolutePath).matching { include '*.js' }
-                }
-            }
-            into "$buildDir/node_modules"
-        }
-    }
-}
-
-task runMocha(type: NodeTask, dependsOn: [compileTestKotlinJs, installMocha, populateNodeModules]) {
-    script = file("$buildDir/npm/node_modules/.bin/mocha")
-    args = [
-        "--timeout", "15000",
-        relativePath(jsCompilations.test.output.allOutputs.first()) + "/${project.name}_test.js"
-    ]
-}
-
-jsTest {
-    dependsOn runMocha
 }
