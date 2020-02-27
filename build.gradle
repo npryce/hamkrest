@@ -47,7 +47,7 @@ kotlin {
 
 apply from: "build-jvm.gradle"
 apply from: "build-js.gradle"
-//apply from: "build-native.gradle"
+apply from: "build-native.gradle"
 
 wrapper {
     gradleVersion = '6.2.1'
