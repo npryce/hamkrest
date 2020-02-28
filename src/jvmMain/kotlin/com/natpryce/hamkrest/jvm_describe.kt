@@ -3,7 +3,8 @@ package com.natpryce.hamkrest
 import java.util.ServiceLoader
 import kotlin.reflect.KClass
 
-private val descriptionServices = ServiceLoader.load(ValueDescription::class.java)
+private val mutex = Any()
+private val descriptionServices = synchronized(mutex) { ServiceLoader.load(ValueDescription::class.java) }
 
 actual fun describe(v: Any?): String =
     descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
