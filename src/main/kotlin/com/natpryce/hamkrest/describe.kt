@@ -12,8 +12,8 @@ import java.util.ServiceLoader
 fun describe(v: Any?): String =
     descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
 
-
-private val descriptionServices = ServiceLoader.load(ValueDescription::class.java)
+private val mutex = Any()
+private val descriptionServices = synchronized(mutex) { ServiceLoader.load(ValueDescription::class.java) }
 
 
 /**
