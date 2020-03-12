@@ -10,10 +10,9 @@ import java.util.ServiceLoader
  * @param v the value to be described.
  */
 fun describe(v: Any?): String =
-    descriptionServices.map { it.describe(v) }.filterNotNull().firstOrNull() ?: defaultDescription(v)
-
-private val mutex = Any()
-private val descriptionServices = synchronized(mutex) { ServiceLoader.load(ValueDescription::class.java) }
+    ServiceLoader.load(ValueDescription::class.java).asSequence()
+        .mapNotNull { it.describe(v) }
+        .firstOrNull() ?: defaultDescription(v)
 
 
 /**
