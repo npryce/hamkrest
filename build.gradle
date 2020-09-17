@@ -32,14 +32,14 @@ kotlin {
 
         commonMain {
             dependencies {
-                api kotlin('stdlib-common')
+                compileOnly kotlin('stdlib-common')
             }
         }
 
         commonTest {
             dependencies {
-                api kotlin('test-common')
-                api kotlin('test-annotations-common')
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
             }
         }
     }

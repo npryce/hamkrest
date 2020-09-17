@@ -27,7 +27,7 @@ kotlin {
     sourceSets {
         jsMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+                compileOnly "org.jetbrains.kotlin:kotlin-stdlib-js"
             }
         }
 
