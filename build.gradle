@@ -112,6 +112,17 @@ uploadArchives {
                         url 'http://opensource.org/licenses/Apache-2.0'
                     }
                 }
+
+                developers {
+                    developer {
+                        id 'npryce'
+                        name 'Nat Pryce'
+                    }
+                    developer {
+                        id 'dmcg'
+                        name 'Duncan McGregor'
+                    }
+                }
             }
         }
     }
