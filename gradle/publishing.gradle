@@ -1,0 +1,50 @@
+signing {
+    required { hasProperty("sign") || gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+publishing {
+    publications {
+        release(MavenPublication) {
+            artifactId = "hamkrest"
+
+            pom {
+                description = 'Matcher library for Kotlin. A port of Hamcrest, made more Kotlin-esque.'
+                url = 'https://github.com/npryce/hamkrest'
+                scm {
+                    connection = 'git@github.com:npryce/hamkrest.git'
+                    url = 'https://github.com/npryce/hamkrest'
+                }
+
+                licenses {
+                    license {
+                        name = 'Apache 2.0'
+                        url = 'http://opensource.org/licenses/Apache-2.0'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'npryce'
+                        name = 'Nat Pryce'
+                    }
+                    developer {
+                        id = 'dmcg'
+                        name = 'Duncan McGregor'
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+
+            credentials {
+                username = property("ossrh.username")
+                password = property("ossrh.password")
+            }
+        }
+    }
+}

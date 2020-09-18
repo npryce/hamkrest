@@ -15,7 +15,7 @@ repositories {
     mavenCentral()
 }
 
-group = "com.natpryce"
+group = "com.natpryce.hamkrest"
 version(hasProperty("-version") ? property("-version") : "SNAPSHOT")
 
 println "building version ${version}"
@@ -32,7 +32,7 @@ kotlin {
 
         commonMain {
             dependencies {
-                compileOnly kotlin('stdlib-common')
+                implementation kotlin('stdlib-common')
             }
         }
 
@@ -45,10 +45,8 @@ kotlin {
     }
 }
 
-apply from: "build-jvm.gradle"
-apply from: "build-js.gradle"
-apply from: "build-native.gradle"
+apply from: "gradle/build-jvm.gradle"
+apply from: "gradle/build-js.gradle"
+apply from: "gradle/build-native.gradle"
+apply from: "gradle/publishing.gradle"
 
-wrapper {
-    gradleVersion = '6.2.1'
-}
